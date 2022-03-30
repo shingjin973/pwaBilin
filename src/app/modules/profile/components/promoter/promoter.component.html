@@ -1,0 +1,54 @@
+<div class="nicdark_section nicdark_background_size_cover nicdark_background_position_center_bottom"  *ngIf="user; else loading">
+    <div class="nicdark_section">
+        <div class="nicdark_container nicdark_clearfix">
+            <div class="nicdark_section welcome" style="height: 75px">
+                <p>Hi, {{user.name}}!</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="nicdark_section py-4 content" *ngIf="user; else loading">
+    <div class="nicdark_container ">
+        <p class="account">Account</p>   
+        <div class="main">
+            <div class="item">
+                <div class="item-content">
+                    <p class="item-header">Share Referral Link</p>
+                    <p class="item-subheader">Invite contacts by sharing this promo </p>
+                </div>
+                <div class="item-right">
+                    <a href="#" (click)="$event.preventDefault(); navigate('/profile/promoter/share')" i18n>
+                        <img alt="" width="23" src="assets/img/icons/icon-right-angle.svg">
+                    </a> 
+                </div>
+            </div>      
+            <div class="item">
+                <div class="item-content">
+                    <p class="item-header">Profile Info</p>
+                    <p class="item-subheader">Profile name, email, phone number, and more </p>
+                </div>
+                <div class="item-right">
+                    <a href="#" (click)="$event.preventDefault(); navigate('/profile')" i18n>
+                        <img alt="" width="23" src="assets/img/icons/icon-right-angle.svg">
+                    </a>                    
+                </div>
+            </div>
+            <div class="item">
+                <div class="item-content">
+                    <p class="item-header">Transactions</p>
+                    <p class="item-subheader">View transactions history </p>
+                </div>
+                <div class="item-right">
+                    <a href="#" (click)="$event.preventDefault(); navigate('/profile/promoter/transaction')" i18n>
+                        <img alt="" width="23" src="assets/img/icons/icon-right-angle.svg">
+                    </a> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #loading>
+    <div class="nicdark_section">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

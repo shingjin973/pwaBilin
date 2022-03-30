@@ -1,0 +1,121 @@
+<ng-template [ngIf]="single_bundle" [ngIfElse]="loading">
+    <div class="course-detail nicdark_clearfix">
+        <div class="nicdark_padding_15 nicdark_box_sizing_border_box">
+            <div class="section-dvm">
+                <div class="course-top-intro">
+                    <h1 class="mb-1" [appTranslate]="single_bundle.course?.topic_ch">
+                        {{single_bundle.course?.topic}}</h1>
+                    <h4 class="h4" [appTranslate]="single_bundle.bundle_title_ch">{{single_bundle.bundle_title}}</h4>
+                    <div class="nicdark_height_20"></div>
+                    <div class="" style="display: flex; flex-direction: row;">
+                        <div class="mr-4">
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <img alt="" class="nicdark_margin_right_10 nicdark_border_radius_100_percentage"
+                                     width="40" [src]="single_bundle.teacher.profile_picture | s3Storage">
+                            </div>
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="nicdark_font_size_13" i18n>Instructed by</p>
+                                <h5 class="">
+                                    <a href="#"
+                                       [routerLink]="['/teachers', single_bundle.teacher_id]">{{single_bundle.teacher?.name}}</a>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <img alt="" class="nicdark_margin_right_10" width="30"
+                                     src="assets/img/icons/icon-category-grey.svg">
+                            </div>
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="nicdark_font_size_13" i18n>Category</p>
+                                <h5 class="">{{single_bundle.course?.category}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nicdark_height_20"></div>
+                </div>
+            </div>
+            <div class="nicdark_section nicdark_height_20"></div>
+        </div>
+        <div class="section-dvm">
+            <div class="course-detail-section">
+                <div>
+                    <div class="nicdark_height_20"></div>
+                    <h2 i18n>Course Description</h2>
+                    <div class="course-detail-text">{{single_bundle.course?.description}}
+                    </div>
+                </div>
+                <div>
+                    <div class="nicdark_height_20"></div>
+                    <h2 i18n>Package Cancellation Policy</h2>
+                    <div class="course-detail-text">{{single_bundle.cancel_policy}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="nicdark_height_20"></div>
+                        <i class="far fa-calendar-alt mr-lg-3"></i><span i18n> Start Dates</span>
+                        <div class="course-detail-text" *ngFor="let ele of single_bundle.date_time">
+                            <span class="" *ngIf="isValidTime(ele.time) && isValidDate(ele.date)">
+                                {{ele.date+ele.time | amLocal | date: 'M-d-yy'}}
+                            </span>
+                            <span class="" *ngIf="!isValidTime(ele.time)||!isValidDate(ele.date)">
+                                {{ele.date}}
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="nicdark_height_20"></div>
+                        <i class="far fa-clock mr-lg-3"></i><span i18n> Start Time</span>
+                        <div class="course-detail-text" *ngIf="isValidTime(single_bundle.date_time[0].time) ">
+                            {{make_time_string(single_bundle.date_time)  + single_bundle.date_time[0].time | amLocal | amDateFormat: 'h:mm A'}}
+                        </div>
+                        <div class="course-detail-text" *ngIf="!isValidTime(single_bundle.date_time[0].time)">
+                            {{single_bundle.date_time[0].time}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="nicdark_height_20"></div>
+                        <!--<button *ngIf="(!user || (user && user.children && user.children.length))"-->
+                        <button [disabled]="single_bundle.enrollment[0].length >= single_bundle.number_of_bundles * single_bundle.max_students_per_session"
+                                (click)="$event.preventDefault(); enrollBundle(single_bundle.course_id, single_bundle._id);"
+                                class="btn btn-sm btn-primary nicdark_font_size_13" i18n>
+                            <i *ngIf="isLoadingEnroll; else content" class="fas fa-spinner fa-spin"></i>
+                            <ng-template #content>Enroll</ng-template>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="clear:left">
+                    <div class="nicdark_height_20"></div>
+                    <h2 i18n>Teacher</h2>
+                    <div class="nicdark_height_20"></div>
+                    <div class="d-flex flex-row justify-content-start">
+                        <div class="mr-2">
+                            <img alt="" class="nicdark_margin_right_20 nicdark_border_radius_100_percentage " width="83"
+                                 height="83" [src]="single_bundle.teacher.profile_picture | s3Storage">
+                        </div>
+                        <div class="d-flex flex-column justify-content-end">
+                            <h3 class="teacher-name">{{single_bundle.teacher?.name}}</h3>
+                            <h5 class="nicdark_color_grey" i18n>Main Teacher</h5>
+                        </div>
+                    </div>
+                    <div class="nicdark_section nicdark_height_20"></div>
+                    <div class="course-detail-text" [appTranslate]="single_bundle.teacher.introduction_ch">
+                        {{single_bundle.teacher.introduction}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nicdark_section nicdark_height_50"></div>
+        <app-bundle-single-sidebar [bundle]="single_bundle"></app-bundle-single-sidebar>
+        <!--end container-->
+    </div>
+</ng-template>
+<ng-template #loading>
+    <div style="min-height: 400px;padding-top: 200px;">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+

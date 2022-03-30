@@ -1,0 +1,1126 @@
+<div class="home-page">
+    <!--<div class="hero-image-background" [style.height.px]="divHeight"-->
+    <!--style="background-image: url('assets/img/hero-image.png');">-->
+    <!--<div class="banner-desc" [style.paddingTop.px]="paddingTop">-->
+    <!-- <img src="assets/img/hero-image1.png" class="bg"> -->
+    <div class="hero-image-background" style="background-image: url('assets/img/hero-image.png'); height: auto">
+        <div class="banner-desc">
+            <br>
+            <h1 *ngIf="title">{{title}}</h1>
+            <!--<h1 i18n>Real context, meaningful learning</h1>-->
+            <h4 style="font-size: 25px" i18n>Global Classroom for Multilingual Learning</h4>
+            <button class="btn primary" (click)="$event.preventDefault(); navigate('/authentication/signup')" href="#"
+                i18n>Join Our
+                Classes
+            </button>
+
+        </div>
+    </div>
+
+
+    <div class="section-dvm dvm-full"
+        style="background-image: url(assets/img/home/featured-classes.png); padding-bottom: 1px;">
+        <div class="section-dvm-title credit-work-wrap">            
+            <div class="credit_work" (click)="$event.preventDefault(); navigate('/faq')" >
+                <img class="infoImg " src="assets/img/information.png">
+                <span i18n>&nbsp; How do credits work?</span>
+            </div>
+            <h2 i18n>Our Picks</h2>
+        </div>
+        <div class="featured-classes-tabs">
+            <ul class="nav nav-tabs" role="tablist">
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#" [ngClass]="{'active': currentTab == Tabs.Recommended}"
+                        (click)="$event.preventDefault(); clickTab(Tabs.Recommended);" i18n>Recommended</a>
+
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#" [ngClass]="{'active': currentTab == Tabs.Free}"
+                        (click)="$event.preventDefault(); clickTab(Tabs.Free)" i18n>Free</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" [ngClass]="{'active': currentTab == Tabs.ChineseInstructed}"
+                        (click)="$event.preventDefault(); clickTab(Tabs.ChineseInstructed)" i18n>Classes in Chinese</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" [ngClass]="{'active': currentTab == Tabs.EnglishInstructed}"
+                        (click)="$event.preventDefault(); clickTab(Tabs.EnglishInstructed)" i18n>Classes in English</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" [ngClass]="{'active': currentTab == Tabs.Spanish}"
+                        (click)="$event.preventDefault(); clickTab(Tabs.Spanish)" i18n>Classes in Spanish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" [ngClass]="{'active': currentTab == Tabs.Japanese}"
+                        (click)="$event.preventDefault(); clickTab(Tabs.Japanese)" i18n>Classes in Japanese</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/courses" [ngClass]="{'active': currentTab == Tabs.All}"
+                        (click)="$event.preventDefault(); navigate('/courses')" i18n>All Classes</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="courses_tab">
+                <!-- Tab for Recommended -->
+                <div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.Recommended}" role="tabpanel">
+                    <div *ngIf="promotions; else loadingPromotions" class="slider_content">
+                        <ngx-slick-carousel *ngIf="isLoaded" class="carousel " #slickModal="slick-carousel"
+                            [config]="slideConfig" (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                            (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+                            <div ngxSlickItem *ngFor="let promotion of promotions" class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <app-course-card [data]="promotion"></app-course-card>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div ngxSlickItem class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <div class="card course-box">
+                                            <div class="nicdark_section nicdark_position_relative">
+                                                <img alt="" class="nicdark_section card-img-top" style="height:0px;"
+                                                    src="https://bilinstudio-assets.s3.us-east-2.amazonaws.com/6017e890-0663-11ea-85f5-d5c31f233303.jpg">
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 style="margin-top: 78px; margin-bottom: 0px;text-align: center;">
+                                                    Over {{total_courses_cnt}}
+                                                </h3>
+                                                <p style="text-align: center; font-size: 22px;">Online courses</p>
+                                                <a href="#" routerLink="/courses"
+                                                    class="btn btn-block btn-primary btn-lg"
+                                                    style="width: 170px;margin: 83px auto;" target="_blank" i18n>More
+                                                    courses</a>
+
+                                            </div>
+
+                                        </div>                               
+                                    </div>
+
+                                </div>
+                            </div>
+                        </ngx-slick-carousel>
+                        <ng-template #nopromotions>
+                            <div class="text-center py-4">
+                                <p class="text-dark" i18n>No upcoming session.</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <ng-template #loadingPromotions>
+                        <div class="text-center py-4 text-dark">
+                            <i class="fas fa-spinner fa-spin fa-3x"></i>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <!-- Tab for Free -->
+                <div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.Free}" role="tabpanel"
+                    aria-labelledby="free-tab">
+                    <div *ngIf="free_promotions; else loadingPromotions" class="slider_content">
+                        <ngx-slick-carousel *ngIf="isLoaded" class="carousel" #slickModal="slick-carousel"
+                            [config]="slideConfig" (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                            (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+                            <div ngxSlickItem *ngFor="let promotion of free_promotions" class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <app-course-card [data]="promotion"></app-course-card>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ngxSlickItem class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <div class="card course-box">
+                                            <div class="nicdark_section nicdark_position_relative">
+                                                <img alt="" class="nicdark_section card-img-top" style="height:0px;"
+                                                    src="https://bilinstudio-assets.s3.us-east-2.amazonaws.com/6017e890-0663-11ea-85f5-d5c31f233303.jpg">
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 style="margin-top: 78px; margin-bottom: 0px;text-align: center;">
+                                                    Over {{total_courses_cnt}}
+                                                </h3>
+                                                <p style="text-align: center; font-size: 22px;">Online courses</p>
+                                                <a href="#" routerLink="/courses"
+                                                    class="btn btn-block btn-primary btn-lg"
+                                                    style="width: 170px;margin: 83px auto;" target="_blank" i18n>More
+                                                    courses</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ngx-slick-carousel>
+
+                        <ng-template #nopromotions>
+                            <div class="text-center py-4">
+                                <p class="text-dark" i18n>No upcoming session.</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <ng-template #loadingPromotions>
+                        <div class="text-center py-4 text-dark">
+                            <i class="fas fa-spinner fa-spin fa-3x"></i>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <!-- Tab for Chinese-->
+                <div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.ChineseInstructed}" role="tabpanel"
+                    aria-labelledby="chinese-tab">
+                    <div *ngIf="chinese_promotions; else loadingPromotions" class="slider_content">
+                        <ngx-slick-carousel *ngIf="isLoaded" class="carousel" #slickModal="slick-carousel"
+                            [config]="slideConfig" (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                            (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+                            <div ngxSlickItem *ngFor="let promotion of chinese_promotions" class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <app-course-card [data]="promotion"></app-course-card>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ngxSlickItem class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <div class="card course-box">
+                                            <div class="nicdark_section nicdark_position_relative">
+                                                <img alt="" class="nicdark_section card-img-top" style="height:0px;"
+                                                    src="https://bilinstudio-assets.s3.us-east-2.amazonaws.com/6017e890-0663-11ea-85f5-d5c31f233303.jpg">
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 style="margin-top: 78px; margin-bottom: 0px;text-align: center;">
+                                                    Over {{total_courses_cnt}}
+                                                </h3>
+                                                <p style="text-align: center; font-size: 22px;">Online courses</p>
+                                                <a href="#" routerLink="/courses"
+                                                    class="btn btn-block btn-primary btn-lg"
+                                                    style="width: 170px;margin: 83px auto;" target="_blank" i18n>More
+                                                    courses</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </ngx-slick-carousel>
+                        <ng-template #nopromotions>
+                            <div class="text-center py-4">
+                                <p class="text-dark" i18n>No upcoming session.</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <ng-template #loadingPromotions>
+                        <div class="text-center py-4 text-dark">
+                            <i class="fas fa-spinner fa-spin fa-3x"></i>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <!-- Tab for English -->
+                <div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.EnglishInstructed}" role="tabpanel"
+                    aria-labelledby="english-tab">
+                    <div *ngIf="english_promotions; else loadingPromotions" class="slider_content">
+                        <ngx-slick-carousel *ngIf="isLoaded" class="carousel" #slickModal="slick-carousel"
+                            [config]="slideConfig" (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                            (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+                            <div ngxSlickItem *ngFor="let promotion of english_promotions" class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px; margin-top: 32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <app-course-card [data]="promotion"></app-course-card>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ngxSlickItem class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <div class="card course-box">
+                                            <div class="nicdark_section nicdark_position_relative">
+                                                <img alt="" class="nicdark_section card-img-top" style="height:0px;"
+                                                    src="https://bilinstudio-assets.s3.us-east-2.amazonaws.com/6017e890-0663-11ea-85f5-d5c31f233303.jpg">
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 style="margin-top: 78px; margin-bottom: 0px;text-align: center;">
+                                                    Over {{total_courses_cnt}}
+                                                </h3>
+                                                <p style="text-align: center; font-size: 22px;">Online courses</p>
+                                                <a href="#" routerLink="/courses"
+                                                    class="btn btn-block btn-primary btn-lg"
+                                                    style="width: 170px;margin: 83px auto;" target="_blank" i18n>More
+                                                    courses</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </ngx-slick-carousel>
+
+                        <ng-template #nopromotions>
+                            <div class="text-center py-4">
+                                <p class="text-dark" i18n>No upcoming session.</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <ng-template #loadingPromotions>
+                        <div class="text-center py-4 text-dark">
+                            <i class="fas fa-spinner fa-spin fa-3x"></i>
+                        </div>
+                    </ng-template>
+                </div>
+                <!-- Tab for Spanish-->
+                <div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.Spanish}" role="tabpanel"
+                    aria-labelledby="spanish-tab">
+                    <div *ngIf="spanish_promotions; else loadingPromotions" class="slider_content">
+                        <ngx-slick-carousel *ngIf="isLoaded" class="carousel" #slickModal="slick-carousel"
+                            [config]="slideConfig" (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                            (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+                            <div ngxSlickItem *ngFor="let promotion of spanish_promotions" class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <app-course-card [data]="promotion"></app-course-card>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ngxSlickItem class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <div class="card course-box">
+                                            <div class="nicdark_section nicdark_position_relative">
+                                                <img alt="" class="nicdark_section card-img-top" style="height:0px;"
+                                                    src="https://bilinstudio-assets.s3.us-east-2.amazonaws.com/6017e890-0663-11ea-85f5-d5c31f233303.jpg">
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 style="margin-top: 78px; margin-bottom: 0px;text-align: center;">
+                                                    Over {{total_courses_cnt}}
+                                                </h3>
+                                                <p style="text-align: center; font-size: 22px;">Online courses</p>
+                                                <a href="#" routerLink="/courses"
+                                                    class="btn btn-block btn-primary btn-lg"
+                                                    style="width: 170px;margin: 83px auto;" target="_blank" i18n>More
+                                                    courses</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </ngx-slick-carousel>
+                        <ng-template #nopromotions>
+                            <div class="text-center py-4">
+                                <p class="text-dark" i18n>No upcoming session.</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <ng-template #loadingPromotions>
+                        <div class="text-center py-4 text-dark">
+                            <i class="fas fa-spinner fa-spin fa-3x"></i>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <!-- Tab for Japanese -->
+                <div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.Japanese}" role="tabpanel"
+                    aria-labelledby="japanese-tab">
+                    <div *ngIf="japanese_promotions; else loadingPromotions" class="slider_content">
+                        <ngx-slick-carousel *ngIf="isLoaded" class="carousel" #slickModal="slick-carousel"
+                            [config]="slideConfig" (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                            (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+                            <div ngxSlickItem *ngFor="let promotion of japanese_promotions" class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px; margin-top: 32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <app-course-card [data]="promotion"></app-course-card>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ngxSlickItem class="slide">
+                                <div class="d-flex flex-row justify-content-space-around"
+                                    style="max-width: 1280px;  margin-top:32px;">
+                                    <div class="mr-3" style="max-width: 300px;">
+                                        <div class="card course-box">
+                                            <div class="nicdark_section nicdark_position_relative">
+                                                <img alt="" class="nicdark_section card-img-top" style="height:0px;"
+                                                    src="https://bilinstudio-assets.s3.us-east-2.amazonaws.com/6017e890-0663-11ea-85f5-d5c31f233303.jpg">
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 style="margin-top: 78px; margin-bottom: 0px;text-align: center;">
+                                                    Over {{total_courses_cnt}}
+                                                </h3>
+                                                <p style="text-align: center; font-size: 22px;">Online courses</p>
+                                                <a href="#" routerLink="/courses"
+                                                    class="btn btn-block btn-primary btn-lg"
+                                                    style="width: 170px;margin: 83px auto;" target="_blank" i18n>More
+                                                    courses</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </ngx-slick-carousel>
+
+                        <ng-template #nopromotions>
+                            <div class="text-center py-4">
+                                <p class="text-dark" i18n>No upcoming session.</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <ng-template #loadingPromotions>
+                        <div class="text-center py-4 text-dark">
+                            <i class="fas fa-spinner fa-spin fa-3x"></i>
+                        </div>
+                    </ng-template>
+                </div>
+                <!-- Tab for All -->
+                <!--<div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.All}" role="tabpanel"-->
+                <!--aria-labelledby="all-lessons-tab">-->
+                <!--<div *ngIf="all_lessons; else loadingPromotions" class="slider_content">-->
+                <!--<ngx-slick-carousel *ngIf="isLoaded" class="carousel" #slickModal="slick-carousel"-->
+                <!--[config]="slideConfig"-->
+                <!--(init)="slickInit($event)"-->
+                <!--(breakpoint)="breakpoint($event)"-->
+                <!--(afterChange)="afterChange($event)"-->
+                <!--(beforeChange)="beforeChange($event)">-->
+                <!--<div ngxSlickItem *ngFor="let promotion of all_lessons" class="slide">-->
+                <!--<div class="d-flex flex-row justify-content-space-around"-->
+                <!--style="max-width: 1280px; margin-top: 32px;">-->
+                <!--<div class="mr-3" style="max-width: 300px;">-->
+                <!--<app-course-card [data]="promotion"></app-course-card>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--<div ngxSlickItem class="slide">-->
+                <!--<div class="d-flex flex-row justify-content-space-around"-->
+                <!--style="max-width: 1280px;  margin-top:32px;">-->
+                <!--<div class="mr-3" style="max-width: 300px;">-->
+                <!--<div class="card course-box">-->
+                <!--<div class="nicdark_section nicdark_position_relative">-->
+                <!--<img alt="" class="nicdark_section card-img-top" style="height:0px;"-->
+                <!--src="https://bilinstudio-assets.s3.us-east-2.amazonaws.com/6017e890-0663-11ea-85f5-d5c31f233303.jpg">-->
+                <!--</div>-->
+                <!--<div class="card-body">-->
+                <!--<h3 style="margin-top: 78px; margin-bottom: 0px;text-align: center;">-->
+                <!--Over {{total_courses_cnt}}-->
+                <!--</h3>-->
+                <!--<p style="text-align: center; font-size: 22px;">Online courses</p>-->
+                <!--<a href="#" routerLink="/courses"-->
+                <!--class="btn btn-block btn-primary btn-lg"-->
+                <!--style="width: 170px;margin: 83px auto;" target="_blank" i18n>More-->
+                <!--courses</a>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+
+                <!--</div>-->
+                <!--</div>-->
+                <!--</ngx-slick-carousel>-->
+
+                <!--<ng-template #nopromotions>-->
+                <!--<div class="text-center py-4">-->
+                <!--<p class="text-dark" i18n>No upcoming session.</p>-->
+                <!--</div>-->
+                <!--</ng-template>-->
+                <!--</div>-->
+                <!--<ng-template #loadingPromotions>-->
+                <!--<div class="text-center py-4 text-dark">-->
+                <!--<i class="fas fa-spinner fa-spin fa-3x"></i>-->
+                <!--</div>-->
+                <!--</ng-template>-->
+                <!--</div>-->
+            </div>
+            <!--END tab-->
+        </div>
+        <!-- <div class="credit_explanation">
+            * 1 Credit = $1 USD
+        </div> -->
+        <!--<div class="nicdark_container nicdark_clearfix">-->
+        <!--<div class="container">-->
+        <!--<div class="row">-->
+        <!--<div class="col-md-4 offset-md-4">-->
+        <!--<a href="#" routerLink="/courses" class="btn btn-block btn-primary btn-lg" i18n>More courses</a>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+    </div>
+
+    <div class="section-dvm">
+        <div class="section-dvm-title">
+            <h2 i18n>What We Offer</h2>
+        </div>
+        <div class="container feature-section">
+            <div class="row">
+                <div class="col-md-4 col-12 d-flex flex-row justify-content-center align-items-center"><i
+                        class="fas fa-language mr-4"></i>
+                    <div class="nicdark_width_250" i18n>Integrating content and language learning in an immersive
+                        environment
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 d-flex flex-row justify-content-center align-items-center"><i
+                        class="fas fa-globe-asia mr-4"></i>
+                    <div class="nicdark_width_250" i18n>Connecting dedicated teachers and curious children across
+                        continents
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 d-flex flex-row justify-content-center align-items-center"><i
+                        class="fas fa-child mr-4"></i>
+                    <div class="nicdark_width_250" i18n>Developing children to be bilingual global citizens
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="testimonial">
+        <ngb-carousel [showNavigationIndicators]="false"
+            style="background-image: url(assets/img/home/testimonial.png); height: 400px" class="section-dvm dvm-full">
+            <ng-template ngbSlide *ngFor="let testinominal of testimonials; let i = index;">
+                <div class="section-dvm-title">
+                    <h2 i18n> What do our happy parents and students say?</h2>
+                </div>
+                <div class="testimonial-item block-with-text" id="testimonial-block-with-text{{i}}">
+                    {{truncateText(testinominal.testimony, i)}}
+                </div>
+                <div class="testimonial-item">
+                    {{testinominal.name}}
+                </div>
+                <!--<div class="d-flex justify-content-center">-->
+                <!--<img class="testimonial-img" src="assets/img/home/testimonial-cool.png"-->
+                <!--alt="Cool Testimonials from Parents"/>-->
+                <!--</div>-->
+            </ng-template>
+        </ngb-carousel>
+
+        <!--</div>-->
+    </div>
+
+    <div class="section-dvm dvm-full" id="package">
+        <div class="section-dvm-title">
+            <h2 i18n>Our Featured Packages</h2>
+        </div>
+        <div class="">
+            <div *ngIf="bundles; else loadingPackages">
+                <div class="card-deck featured_package_4">
+                    <div class="row">
+                        <div class="card course-box" style="border: 1px solid rgba(0, 0, 0, 0.125);"
+                            *ngFor="let bundle of bundles">
+                            <div class="nicdark_section nicdark_position_relative">
+                                <ng-template #placeholderThumbnail>
+                                    <img class="nicdark_section card-img-top" src="assets/img/courses/img2.png" alt="">
+                                </ng-template>
+                                <ng-template [ngIf]="!!bundle.course?.thumbnail" [ngIfElse]="placeholderThumbnail">
+                                    <img alt="" class="nicdark_section card-img-top"
+                                        [src]="bundle.course.thumbnail | s3Storage">
+                                </ng-template>
+                                <div
+                                    class="nicdark_bg_greydark_alpha_gradient_2 nicdark_position_absolute nicdark_left_0 nicdark_height_100_percentage nicdark_width_100_percentage nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <div class="course-card-thumbnail-bottom">
+                                        <div>
+                                            <i class="fas fa-tasks mr-2"></i>
+                                            <span>{{bundle.number_of_sessions}} <span i18n>sessions</span></span>
+                                        </div>
+                                        <div>
+                                            <i class="far fa-clock mr-2"></i>
+                                            <span>{{bundle.session_length | duration}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="nicdark_section nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <h3 class="" [appTranslate]="bundle.course.topic_ch">
+                                        {{bundle.course.topic}}</h3>
+                                    <h5 class="">
+                                        <a [appTranslate]="bundle.bundle_title_ch" href="#"
+                                            (click)="$event.preventDefault(); navigate(['/courses', bundle.course_id, 'package', bundle._id])">{{bundle.bundle_title
+                                            || ''}}</a>
+                                    </h5>
+                                    <div class="d-flex">
+                                        <a [href]="'/teachers/' + bundle.teacher._id" class="d-flex align-items-center"
+                                            (click)="$event.preventDefault(); navigate(['/teachers', bundle.teacher._id])">
+                                            <img [src]="bundle.teacher.profile_picture | s3Storage" width="36"
+                                                height="36" class="rounded-circle mr-2" alt="">
+                                            <span class="text-primary mb-0">{{bundle.teacher.name}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div *ngIf="(bundle.number_of_bundles * bundle.max_students_per_session - bundle.enrollment[0].length) <5"
+                                    class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-users mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session -
+                                            bundle.enrollment[0].length}} of
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session}} available
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <!--<i class="fas fa-dollar-sign mr-2"></i>-->
+                                        <img alt=""
+                                            class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"
+                                            width="20" src="assets/img/icons/icon-money.png">
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.tuition | creditsPrice: 'credits'}}
+                                        </p>
+                                    </div>
+                                    <div class="" style="float: right">
+                                        <a class="nicdark_color_white nicdark_bg_red nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                            style="float: right" [href]="'/course/' + bundle.course_id"
+                                            (click)="$event.preventDefault(); navigate('/courses/' + bundle.course_id + '/package/' +bundle._id)"
+                                            i18n>Details</a>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-user mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            i18n>Age {{bundle.course?.min_age}} - {{bundle.course?.max_age}} yr.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-calendar-alt mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{make_date_string(bundle.date_time)}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 20px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="isValidTime(bundle.date_time[0].time)">
+                                            {{'1970-01-01' + bundle.date_time[0].time | amLocal | amDateFormat:'h:mm
+                                            A'}}
+                                        </p>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="!isValidTime(bundle.date_time[0].time)">
+                                            <!-- {{bundle.date_time[0].time}} -->
+                                            Please contact us to schedule
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-deck featured_package_3">
+                    <div class="row">
+                        <div class="card course-box" style="border: 1px solid rgba(0, 0, 0, 0.125);"
+                            *ngFor="let bundle of bundles.slice(0, 3)">
+                            <div class="nicdark_section nicdark_position_relative">
+                                <ng-template #placeholderThumbnail>
+                                    <img class="nicdark_section card-img-top" src="assets/img/courses/img2.png" alt="">
+                                </ng-template>
+                                <ng-template [ngIf]="!!bundle.course?.thumbnail" [ngIfElse]="placeholderThumbnail">
+                                    <img alt="" class="nicdark_section card-img-top"
+                                        [src]="bundle.course.thumbnail | s3Storage">
+                                </ng-template>
+                                <div
+                                    class="nicdark_bg_greydark_alpha_gradient_2 nicdark_position_absolute nicdark_left_0 nicdark_height_100_percentage nicdark_width_100_percentage nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <div class="course-card-thumbnail-bottom">
+                                        <div>
+                                            <i class="fas fa-tasks mr-2"></i>
+                                            <span>{{bundle.number_of_sessions}} <span i18n>sessions</span></span>
+                                        </div>
+                                        <div>
+                                            <i class="far fa-clock mr-2"></i>
+                                            <span>{{bundle.session_length | duration}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="nicdark_section nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <h3 class="" [appTranslate]="bundle.course.topic_ch">
+                                        {{bundle.course.topic}}</h3>
+                                    <h5 class="">
+                                        <a [appTranslate]="bundle.bundle_title_ch" href="#"
+                                            (click)="$event.preventDefault(); navigate(['/courses', bundle.course_id, 'package', bundle._id])">{{bundle.bundle_title
+                                            || ''}}</a>
+                                    </h5>
+                                    <div class="d-flex">
+                                        <a [href]="'/teachers/' + bundle.teacher._id" class="d-flex align-items-center"
+                                            (click)="$event.preventDefault(); navigate(['/teachers', bundle.teacher._id])">
+                                            <img [src]="bundle.teacher.profile_picture | s3Storage" width="36"
+                                                height="36" class="rounded-circle mr-2" alt="">
+                                            <span class="text-primary mb-0">{{bundle.teacher.name}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-users mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session -
+                                            bundle.enrollment[0].length}} of
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session}} available
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <!--<i class="fas fa-dollar-sign mr-2"></i>-->
+                                        <img alt=""
+                                            class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"
+                                            width="20" src="assets/img/icons/icon-money.png">
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.tuition | creditsPrice: 'credits'}}
+                                        </p>
+                                    </div>
+                                    <div class="" style="float: right">
+                                        <a class="nicdark_color_white nicdark_bg_red nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                            style="float: right" [href]="'/course/' + bundle.course_id"
+                                            (click)="$event.preventDefault(); navigate('/courses/' + bundle.course_id + '/package/' +bundle._id)"
+                                            i18n>Details</a>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-user mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            i18n>Age {{bundle.course?.min_age}} - {{bundle.course?.max_age}} yr.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-calendar-alt mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{make_date_string(bundle.date_time)}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 20px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="isValidTime(bundle.date_time[0].time)">
+                                            {{'1970-01-01' + bundle.date_time[0].time | amLocal | amDateFormat:'h:mm
+                                            A'}}
+                                        </p>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="!isValidTime(bundle.date_time[0].time)">
+                                            {{bundle.date_time[0].time}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="card course-box" style="border: 1px solid rgba(0, 0, 0, 0.125);"
+                            *ngFor="let bundle of bundles.slice(3, 4)">
+                            <div class="nicdark_section nicdark_position_relative">
+                                <ng-template #placeholderThumbnail>
+                                    <img class="nicdark_section card-img-top" src="assets/img/courses/img2.png" alt="">
+                                </ng-template>
+                                <ng-template [ngIf]="!!bundle.course?.thumbnail" [ngIfElse]="placeholderThumbnail">
+                                    <img alt="" class="nicdark_section card-img-top"
+                                        [src]="bundle.course.thumbnail | s3Storage">
+                                </ng-template>
+                                <div
+                                    class="nicdark_bg_greydark_alpha_gradient_2 nicdark_position_absolute nicdark_left_0 nicdark_height_100_percentage nicdark_width_100_percentage nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <div class="course-card-thumbnail-bottom">
+                                        <div>
+                                            <i class="fas fa-tasks mr-2"></i>
+                                            <span>{{bundle.number_of_sessions}} <span i18n>sessions</span></span>
+                                        </div>
+                                        <div>
+                                            <i class="far fa-clock mr-2"></i>
+                                            <span>{{bundle.session_length | duration}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="nicdark_section nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <h3 class="" [appTranslate]="bundle.course.topic_ch">
+                                        {{bundle.course.topic}}</h3>
+                                    <h5 class="">
+                                        <a [appTranslate]="bundle.bundle_title_ch" href="#"
+                                            (click)="$event.preventDefault(); navigate(['/courses', bundle.course_id, 'package', bundle._id])">{{bundle.bundle_title
+                                            || ''}}</a>
+                                    </h5>
+                                    <div class="d-flex">
+                                        <a [href]="'/teachers/' + bundle.teacher._id" class="d-flex align-items-center"
+                                            (click)="$event.preventDefault(); navigate(['/teachers', bundle.teacher._id])">
+                                            <img [src]="bundle.teacher.profile_picture | s3Storage" width="36"
+                                                height="36" class="rounded-circle mr-2" alt="">
+                                            <span class="text-primary mb-0">{{bundle.teacher.name}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-users mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session -
+                                            bundle.enrollment[0].length}} of
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session}} available
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <!--<i class="fas fa-dollar-sign mr-2"></i>-->
+                                        <img alt=""
+                                            class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"
+                                            width="20" src="assets/img/icons/icon-money.png">
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.tuition | creditsPrice: 'credits'}}
+                                        </p>
+                                    </div>
+                                    <div class="" style="float: right">
+                                        <a class="nicdark_color_white nicdark_bg_red nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                            style="float: right" [href]="'/course/' + bundle.course_id"
+                                            (click)="$event.preventDefault(); navigate('/courses/' + bundle.course_id + '/package/' +bundle._id)"
+                                            i18n>Details</a>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-user mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            i18n>Age {{bundle.course?.min_age}} - {{bundle.course?.max_age}} yr.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-calendar-alt mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{make_date_string(bundle.date_time)}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 20px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="isValidTime(bundle.date_time[0].time)">
+                                            {{'1970-01-01' + bundle.date_time[0].time | amLocal | amDateFormat:'h:mm
+                                            A'}}
+                                        </p>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="!isValidTime(bundle.date_time[0].time)">
+                                            {{bundle.date_time[0].time}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card invisible" *ngFor="let empty of [1, 2]"></div>
+                    </div>
+                </div>
+                <div class="card-deck featured_package_2">
+                    <div class="row">
+                        <div class="card course-box" style="border: 1px solid rgba(0, 0, 0, 0.125);"
+                            *ngFor="let bundle of bundles.slice(0, 2)">
+                            <div class="nicdark_section nicdark_position_relative">
+                                <ng-template #placeholderThumbnail>
+                                    <img class="nicdark_section card-img-top" src="assets/img/courses/img2.png" alt="">
+                                </ng-template>
+                                <ng-template [ngIf]="!!bundle.course?.thumbnail" [ngIfElse]="placeholderThumbnail">
+                                    <img alt="" class="nicdark_section card-img-top"
+                                        [src]="bundle.course.thumbnail | s3Storage">
+                                </ng-template>
+                                <div
+                                    class="nicdark_bg_greydark_alpha_gradient_2 nicdark_position_absolute nicdark_left_0 nicdark_height_100_percentage nicdark_width_100_percentage nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <div class="course-card-thumbnail-bottom">
+                                        <div>
+                                            <i class="fas fa-tasks mr-2"></i>
+                                            <span>{{bundle.number_of_sessions}} <span i18n>sessions</span></span>
+                                        </div>
+                                        <div>
+                                            <i class="far fa-clock mr-2"></i>
+                                            <span>{{bundle.session_length | duration}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="nicdark_section nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <h3 class="" [appTranslate]="bundle.course.topic_ch">
+                                        {{bundle.course.topic}}</h3>
+                                    <h5 class="">
+                                        <a [appTranslate]="bundle.bundle_title_ch" href="#"
+                                            (click)="$event.preventDefault(); navigate(['/courses', bundle.course_id, 'package', bundle._id])">{{bundle.bundle_title
+                                            || ''}}</a>
+                                    </h5>
+                                    <div class="d-flex">
+                                        <a [href]="'/teachers/' + bundle.teacher._id" class="d-flex align-items-center"
+                                            (click)="$event.preventDefault(); navigate(['/teachers', bundle.teacher._id])">
+                                            <img [src]="bundle.teacher.profile_picture | s3Storage" width="36"
+                                                height="36" class="rounded-circle mr-2" alt="">
+                                            <span class="text-primary mb-0">{{bundle.teacher.name}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-users mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session -
+                                            bundle.enrollment[0].length}} of
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session}} available
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <!--<i class="fas fa-dollar-sign mr-2"></i>-->
+                                        <img alt=""
+                                            class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"
+                                            width="20" src="assets/img/icons/icon-money.png">
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.tuition | creditsPrice: 'credits'}}
+                                        </p>
+                                    </div>
+                                    <div class="" style="float: right">
+                                        <a class="nicdark_color_white nicdark_bg_red nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                            style="float: right" [href]="'/course/' + bundle.course_id"
+                                            (click)="$event.preventDefault(); navigate('/courses/' + bundle.course_id + '/package/' +bundle._id)"
+                                            i18n>Details</a>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-user mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            i18n>Age {{bundle.course?.min_age}} - {{bundle.course?.max_age}} yr.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-calendar-alt mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{make_date_string(bundle.date_time)}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 20px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="isValidTime(bundle.date_time[0].time)">
+                                            {{'1970-01-01' + bundle.date_time[0].time | amLocal | amDateFormat:'h:mm
+                                            A'}}
+                                        </p>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="!isValidTime(bundle.date_time[0].time)">
+                                            {{bundle.date_time[0].time}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="card course-box" style="border: 1px solid rgba(0, 0, 0, 0.125);"
+                            *ngFor="let bundle of bundles.slice(2, 4)">
+                            <div class="nicdark_section nicdark_position_relative">
+                                <ng-template #placeholderThumbnail>
+                                    <img class="nicdark_section card-img-top" src="assets/img/courses/img2.png" alt="">
+                                </ng-template>
+                                <ng-template [ngIf]="!!bundle.course?.thumbnail" [ngIfElse]="placeholderThumbnail">
+                                    <img alt="" class="nicdark_section card-img-top"
+                                        [src]="bundle.course.thumbnail | s3Storage">
+                                </ng-template>
+                                <div
+                                    class="nicdark_bg_greydark_alpha_gradient_2 nicdark_position_absolute nicdark_left_0 nicdark_height_100_percentage nicdark_width_100_percentage nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <div class="course-card-thumbnail-bottom">
+                                        <div>
+                                            <i class="fas fa-tasks mr-2"></i>
+                                            <span>{{bundle.number_of_sessions}} <span i18n>sessions</span></span>
+                                        </div>
+                                        <div>
+                                            <i class="far fa-clock mr-2"></i>
+                                            <span>{{bundle.session_length | duration}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="nicdark_section nicdark_padding_20 nicdark_box_sizing_border_box">
+                                    <h3 class="" [appTranslate]="bundle.course.topic_ch">
+                                        {{bundle.course.topic}}</h3>
+                                    <h5 class="">
+                                        <a [appTranslate]="bundle.bundle_title_ch" href="#"
+                                            (click)="$event.preventDefault(); navigate(['/courses', bundle.course_id, 'package', bundle._id])">{{bundle.bundle_title
+                                            || ''}}</a>
+                                    </h5>
+                                    <div class="d-flex">
+                                        <a [href]="'/teachers/' + bundle.teacher._id" class="d-flex align-items-center"
+                                            (click)="$event.preventDefault(); navigate(['/teachers', bundle.teacher._id])">
+                                            <img [src]="bundle.teacher.profile_picture | s3Storage" width="36"
+                                                height="36" class="rounded-circle mr-2" alt="">
+                                            <span class="text-primary mb-0">{{bundle.teacher.name}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-users mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session -
+                                            bundle.enrollment[0].length}} of
+                                            {{bundle.number_of_bundles *
+                                            bundle.max_students_per_session}} available
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <!--<i class="fas fa-dollar-sign mr-2"></i>-->
+                                        <img alt=""
+                                            class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"
+                                            width="20" src="assets/img/icons/icon-money.png">
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{bundle.tuition | creditsPrice: 'credits'}}
+                                        </p>
+                                    </div>
+                                    <div class="" style="float: right">
+                                        <a class="nicdark_color_white nicdark_bg_red nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                            style="float: right" [href]="'/course/' + bundle.course_id"
+                                            (click)="$event.preventDefault(); navigate('/courses/' + bundle.course_id + '/package/' +bundle._id)"
+                                            i18n>Details</a>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-user mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            i18n>Age {{bundle.course?.min_age}} - {{bundle.course?.max_age}} yr.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 5px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-calendar-alt mr-2"></i>
+                                        <p
+                                            class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8">
+                                            {{make_date_string(bundle.date_time)}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="nicdark_section" style="padding: 10px 20px 20px 20px">
+                                    <div class="nicdark_display_table nicdark_float_left">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="isValidTime(bundle.date_time[0].time)">
+                                            {{'1970-01-01' + bundle.date_time[0].time | amLocal | amDateFormat:'h:mm
+                                            A'}}
+                                        </p>
+                                        <p class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_8"
+                                            *ngIf="!isValidTime(bundle.date_time[0].time)">
+                                            {{bundle.date_time[0].time}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-template #loadingPackages>
+                <div class="text-center py-4 text-dark">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <div class="teachers-section">
+        <div class="section-dvm">
+            <div class="section-dvm-title">
+                <h2 i18n>Our Featured Teachers</h2>
+            </div>
+            <div class="nicdark_color_greydark nicdark_text_align_center section-dvm-description" i18n>
+                We are proud of our teachers. Our dedicated and talented teachers come from different parts of the world
+                and bring their own unique experiences, culture, and native tongue into our classroom. Get to know <a
+                    href="#" routerLink="/teachers">all of our teachers</a>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-6" *ngFor="let feature of features">
+                        <a href="#" [routerLink]="['/teachers', feature._id]" target="_blank">
+                            <div class="d-flex flex-column justify-content-center align-items-center mb-3">
+                                <img [src]="feature.profile_picture  | s3Storage" alt="Teacher Avatar" />
+                                <div class="mt-3">{{feature.name}}</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section-dvm">
+        <div class="section-dvm-title">
+            <h2 i18n>Our Partners</h2>
+        </div>
+        <div class="nicdark_color_greydark nicdark_text_align_center section-dvm-description" i18n>We are glad to work
+            with
+            other partner organizations who are equally dedicated to bring quality and creative online classes.
+        </div>
+        <div class="partners-logos row">
+            <div *ngFor="let partner of partners;" class="col-md-3">
+                <img [src]="partner.icon | s3Storage" [alt]="partner.name" />
+            </div>
+            <!--<img src="assets/img/partner/logo6.png" alt="partner logo"/>-->
+            <!--<img src="assets/img/partner/logo6.png" alt="partner logo"/>-->
+            <!--<img src="assets/img/partner/logo6.png" alt="partner logo"/>-->
+            <!--<img src="assets/img/partner/logo6.png" alt="partner logo"/>-->
+        </div>
+    </div>
+</div>

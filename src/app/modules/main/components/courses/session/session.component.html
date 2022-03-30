@@ -1,0 +1,385 @@
+<ng-template #nodata>
+    <div class="text-center py-5">
+        <p i18n>Nothing found.</p>
+    </div>
+</ng-template>
+
+<ng-template #loading>
+    <div style="min-height: 400px;padding-top: 200px;">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+
+<ng-template #loadingSmall>
+    <div class="text-center p-5">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+    </div>
+</ng-template>
+
+<!-- <div class="nicdark_section nicdark_background_size_cover nicdark_background_position_center_bottom">
+  <div class="nicdark_section">
+    <div class="nicdark_container nicdark_clearfix">
+      <div class="nicdark_section" style="height: 75px"></div>
+    </div>
+  </div>
+</div> -->
+
+<ng-template [ngIf]="lesson" [ngIfElse]="loading">
+    <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+    <!-- <div class="nicdark_section nicdark_height_30"></div> -->
+    <div class="session_detail nicdark_clearfix">
+        <div class="nicdark_padding_15 nicdark_box_sizing_border_box">
+            <div class="section-dvm">
+                <div class="course-top-intro">
+                    <h1 [appTranslate]="lesson.course?.topic_ch">{{lesson.course?.topic}}</h1>
+                    <!--<h4 class="h4">{{currentSession.startTime | amLocal | amDateFormat: 'll'}}</h4>-->
+                    <h4 class="h4">
+                        {{currentSession.startTime | amLocal | date: 'EEE, MMM d, y (z)'}}
+                    </h4>
+
+                    <h5>{{currentSession.startTime | amLocal | amDateFormat: 'HH:mm'}} - {{currentSession.endTime |
+                        amLocal | amDateFormat: 'HH:mm'}}</h5>
+                    <div class="nicdark_height_20"></div>
+                    <div class="" style="display: flex; flex-direction: row;">
+                        <div class="mr-4">
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <img alt="" class="nicdark_margin_right_10 nicdark_border_radius_100_percentage"
+                                     width="40" [src]="lesson.teacher.profile_picture | s3Storage">
+                            </div>
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="nicdark_font_size_13" i18n>Teacher</p>
+                                <h5 class="">
+                                    <a href="#"
+                                       [routerLink]="['/teachers', lesson.teacher_id]">{{lesson.teacher?.name}}</a>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <img alt="" class="nicdark_margin_right_10" width="30"
+                                     src="assets/img/icons/icon-category-grey.svg">
+                            </div>
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="nicdark_font_size_13" i18n>Category</p>
+                                <h5 class="">{{lesson.course?.category}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nicdark_height_20"></div>
+                </div>
+            </div>
+            <div class="nicdark_section nicdark_height_20"></div>
+            <!-- <div class="nicdark_section nicdark_position_relative">
+              <img alt="" class="nicdark_section" style="max-width: 100%;" [src]="lesson.course?.thumbnail | s3Storage">
+            </div> -->
+        </div>
+        <div class="section-dvm">
+            <div class="session-detail-section">
+                <div>
+                    <div class="nicdark_height_20"></div>
+                    <h2>Session information</h2>
+                    <div class="session-detail-text">
+                        <h5><span i18n>Subject</span>: <span [appTranslate]="currentSession.subject_ch">{{currentSession.subject}}</span>
+                        </h5>
+                        <h5><span i18n>Platform</span>: <span>{{lesson.course?.provider | titlecase}}</span></h5>
+                        <ng-template [ngIf]="lesson.course?.provider === 'zoom'">
+                            <h5><span i18n>Zoom link</span>: <span>{{currentSession.zoomUrl || '-'}}</span></h5>
+                            <h5><span i18n>Meeting ID</span>: <span>{{currentSession.zoomId || '-'}}</span></h5>
+                            <h5 *ngIf="currentSession.zoomPassword"><span i18n>Zoom Password</span>: <span>{{currentSession.zoomPassword || '-'}}</span></h5>
+                            <h5 *ngIf="currentSession.notes"><span i18n>Notes</span>: <span>{{currentSession.notes || '-'}}</span></h5>
+
+                        </ng-template>
+                        <ng-template [ngIf]="lesson.course?.provider === 'classin'">
+                            <p class="text-dark" i18n>We use classin app for this class. Contact learn@bilinacademy.com
+                                or WeChat: bilinstudio for instruction of how to join the class.</p>
+                        </ng-template>
+                        <ng-template [ngIf]="currentSession.notes">
+                            <h5>Notes</h5>
+                            <p class="text-dark" i18n>{{currentSession.notes}}</p>
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="nicdark_section nicdark_position_relative">
+                    <div class="nicdark_height_20"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>Course materials</h2>
+                        <div *ngIf="isTeacher || (isSchoolAdmin$ | async)" ngbDropdown class="d-inline-block">
+                            <button
+                                    [disabled]="isLoadingMaterials"
+                                    class="btn btn-sm btn-outline-primary"
+                                    ngbDropdownToggle
+                            >{{isLoadingMaterials ? 'Uploading...' : 'Upload materials'}}
+                            </button>
+                            <div ngbDropdownMenu>
+                                <button ngbDropdownItem (click)="uploadMaterials('file')" i18n>Upload from your
+                                    computer
+                                </button>
+                                <button ngbDropdownItem (click)="uploadMaterials('url')" i18n>Upload from URL</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nicdark_section nicdark_height_20"></div>
+                    <div class="nicdark_section">
+                        <div *ngIf="materials; else loadingSmall">
+                            <div *ngIf="materials.length; else nodata">
+                                <div *ngFor="let mat of materials"
+                                     class="nicdark_section nicdark_border_bottom_1_solid_grey nicdark_padding_15 ng-star-inserted">
+                                    <div class="nicdark_width_10_percentage nicdark_width_100_percentage_responsive nicdark_float_left">
+                                        <table style="font-size: 1.25rem">
+                                            <tr>
+                                                <td>
+                                                    <i class="nicdark_color_grey {{mat.url | materialtype}}"></i>
+                                                </td>
+                                                <td><span
+                                                        class="nicdark_color_grey nicdark_first_font nicdark_font_size_15 nicdark_margin_left_10">{{mat.extension}}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="nicdark_width_65_percentage nicdark_width_100_percentage_responsive nicdark_float_left">
+                                        <h4 class="nicdark_padding_5 nicdark_second_font">{{mat.description}}</h4>
+                                    </div>
+                                    <div class="d-flex justify-content-end nicdark_width_25_percentage nicdark_width_100_percentage_responsive nicdark_float_left nicdark_text_align_right nicdark_text_align_left_responsive nicdark_margin_top_5_responsive">
+                                        <div ngbDropdown>
+                                            <button
+                                                    data-toggle="dropdown"
+                                                    class="btn btn-sm btn-primary mr-2"
+                                                    ngbDropdownToggle
+                                                    i18n>PREVIEW
+                                            </button>
+                                            <div ngbDropdownMenu>
+                                                <a *ngIf="!mat.external" target="_blank" [href]="mat.url | s3Storage"
+                                                   ngbDropdownItem i18n>Download</a>
+                                                <a *ngIf="mat.external" target="_blank"
+                                                   [href]="'https://bilinstudio-assets.s3.us-east-2.amazonaws.com/' + mat.url"
+                                                   ngbDropdownItem i18n>Download from US</a>
+                                                <a *ngIf="mat.external" target="_blank"
+                                                   [href]="'https://bilinstudio-assets.s3.cn-north-1.amazonaws.com.cn/' + mat.url"
+                                                   ngbDropdownItem i18n>Download from China</a>
+                                            </div>
+                                        </div>
+                                        <button *ngIf="isTeacher || (isSchoolAdmin$ | async)"
+                                                (click)="deleteMaterial(mat._id)" class="btn btn-danger btn-sm" i18n>
+                                            DELETE
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nicdark_section nicdark_position_relative">start
+                    <div class="nicdark_height_20"></div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>Gallery</h2>
+                        <div *ngIf="isTeacher || (isSchoolAdmin$ | async)" ngbDropdown class="d-inline-block">
+                            <button [disabled]="isLoadingDrawings"
+                                    class="btn btn-sm btn-outline-primary"
+                                    (click)="uploadDrawings()">{{isLoadingDrawings ? 'Uploading...' : 'Upload
+                                drawings'}}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="gallery" *ngIf="drawings && drawings.length else nodata">
+                        <div class="gallery-wrapper">
+                            <ul>
+                                <li *ngFor="let draw of drawings">
+                                    <a href="#" (click)="$event.preventDefault(); activeDrawing$.next(draw)">
+                                        <img [src]="draw.url | s3Storage" alt="">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <hr>
+
+                        <div class="gallery-preview" *ngIf="activeDrawing$.asObservable() | async">
+                            <div class="my-3 d-flex justify-content-between align-items-center">
+                                <h5 class="h2 mb-0" *ngIf="(activeDrawing$.asObservable() | async)?.uploaded_by"><span
+                                        i18n>Drew by</span> {{(activeDrawing$ | async).uploaded_by.name}}</h5>
+
+                                <app-actions
+                                        [showReport]="true"
+                                        [showDelete]="(isSchoolAdmin$ | async) || ((activeDrawing$.asObservable() | async).uploaded_by._id === user._id)"
+                                        (onReport)="reportDrawing()"
+                                        (onDelete)="deleteDrawing()"
+                                >
+                                </app-actions>
+                            </div>
+                            <div class="gallery-preview-wrapper">
+                                <img [src]="(activeDrawing$.asObservable() | async)?.url | s3Storage" alt="">
+                            </div>
+                            <p class="mt-1">{{(activeDrawing$.asObservable() | async)?.description}}</p>
+
+                            <h4><strong i18n>Comments</strong></h4>
+
+                            <app-comments
+                                    [from]="user"
+                                    [to]="(activeDrawing$.asObservable() | async)?._id"
+                            ></app-comments>
+                        </div>
+                    </div>
+                </div>
+                <div class="nicdark_height_50"></div>
+                <app-single-sidebar [lesson]="lesson" [showSections]="false"></app-single-sidebar>
+            </div>
+        </div>
+
+
+        <!-- <div class="nicdark_container nicdark_clearfix">
+          <div class="nicdark_width_66_percentage nicdark_width_100_percentage_ipad_port nicdark_width_100_percentage_all_iphone nicdark_float_left">
+            <div class="nicdark_section nicdark_padding_15 nicdark_box_sizing_border_box">
+              <h1 [appTranslate]="lesson.course?.topic_ch">{{lesson.course?.topic}}</h1>
+              <h3>{{currentSession.startTime | amLocal | amDateFormat: 'll'}}</h3>
+              <h5>{{currentSession.startTime | amLocal | amDateFormat: 'HH:mm'}} - {{currentSession.endTime | amLocal | amDateFormat: 'HH:mm'}}</h5>
+              <div class="nicdark_section nicdark_height_20"></div>
+              <div class="nicdark_float_left mr-4">
+                <div class="nicdark_display_table nicdark_float_left">
+                  <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                    <img alt="" class="nicdark_margin_right_10 nicdark_border_radius_100_percentage" width="40" src="assets/img/avatar/avatar-chef-1.png">
+                  </div>
+                  <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                    <p class="nicdark_font_size_13" i18n>Teacher</p>
+                    <div class="nicdark_section nicdark_height_5"></div>
+                    <h5 class="">
+                      <a href="#" [routerLink]="['/teachers', lesson.teacher_id]">{{lesson.teacher?.name}}</a>
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              <div class="nicdark_float_left">
+                <div class="nicdark_section nicdark_height_5"></div>
+                <div class="nicdark_display_table nicdark_float_left">
+                  <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                    <img alt="" class="nicdark_margin_right_10" width="30" src="assets/img/icons/icon-category-grey.svg">
+                  </div>
+                  <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                    <p class="nicdark_font_size_13" i18n>Category</p>
+                    <div class="nicdark_section nicdark_height_5"></div>
+                    <h5 class="">{{lesson.course?.category}}</h5>
+                  </div>
+                </div>
+              </div>
+              <div class="nicdark_section nicdark_height_50"></div>
+              <div class="nicdark_section nicdark_position_relative">
+                <h3><strong i18n>Session information</strong></h3>
+                <h5><span i18n>Subject</span>: <strong [appTranslate]="currentSession.subject_ch">{{currentSession.subject}}</strong></h5>
+                <h5><span i18n>Provider</span>: <strong>{{lesson.course?.provider | titlecase}}</strong></h5>
+                <ng-template [ngIf]="lesson.course?.provider === 'zoom'">
+                  <h6><span i18n>Zoom link</span>: <strong>{{currentSession.zoomUrl || '-'}}</strong></h6>
+                  <h6><span i18n>Meeting ID</span>: <strong>{{currentSession.zoomId || '-'}}</strong></h6>
+                </ng-template>
+                <ng-template [ngIf]="lesson.course?.provider === 'classin'">
+                  <p class="text-dark" i18n>We use classin app for this class. Contact learn@bilinacademy.com or WeChat: bilinstudio for instruction of how to join the class.</p>
+                </ng-template>
+              </div>
+              <div class="nicdark_section nicdark_height_50"></div>
+              <div class="nicdark_section nicdark_position_relative">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h3><strong i18n>Course materials</strong></h3>
+                  <div *ngIf="isTeacher || (isSchoolAdmin$ | async)" ngbDropdown class="d-inline-block">
+                      <button
+                        [disabled]="isLoadingMaterials"
+                        class="btn btn-sm btn-outline-primary"
+                        ngbDropdownToggle
+                        >{{isLoadingMaterials ? 'Uploading...' : 'Upload materials'}}</button>
+                      <div ngbDropdownMenu>
+                        <button ngbDropdownItem (click)="uploadMaterials('file')" i18n>Upload from your computer</button>
+                        <button ngbDropdownItem (click)="uploadMaterials('url')" i18n>Upload from URL</button>
+                      </div>
+                    </div>
+                </div>
+                <div class="nicdark_section nicdark_height_30"></div>
+                <div class="nicdark_section">
+                  <div *ngIf="materials; else loadingSmall">
+                    <div *ngIf="materials.length; else nodata">
+                      <div *ngFor="let mat of materials" class="nicdark_section nicdark_border_top_1_solid_grey nicdark_padding_15 nicdark_box_sizing_border_box">
+                        <div class="nicdark_width_10_percentage nicdark_width_100_percentage_responsive nicdark_float_left">
+                          <table style="font-size: 1.25rem">
+                            <tr>
+                              <td>
+                                <i class="nicdark_color_grey {{mat.url | materialtype}}"></i>
+                              </td>
+                              <td><span class="nicdark_color_grey nicdark_first_font nicdark_font_size_15 nicdark_margin_left_10">{{mat.extension}}</span></td>
+                            </tr>
+                          </table>
+                        </div>
+                        <div class="nicdark_width_65_percentage nicdark_width_100_percentage_responsive nicdark_float_left">
+                          <h4 class="nicdark_padding_5 nicdark_second_font">{{mat.description}}</h4>
+                        </div>
+                        <div class="d-flex nicdark_width_25_percentage nicdark_width_100_percentage_responsive nicdark_float_left nicdark_text_align_right nicdark_text_align_left_responsive nicdark_margin_top_5_responsive">
+                          <div ngbDropdown>
+                            <button
+                              data-toggle="dropdown"
+                              class="btn btn-sm btn-primary mr-2"
+                              ngbDropdownToggle
+                              i18n>PREVIEW</button>
+                            <div ngbDropdownMenu>
+                              <a *ngIf="!mat.external" target="_blank" [href]="mat.url | s3Storage" ngbDropdownItem i18n>Download</a>
+                              <a *ngIf="mat.external" target="_blank" [href]="'https://bilinstudio-assets.s3.us-east-2.amazonaws.com/' + mat.url" ngbDropdownItem i18n>Download from US</a>
+                              <a *ngIf="mat.external" target="_blank" [href]="'https://bilinstudio-assets.s3.cn-north-1.amazonaws.com.cn/' + mat.url" ngbDropdownItem i18n>Download from China</a>
+                            </div>
+                          </div>
+                          <button *ngIf="isTeacher || (isSchoolAdmin$ | async)" (click)="deleteMaterial(mat._id)" class="btn btn-danger btn-sm" i18n>DELETE</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="nicdark_section nicdark_height_50"></div>
+              <div class="nicdark_section nicdark_position_relative">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h3><strong i18n>Gallery</strong></h3>
+                  <button
+                    [disabled]="isLoadingDrawings"
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="uploadDrawings()">{{isLoadingDrawings ? 'Uploading...' : 'Upload drawings'}}</button>
+                </div>
+
+                <div class="gallery" *ngIf="drawings && drawings.length else nodata">
+                  <div class="gallery-wrapper">
+                    <ul>
+                      <li *ngFor="let draw of drawings">
+                        <a href="#" (click)="$event.preventDefault(); activeDrawing$.next(draw)">
+                          <img [src]="draw.url | s3Storage" alt="">
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <hr>
+
+                  <div class="gallery-preview" *ngIf="activeDrawing$.asObservable() | async">
+                    <div class="my-3 d-flex justify-content-between align-items-center">
+                      <h5 class="h2 mb-0" *ngIf="(activeDrawing$.asObservable() | async)?.uploaded_by"><span i18n>Drew by</span> {{(activeDrawing$ | async).uploaded_by.name}}</h5>
+
+                      <app-actions
+                        [showReport]="true"
+                        [showDelete]="(isSchoolAdmin$ | async) || ((activeDrawing$.asObservable() | async).uploaded_by._id === user._id)"
+                        (onReport)="reportDrawing()"
+                        (onDelete)="deleteDrawing()"
+                      >
+                      </app-actions>
+                    </div>
+                    <div class="gallery-preview-wrapper">
+                      <img [src]="(activeDrawing$.asObservable() | async)?.url | s3Storage" alt="">
+                    </div>
+                    <p class="mt-1">{{(activeDrawing$.asObservable() | async)?.description}}</p>
+
+                    <h4><strong i18n>Comments</strong></h4>
+
+                    <app-comments
+                      [from]="user"
+                      [to]="(activeDrawing$.asObservable() | async)?._id"
+                      ></app-comments>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="nicdark_section nicdark_height_50"></div>
+          </div>
+          <app-single-sidebar [lesson]="lesson" [showSections]="false"></app-single-sidebar>
+        </div> -->
+    </div>
+</ng-template>

@@ -1,0 +1,72 @@
+.nicdark_tabs {
+  ul li a.active {
+    color: #b78e57;
+  }
+}
+
+.nicdark_background_size_cover {
+  background-color: #E1DB9C;
+}
+
+.nicdark_navigation_2 li a {
+  color: white;
+}
+
+.table-hover {
+  &:hover {
+    cursor: pointer;
+    background-color: #f1f1f1;
+  }
+}
+
+h4 {
+  font-size: 18px;
+}
+
+.table-inside {
+  padding-left: 2rem;
+
+  tr, td, th {
+    padding-right: .5rem !important;
+    padding-left: .5rem !important;
+
+    & h3, & p {
+      font-size: .8rem !important;
+    }
+  }
+}
+
+#purchase_credits {
+  .nicdark_background_size_cover {
+    background-color: #E1DB9C;
+  }
+
+  .main {
+    min-height: calc(100vh - 75px - 56px - 61px - 48px);
+  }
+
+  .card {
+    text-align: center;
+    max-width: 600px;
+    margin: auto;
+
+    @media (max-width: 767px) {
+      max-width: 100%;
+    }
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  form {
+    width: 80%;
+    margin: auto;
+  }
+
+}

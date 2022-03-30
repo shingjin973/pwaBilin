@@ -1,0 +1,8 @@
+<div *ngIf="file" class="image-wrapper position-relative">
+  <img [src]="file | s3Storage" alt="">
+  <a href="#" (click)="$event.preventDefault(); delete()" class="delete-link">
+    <i class="fas fa-times fa-4x text-white"></i>
+  </a>
+</div>
+
+<file-drop *ngIf="!file" [showBrowseBtn]="true" (onFileDrop)="dropped($event)"></file-drop>

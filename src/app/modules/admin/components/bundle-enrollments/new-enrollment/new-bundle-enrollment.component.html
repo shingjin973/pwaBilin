@@ -1,0 +1,26 @@
+<div class="card shadow card-noborder">
+    <div class="card-body">
+        <div class="card-titlebox">
+            <h1 class="card-title">New Package enrollment</h1>
+            <div></div>
+        </div>
+        <div class="card-content">
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <mat-form-field class="w-100">
+                    <mat-select formControlName="student_family" placeholder="Student">
+                        <mat-option>
+                            <ngx-mat-select-search [noEntriesFoundLabel]="'No matching found'"
+                                                   [placeholderLabel]="'Find student family...'"
+                                                   [formControl]="studentForm">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let student of students$ | async" [value]="student">
+                            #{{student.auto_id}} {{student.name}} ({{student.children.name}})
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button [disabled]="form.invalid || isLoading" class="btn btn-block btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+.nicdark_background_size_cover {
+  background-color: #e1db9c;
+}
+.welcome p {
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 37px;
+  /* identical to box height */
+  letter-spacing: 0.15px;
+  color: #ffffff;
+  padding-top: 18px;
+}
+.account {
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 37px;
+  /* identical to box height */
+  letter-spacing: 0.15px;
+  color: #000000;
+}
+
+.main {
+  clear: both;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 20px;
+}
+.item {
+  display: flex;
+  width: 665px;
+  height: 100px;
+  background: #ffffff;
+  border-radius: 20px;
+}
+.item-content {
+  width: 92%;
+}
+.item-header {
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 25px;
+  /* identical to box height */
+  color: #000000;
+  margin-top: 20px;
+  margin-left: 24px;
+}
+.item-subheader {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: #000000;
+  opacity: 0.6;
+  margin-left: 24px;
+}
+.item-right img{
+  width: 13px;
+  margin-top: 38px;
+}
+.content {
+  background: #f7f6f6;
+  min-height: 600px;
+}
+form {
+  margin: 1rem auto 0;
+  max-width: 600px;
+
+  @media (max-width: 767px) {
+    max-width: 100%;
+  }
+}

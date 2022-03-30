@@ -1,0 +1,51 @@
+<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+<ng-template #loading>
+        <mat-spinner></mat-spinner>
+</ng-template>
+<div class="nicdark_section py-4 content ng-star-inserted">
+    <div class="share nicdark_container">
+        <p class="share-text">Transactions</p>
+        <div class="commission">
+            <p class="balance">Total Commission:</p>
+            <span class="balance_amount">&nbsp; ${{totalCommissions*promoterRate/100 || '0'}}</span>
+        </div>
+        <div class="commission">
+            <p class="balance">Paid Commission:</p>
+            <span class="balance_amount">&nbsp; ${{paidCommision}}</span>
+        </div>
+        <div class="commission">
+            <p class="balance">Non Paid Commission:</p>
+            <span class="balance_amount">&nbsp; ${{totalCommissions*promoterRate/100 -paidCommision}}</span>
+        </div>      
+    </div>
+    <div style="clear: both;"></div>
+    <div *ngIf="myPromoterUsers; else loading">
+        <div *ngIf="myPromoterUsers.length; else nodata">   
+            <table class="table">
+                <thead>
+                <tr>                
+                    <th>User Name</th>
+                    <th>Date</th>
+                    <th>Credits Purchased</th>
+                    <th>Commissions</th>            
+                </tr>
+                </thead>
+                <tbody>               
+                <tr *ngFor="let user of myPromoterUsers">                   
+                    <td class="userName"> {{user.username}}</td>
+                    <td>{{user.date | amLocal | date: 'EEE, MMM d, y'}}</td>
+                    <td  class="amount">${{user.totalamount}}</td>
+                    <td class="amount">
+                        ${{user.totalamount*promoterRate/100}}
+                    </td>                   
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ng-template #nodata>
+    <div class="p-5 text-center">
+        <span class="h3">No data</span>
+    </div>
+</ng-template>

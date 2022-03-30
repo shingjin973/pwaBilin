@@ -1,0 +1,120 @@
+<div class="side-bar nicdark_width_100_percentage_ipad_port nicdark_width_100_percentage_all_iphone">
+    <div class="nicdark_section nicdark_padding_15 nicdark_box_sizing_border_box">
+        <div class="card mb-4" *ngIf="showSections">
+
+            <div class="card-body course-info">
+                <img class="mb-2" alt="" [src]="bundle.course?.thumbnail | s3Storage" style="width: 100%;">
+                <ul>
+                    <li style="margin: 0px; padding: 0.3rem 0;">
+                        <div class="d-flex"><i class="fas fa-tasks mr-1" style="color: #000000"></i><span i18n> Sessions</span></div>
+                        <div class="card-detail-text">{{bundle.number_of_sessions}}</div>
+                    </li>
+                    <li style="margin: 0px; padding: 0.3rem 0;">
+                        <div class="d-flex"><i class="far fa-clock mr-1" style="color: #000000"></i><span i18n> Duration</span></div>
+                        <div class="card-detail-text">{{bundle.session_length | duration}}</div>
+                    </li>
+                    <li style="margin: 0px; padding: 0.3rem 0;">
+                        <div class="d-flex"><i class="fas fa-child mr-1" style="color: #000000"></i><span i18n> Age</span></div>
+                        <div class="card-detail-text">{{bundle.course?.min_age}} - {{bundle.course?.max_age}} yr.</div>
+                    </li>
+                    <li style="margin: 0px; padding: 0.3rem 0;">
+                        <div class="" style="display: flex !important;">
+                            <img alt=""
+                                                 class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"
+                                                 width="30" height="30"
+                                                 src="assets/img/icons/icon-money.png" style="margin-right: 0px;">
+                            <span i18n> Tuition</span></div>
+                        <div class="card-detail-text">
+                            <ng-template [ngIf]="bundle.tuition === 0" [ngIfElse]="tuition">
+                                <span i18n>FREE</span>
+                            </ng-template>
+                            <ng-template #tuition>
+                                {{bundle.tuition | creditsPrice: 'credits'}}
+
+                            </ng-template>
+                        </div>
+                    </li>
+                    <li style="margin: 0px; padding: 0.3rem 0;">
+                        <div class="" style="display: flex !important;">
+                            <!--<i class="fas fa-users mr-1"></i>-->
+
+                            <img alt=""
+                                 class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"
+                                 width="30" height="30"
+                                 src="assets/img/seat.png" style="margin-right: 0px;">
+                            <span i18n> Seats/Session</span></div>
+                        <div class="card-detail-text">
+                            Min {{bundle.min_students_per_session}}, Max {{bundle.max_students_per_session}}
+                        </div>
+                    </li>
+                    <!--<li style="margin: 0px; padding: 0.3rem 0;">-->
+                        <!--<div class="" style="display: flex !important;">-->
+                            <!--&lt;!&ndash;<i class="fas fa-users mr-1"></i>&ndash;&gt;-->
+                            <!--<img alt=""-->
+                                 <!--class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"-->
+                                 <!--width="23"-->
+                                 <!--src="assets/img/icons/icon-max.png">-->
+                            <!--<span i18n> Max Seats/Session</span></div>-->
+                        <!--<div class="card-detail-text">-->
+                            <!--{{bundle.min_students_per_session}}-->
+                        <!--</div>-->
+                    <!--</li>-->
+                    <li style="margin: 0px; padding: 0.3rem 0;">
+                        <div class="d-flex"><i class="fas fa-language mr-1" style="color: #000000"></i><span
+                                i18n> Language of Instruction</span></div>
+                        <div class="card-detail-text">{{bundle.course?.language}}</div>
+                    </li>
+                    <li style="margin: 0px; padding: 0.3rem 0;">
+                        <div class="d-flex">
+                            <i class="fab fa-connectdevelop mr-1" style="color: #000000"></i>
+                            <span i18n> Language Level</span>
+                        </div>
+                        <div class="card-detail-text">{{bundle.course?.language_skill | levels}}</div>
+                    </li>
+                    <li style="margin: 0px; padding: 0.3rem 0;">
+                        <div class="d-flex"><i class="fas fa-users mr-1" style="color: #000000"></i></div>
+                        <div class="card-detail-text">
+                            {{bundle.number_of_bundles * bundle.max_students_per_session - bundle.enrollment[0].length}} available
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card" *ngIf="showSections">
+            <div class="card-body">
+                <!--<div>-->
+                <!--<div class="card-title">Course Materials</div>-->
+                <!--<ul *ngIf="bundle.course.material">-->
+                <!--{{bundle.course.material}}-->
+                <!--</ul>-->
+                <!--<div *ngIf="!bundle.course.material" i18n>-->
+                <!--N/A-->
+                <!--</div>-->
+                <!--</div>-->
+                <div>
+                    <div class="card-title">Platform</div>
+                    <div *ngIf="bundle.course.provider == 'zoom'">
+                        <img class="nicdark_width_30 mr-2" src="assets/img/zoom.png">
+                        <span>Zoom</span>
+                    </div>
+                    <div *ngIf="bundle.course.provider == 'classin'">
+                        <img class="nicdark_width_30 mr-2" src="assets/img/ClassIn.png" width="50px;">
+                        <span>Classin</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="card-title" *ngIf="bundle.course.provider == 'zoom'">
+                        <a href="#" (click)="$event.preventDefault(); navigate('/faq')" style="cursor: pointer" i18n>How
+                            to take the class</a>
+                    </div>
+                    <div class="card-title" *ngIf="bundle.course.provider == 'classin'">
+                        <a href="#" (click)="$event.preventDefault(); navigate('/faq')" style="cursor: pointer" i18n>How
+                            to take the class</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="nicdark_section nicdark_height_50"></div>
+</div>

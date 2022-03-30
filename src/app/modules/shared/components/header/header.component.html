@@ -1,0 +1,228 @@
+<!--START menu responsive-->
+<div @sidebar *ngIf="showSidebar"
+     class="nicdark_navigation_2_sidebar_content nicdark_padding_40 nicdark_box_sizing_border_box nicdark_overflow_hidden nicdark_overflow_y_auto nicdark_transition_all_08_ease nicdark_bg_green nicdark_height_100_percentage nicdark_position_fixed nicdark_width_100_percentage nicdark_z_index_9">
+    <a href="#" (click)="$event.preventDefault(); showSidebar = false">
+        <img alt="" width="25"
+             class="nicdark_close_navigation_2_sidebar_content nicdark_cursor_pointer nicdark_right_20 nicdark_top_20 nicdark_position_absolute"
+             src="assets/img/icons/icon-close-white.svg">
+    </a>   
+    <div class="nicdark_navigation_2_sidebar">        
+        <ul>
+            <li>
+                <a href="/" (click)="$event.preventDefault(); showSidebar = false; navigate('/')" i18n>HOME</a>
+            </li>
+            <li>
+                <a href="/courses/1" (click)="$event.preventDefault(); showSidebar = false; navigate('/courses/1')" i18n>CLASSES</a>
+            </li>            
+            <li>
+                <a href="/presales" (click)="$event.preventDefault(); showSidebar = false; navigate('/packages/1')" i18n>PACKAGES</a>
+            </li>
+            <li>
+                <a href="/teachers" (click)="$event.preventDefault(); showSidebar = false; navigate('/teachers')" i18n>TEACHERS</a>
+            </li>
+            <!--<li>-->
+                <!--<a href="/about-us" (click)="$event.preventDefault(); showSidebar = false; navigate('/about-us')" i18n>ABOUT</a>-->
+            <!--</li>-->
+            <li *ngIf="(isLoggedIn | async)">
+                <a href="#" (click)="$event.preventDefault();" i18n>
+                    <i class="fas fa-user-circle mr-1 fa-2x"></i>
+                    MY ACCOUNT
+                </a>
+                <ul class="nicdark_sub_menu">
+                    <li><a href="#" (click)="$event.preventDefault(); navigate('/profile')" i18n>My Account</a></li>
+                    <li><a href="#" *ngIf="isPromoter | async " (click)="$event.preventDefault(); navigate('/profile/promoter')" i18n>Promoter</a></li>
+                    <li><a href="#" (click)="$event.preventDefault(); navigate('/profile/settings')" i18n>Settings</a>
+                    </li>
+                    <li><a href="#" (click)="$event.preventDefault(); logout();" i18n>Logout</a></li>
+                </ul>
+            </li>
+            <li *ngIf="(isLoggedIn | async) && (isStudent | async)">
+                <a href="#" (click)="$event.preventDefault(); navigate('/profile/checkout')" i18n>
+                    <i class="fa fa-shopping-cart" style="color: #ffffff; padding-left: 5px;"></i> Checkout
+                </a>
+            </li>
+            <li *ngIf="(isAdmin | async)">
+                <a href="#" (click)="$event.preventDefault(); navigate('/admin/')" i18n>
+                    <i class="fas fa-unlock-alt mr-1"></i>
+                    ADMIN
+                </a>
+            </li>
+            <li *ngIf="!(isLoggedIn | async)">
+                <a (click)="$event.preventDefault(); navigate('/authentication/signin')" href="#" i18n>
+                    <i class="fas fa-user mr-1"></i>
+                    LOGIN
+                </a>
+            </li>
+            <li *ngIf="!(isLoggedIn | async)">
+                <a (click)="$event.preventDefault(); navigate('/authentication/signup')" href="#" i18n>
+                    <i class="fas fa-unlock mr-1"></i>
+                    REGISTER
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i class="fas fa-globe"></i>
+                    <span i18n> LANGUAGES</span>
+                    <ul class="nicdark_sub_menu">
+                        <li><a href="#" (click)="$event.preventDefault(); changeLang('en')" i18n>English</a></li>
+                        <li><a href="#" (click)="$event.preventDefault(); changeLang('ch')" i18n>中文</a></li>
+                    </ul>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--END menu responsive-->
+<!--Header Header-->
+<div class="nicdark_section desktop header">
+    <div class="speaker" *ngIf="!(isLoggedIn | async)">
+        <div class="get_credit">
+               <img style="vertical-align:middle" width="30" src="assets/img/speaker.png">
+               <span class="get_credit_text" i18n>
+                   <a href="#" (click)="$event.preventDefault(); navigate('/authentication/signup')">
+                    Get $20 credits instantly by signing up!</a></span> 
+        </div>     
+    </div>       
+    <div class="nicdark_section" style="background-color: #28B7A8;">
+        <!--start nicdark_container-->
+        <div class="nicdark_container d-flex align-items-end justify-content-between">
+
+            <div class="nicdark_padding_botttom_10 nicdark_padding_top_10 nicdark_text_align_center_responsive d-flex align-items-end">
+                <div class="nicdark_navigation_top_header_2 mb-2">
+                    <ul>
+                        <li>
+                            <a href="/" (click)="$event.preventDefault(); navigate('/')" i18n>HOME</a>
+                        </li>
+                        <li>
+                            <a href="/courses/1" (click)="$event.preventDefault(); navigate('/courses/1')" i18n>CLASSES</a>
+                        </li>
+                        <li>
+                            <a href="/presales" (click)="$event.preventDefault(); navigate('/packages/1')" i18n>PACKAGES</a>
+                        </li>
+                        <li>
+                            <a href="/teachers" (click)="$event.preventDefault(); navigate('/teachers')"
+                               i18n>TEACHERS</a>
+                        </li>                       
+                        <li>
+                            <a href="/faq" (click)="$event.preventDefault(); navigate('/faq')" i18n>FAQ</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nicdark_padding_botttom_10 nicdark_padding_top_10 nicdark_text_align_center_responsive d-flex align-items-end"
+                 style="margin-left: -30px;" *ngIf="!(isLoggedIn | async)">
+                <a class="mr-5" href="#" (click)="$event.preventDefault(); navigate('/')">
+                    <!--<img src="assets/img/logos/logo.png" alt="Bilin Studio Logo" height="65">-->
+                    <img src="assets/img/logos/website log.png" alt="Bilin Studio Logo" height="65">
+
+                </a>
+            </div>
+            <div class="nicdark_padding_botttom_10 nicdark_padding_top_10 nicdark_text_align_center_responsive d-flex align-items-end"
+                 style="margin-left: -22px;" *ngIf="(isLoggedIn | async)">
+                <a class="mr-5" href="#" (click)="$event.preventDefault(); navigate('/')">
+                    <!--<img src="assets/img/logos/logo.png" alt="Bilin Studio Logo" height="65">-->
+                    <img src="assets/img/logos/website log.png" alt="Bilin Studio Logo" height="65">
+
+                </a>
+            </div>
+            <div class="nicdark_padding_botttom_10 nicdark_padding_top_10 nicdark_text_align_center_responsive d-flex align-items-end">
+                <div class="nicdark_navigation_top_header_2 mb-2">
+                    <ul>
+                        <li>
+                            <a class=" nicdark_line_height_18 mr-1" href="#" i18n>LANGUAGE</a>
+                            <ul class="nicdark_sub_menu">
+                                <li><a href="#" (click)="$event.preventDefault(); changeLang('en')" i18n>English</a>
+                                </li>
+                                <li><a href="#" (click)="$event.preventDefault(); changeLang('ch')" i18n>中文</a></li>
+                            </ul>
+                            <i class="fas fa-caret-down" style="color: #fff"></i>
+                        </li>
+                        <li *ngIf="(isLoggedIn | async)">
+                            <a href="#" (click)="$event.preventDefault();" i18n>
+                                MY ACCOUNT
+                            </a>
+                            <ul class="nicdark_sub_menu">
+                                <li>
+                                    <a href="#" (click)="$event.preventDefault(); navigate('/profile')" i18n>
+                                        My Account
+                                    </a>
+                                </li>
+                                <li *ngIf="isPromoter | async"><a href="#"  (click)="$event.preventDefault(); navigate('/profile/promoter')" i18n>Promoter</a></li>
+                                <li>
+                                    <a href="#" (click)="$event.preventDefault(); navigate('/profile/settings')" i18n>
+                                        Settings
+                                    </a>
+                                    <i class="fa fa-cog" style="color: #ffffff; padding-left: 5px;"></i>
+                                </li>
+                                <li>
+                                    <a href="#" (click)="$event.preventDefault(); logout();" i18n>Log out</a>
+                                    <i class="fa fa-sign-out-alt" style="color: #ffffff; padding-left: 5px;"></i>
+                                </li>
+                            </ul>
+                        </li>
+                        <li *ngIf="(isLoggedIn | async) && (isStudent | async)">
+                            <a href="#" (click)="$event.preventDefault(); navigate('/profile/checkout')">
+                                <i class="fa fa-shopping-cart" style="color: #ffffff; padding-left: 5px;"></i>
+                            </a>
+                        </li>
+                        <li *ngIf="(isAdmin | async)">
+                            <a href="#" (click)="$event.preventDefault(); navigate('/admin/')" i18n>
+                                ADMIN
+                            </a>
+                        </li>
+                        <li *ngIf="!(isLoggedIn | async)">
+                            <a (click)="$event.preventDefault(); navigate('/authentication/signin')" href="#" i18n>
+                                LOGIN
+                            </a>
+                        </li>
+                        <li *ngIf="!(isLoggedIn | async)">
+                            <button (click)="$event.preventDefault(); navigate('/authentication/signup')" href="#" i18n
+                                    style="border: 2px solid #fff; border-radius: 6px;font-size:13px; background: transparent; color:#fff">
+                                Join Now
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Mobile Header-->
+<div class="nicdark_section mobile header">
+    <div class="nicdark_section" style="background-color: #28B7A8;">
+        <!--start nicdark_container-->
+        <div class="nicdark_container d-flex align-items-end justify-content-between">
+            <div class="nicdark_padding_botttom_10 nicdark_padding_top_10 nicdark_text_align_center_responsive d-flex align-items-end">
+                <a class="mr-3" href="#" (click)="$event.preventDefault(); navigate('/')">
+                    <img src="assets/img/logos/website log.png" alt="Bilin Studio Logo" height="65">
+                </a>
+            </div>
+            <!-- <div class="nicdark_padding_botttom_10 nicdark_padding_top_10 nicdark_text_align_center_responsive d-flex align-items-end">
+                <div class="nicdark_navigation_top_header_2 mb-2">
+                    <ul>
+                        <li *ngIf="!(isLoggedIn | async)">
+                            <button (click)="$event.preventDefault(); navigate('/authentication/signup')" href="#" i18n
+                                    style="border: 2px solid #fff; border-radius: 6px;font-size:13px; background: transparent; color:#fff">
+                                Join Now
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div> -->
+            <div class="nicdark_padding_botttom_10 nicdark_padding_top_10 nicdark_text_align_center_responsive d-flex align-items-end">
+                <div class="nicdark_navigation_top_header_2 mb-2">
+                    <ul>
+                        <li>
+                            <button class="navbar-toggler" type="button"
+                                    (click)="$event.preventDefault(); showSidebar = true;"
+                                    style="border-color: #fff; color:#fff">
+                                &#9776;
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--end container-->
+    </div>
+</div>

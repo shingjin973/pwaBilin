@@ -1,0 +1,99 @@
+<div class="nicdark_section nicdark_background_size_cover nicdark_background_position_center_bottom">
+    <div class="nicdark_section">
+        <div class="nicdark_container nicdark_clearfix">
+            <div class="nicdark_section" style="height: 75px"></div>
+        </div>
+    </div>
+</div>
+<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+<div class="nicdark_section py-4" *ngIf="user; else loading">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-center" i18n>Edit Profile</h1>
+
+            <button type="button" (click)="$event.preventDefault(); changePassword();" class="btn btn-sm btn-primary"
+                    i18n>Change password
+            </button>
+        </div>
+        <ng-template [ngIf]="user.type === UserType.Teacher">
+        <div style="width:200px;" class="m-auto text-center" *ngIf="form.get('profile_picture')">
+            <ng-template [ngIf]="form.get('profile_picture').value">
+                <img width="150" height="150" class="rounded-circle"
+                     [src]="form.get('profile_picture').value | s3Storage" alt="">
+                <button class="btn btn-sm btn-outline-primary mt-3"
+                        (click)="$event.preventDefault(); form.get('profile_picture').setValue('')">Upload another
+                    picture
+                </button>
+            </ng-template>
+            <ng-template [ngIf]="!form.get('profile_picture').value">
+                <app-file-upload [file]="form.get('profile_picture').value"
+                                 (onFinish)="form.get('profile_picture').setValue($event)"></app-file-upload>
+            </ng-template>
+        </div>
+        </ng-template>
+
+        <mat-form-field class="w-100">
+            <input type="text" required matInput placeholder="Name" formControlName="name">
+            <mat-error i18n *ngIf="form.get('name').invalid && form.get('name').touched">
+                Name is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+            <input type="text" required matInput placeholder="Phone number" formControlName="phone">
+            <mat-error i18n *ngIf="form.get('phone').errors?.required && form.get('phone').touched">
+                Phone is required
+            </mat-error>
+            <mat-error i18n *ngIf="form.get('phone').errors?.pattern">
+                Invalid Phone number
+            </mat-error>   
+        </mat-form-field>
+
+        <!-- <mat-form-field
+                *ngIf="form.get('facebook')"
+                class="w-100">
+            <input type="text" matInput placeholder="Facebook (optional)" formControlName="facebook">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.get('wechat')" class="w-100">
+            <input type="text" matInput placeholder="WeChat (optional)" formControlName="wechat">
+        </mat-form-field> -->
+        <mat-form-field *ngIf="form.get('classin')" class="w-100">
+            <input type="text" matInput placeholder="ClassIn (optional)" formControlName="classin">
+        </mat-form-field>
+        <mat-form-field *ngIf="form.get('school')" class="w-100">
+            <mat-label i18n>Please select your association school</mat-label>
+            <mat-select formControlName="school">
+                <mat-option value="" i18n>No association school</mat-option>
+                <mat-option *ngFor="let school of schools" [value]="school._id">{{school.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" *ngIf="form.get('introduction')">
+            <textarea matInput style="min-height: 100px;" placeholder="Your introduction.."
+                      formControlName="introduction"></textarea>
+            <mat-hint i18n>At least 100 characters.</mat-hint>
+            <mat-error i18n *ngIf="form.get('introduction').invalid && form.get('introduction').touched">
+                Introduction is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" *ngIf="form.get('introduction_ch')">
+            <textarea matInput style="min-height: 100px;" placeholder="Your introduction (Chinese).."
+                      formControlName="introduction_ch"></textarea>
+            <mat-hint i18n>At least 100 characters.</mat-hint>
+            <mat-error i18n *ngIf="form.get('introduction_ch').invalid && form.get('introduction_ch').touched">
+                Chinese Introduction is required
+            </mat-error>
+        </mat-form-field>
+
+        <a href="#" routerLink="/profile" class="btn btn-lg btn-outline-dark mr-2 mt-3" i18n>Cancel</a>
+        <button [disabled]="isLoading || form.invalid" class="btn btn-lg btn-primary mt-3" i18n>Submit</button>
+    </form>
+</div>
+<ng-template #loading>
+    <div class="nicdark_section">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+<div class="nicdark_section nicdark_height_40"></div>

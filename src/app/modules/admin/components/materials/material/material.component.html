@@ -1,0 +1,61 @@
+<div class="card shadow card-noborder">
+  <div class="card-body">
+    <a href="#" routerLink="/admin/materials">
+      <i class="fas fa-arrow-left"></i>
+      Back to all materials</a>
+    <div class="card-titlebox">
+      <h1 class="card-title">Material {{material?.auto_id}}</h1>
+    </div>
+    <div class="card-content">
+      <div>
+        <div *ngIf="material !== undefined; else loading">
+          <div *ngIf="material !== null; else nodata">
+            <div class="text-center">
+              <div>
+                <i class="fa-8x {{material.url | materialtype}} text-muted"></i>
+              </div>
+
+              <h2 class="text-muted mt-3 h4">{{material.description}}</h2>
+              <a target="_blank" [href]="material.url | s3Storage">{{material.url}}</a>
+              <p>Uploaded on {{material.date | date: 'medium'}}</p>
+            </div>
+
+            <h2>Courses:</h2>
+            <table *ngIf="material.lessons && material.lessons.length; else nocourses" class="table">
+              <thead>
+                <tr>
+                  <th>Subtitle - Subject</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let lesson of material.lessons">
+                  <td>
+                    <a href="#" [routerLink]="['/admin/courses', lesson.course_id, 'lesson', lesson.lesson_id, 'session', lesson.session_id]">{{lesson.subtitle}} - {{lesson.subject}}</a>
+                  </td>
+                  <td class="text-right">
+                    <button class="btn btn-danger btn-sm" (click)="$event.preventDefault(); removeMaterialsFromSession(lesson.course_id, lesson.lesson_id, lesson.session_id)">Remove</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <ng-template #nocourses>
+              <div class="text-center">
+                <p>No courses.</p>
+              </div>
+            </ng-template>
+          </div>
+          <ng-template #nodata>
+            <div class="text-center">
+              <p>Cannot find the material.</p>
+            </div>
+          </ng-template>
+        </div>
+        <ng-template #loading>
+          <mat-spinner></mat-spinner>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+.accordion {
+  .card {
+    border: 1px solid lightgray;
+  }
+}
+.promotor {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed lightgray;
+  color: #868ba1;
+}
+.commission {
+  float: left;
+  margin-right: 30px;
+}
+.balance {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 23px;
+  /* identical to box height */
+  color: #000000;
+  opacity: 0.6;
+  float: left;
+}
+.balance_amount {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 23px;
+  color: #000000;
+}

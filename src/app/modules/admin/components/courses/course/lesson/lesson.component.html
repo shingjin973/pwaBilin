@@ -1,0 +1,430 @@
+<div class="card shadow card-noborder">
+    <div class="card-body" *ngIf="!lesson">
+        <h3 class="py-5 text-center" *ngIf="lesson === null; else loadingLesson">
+            Class is not found
+        </h3>
+        <ng-template #loadingLesson>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+    </div>
+    <div class="card-body" *ngIf="lesson">
+        <div class="card-titlebox">
+            <div>
+                <h1 class="card-title">Class:
+                    <a href="#" [routerLink]="['/admin/courses', lesson.course_id]"
+                        class="text-primary">{{lesson.course?.topic}}</a>
+                </h1>
+            </div>
+            <div>
+                <button *ngIf="isEditing" class="btn btn-info mr-2 btn-sm"
+                    (click)="$event.preventDefault(); cancelEdit();">Cancel
+                </button>
+                <button *ngIf="isEditing" class="btn btn-primary mr-2 btn-sm"
+                    (click)="$event.preventDefault(); saveLesson();">Save
+                </button>
+                <button *ngIf="!isEditing" class="btn btn-primary mr-2 btn-sm"
+                    (click)="$event.preventDefault(); editLesson()">Edit
+                </button>
+                <button class="btn btn-danger btn-sm mr-2" (click)="$event.preventDefault(); deleteLesson()">Delete
+                </button>
+                <button class="btn btn-success btn-sm" (click)="$event.preventDefault(); setLessonAs()">Set as</button>
+            </div>
+        </div>
+        <div class="card-summary">
+            <form [formGroup]="editForm">
+                <p>
+                    <span>Teacher</span>
+                    <span><a href="#"
+                            [routerLink]="['/admin/users/', lesson.teacher_id]">{{lesson.teacher?.name}}</a></span>
+                </p>
+                <p>
+                    <span>Subtitle</span>
+                    <span *ngIf="!isEditing">{{lesson.subtitle}}</span>
+                    <textarea *ngIf="isEditing" style="resize: none;" class="form-control"
+                        formControlName="subtitle"></textarea>
+                </p>
+                <p>
+                    <span>Subtitle (Chinese)</span>
+                    <span *ngIf="!isEditing">{{lesson.subtitle_ch}}</span>
+                    <input type="text" *ngIf="isEditing" class="form-control" formControlName="subtitle_ch" />
+                </p>
+                <p>
+                    <span>State</span>
+                    <span *ngIf="!isEditing"><strong>{{lesson.state | state}}</strong></span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="state">
+                        <option *ngFor="let i of [0,1,2]" [value]="i">{{i | state}}</option>
+                    </select>
+                </p>
+                <p>
+                    <span>Sessions</span>
+                    <span>{{lesson.sessions?.length}}</span>
+                </p>
+                <!-- <p>
+                    <span>Total Sessions</span>
+                    <span>{{lesson.course?.total_sessions}}</span>
+                </p> -->
+                <p>
+                    <span>Credits</span>
+                    <span *ngIf="!isEditing">{{lesson.credits_per_session | creditsPrice}}</span>
+                    <input *ngIf="isEditing" type="number" class="form-control" formControlName="credits_per_session">
+                </p>
+                <p>
+                    <span>Session duration</span>
+                    <span *ngIf="!isEditing">{{lesson.session_duration | duration}}</span>
+                    <input *ngIf="isEditing" type="text" formControlName="session_duration" class="form-control">
+                </p>
+                <p>
+                    <span>Total sessions</span>
+                    <span *ngIf="!isEditing">{{lesson.total_sessions}}</span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="total_sessions">
+                        <option *ngFor="let i of _range(60)" [value]="i">{{i}}</option>
+                    </select>
+                </p>
+                <p>
+                    <span>Max students</span>
+                    <span *ngIf="!isEditing">{{lesson.max_students}}</span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="max_students">
+                        <option *ngFor="let i of _range(25)" [value]="i">{{i}}</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </p>
+                <p>
+                    <span>Hidden/Show</span>
+                    <mat-slide-toggle *ngIf="!isEditing" [disabled]="true" formControlName="show_on_front">
+                    </mat-slide-toggle>
+                    <mat-slide-toggle *ngIf="isEditing" formControlName="show_on_front"></mat-slide-toggle>
+                </p>
+            </form>
+        </div>
+
+        <div class="mt-4">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Sessions</h2>
+                <div>
+                    <button class="btn btn-sm btn-primary mr-2"
+                        [disabled]="lesson.sessions?.length == lesson.total_sessions"
+                        (click)="isAddingNewSession = !isAddingNewSession">
+                        {{isAddingNewSession ? 'Cancel' : 'Add new session'}}
+                    </button>
+                    <button class="btn btn-sm btn-primary"
+                        [disabled]="isLoadingUpload || lesson.sessions?.length == lesson.total_sessions"
+                        (click)="uploadSessions();">
+                        <span *ngIf="!isLoadingUpload">Upload sessions</span>
+                        <i *ngIf="isLoadingUpload" class="fas fa-spinner fa-spin"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="page-table" *ngIf="!isAddingNewSession">
+                <div *ngIf="lesson.sessions; else loading">
+                    <div *ngIf="lesson.sessions.length; else nodata">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Subject</th>
+                                    <th>Zoom URL</th>
+                                    <th>Zoom ID</th>
+                                    <th>Notes</th>
+                                    <th>State</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let session of lesson.sessions; let i = index;">
+                                    <th scope="row">{{ session.auto_id }}</th>
+                                    <td>{{session.startTime | amLocal | amDateFormat: 'll'}}</td>
+                                    <td>{{session.startTime | amLocal | amDateFormat: 'HH:mm'}} - {{session.endTime |
+                                        amLocal | amDateFormat: 'HH:mm'}}
+                                    </td>
+                                    <td>{{session.subject || '-'}}</td>
+                                    <td>{{session.zoomUrl}}</td>
+                                    <td>{{session.zoomId}}</td>
+                                    <td>{{session.notes}}</td>
+                                    <td>{{session.state | state}}</td>
+                                    <td class="text-right">
+                                        <a href="#"
+                                            [routerLink]="['/admin/courses', lesson.course_id, 'lesson', lesson._id, 'session', session._id]"
+                                            class="btn btn-primary btn-sm">Manage</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+
+            <div class="page-form" *ngIf="isAddingNewSession">
+                <div class="text-center">
+                    <div class="btn-group mb-3">
+                        <button type="button"
+                            [ngClass]="{'btn-secondary': addSingleSession, 'btn-outline-secondary': !addSingleSession}"
+                            class="btn btn-sm" (click)="$event.preventDefault(); addSingleSession = true">Single
+                            Session
+                        </button>
+                        <button type="button"
+                            [ngClass]="{'btn-secondary': !addSingleSession, 'btn-outline-secondary': addSingleSession}"
+                            class="btn btn-sm" (click)="$event.preventDefault(); addSingleSession = false">Multiple
+                            Sessions
+                        </button>
+                    </div>
+                </div>
+
+                <div *ngIf="addSingleSession">
+                    <h3 class="text-center font-weight-bold">New session</h3>
+                    <form class="form-width" [formGroup]="form" (ngSubmit)="submit()">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field class="w-100">
+                                    <input readonly formControlName="date" matInput [matDatepicker]="picker"
+                                        placeholder="Enter date">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                    <mat-error *ngIf="hasError('date')">
+                                        Field is invalid
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12">
+                                <mat-form-field class="w-100">
+                                    <input matInput type="time" placeholder="Enter start time"
+                                        formControlName="startTime">
+                                    <mat-error *ngIf="hasError('startTime')">
+                                        Field is invalid
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12">
+                                <mat-form-field class="w-100">
+                                    <input matInput placeholder="Subject" formControlName="subject">
+                                    <mat-error *ngIf="hasError('subject')">
+                                        Field is invalid
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12">
+                                <mat-form-field class="w-100">
+                                    <input matInput placeholder="Subject (Chinese)" formControlName="subject_ch">
+                                    <mat-error *ngIf="hasError('subject_ch')">
+                                        Field is invalid
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12">
+                                <ng-template [ngIf]="lesson?.course?.provider === 'zoom'">
+                                    <mat-checkbox formControlName="toCreateZoomMeeting">Create zoom meeting
+                                    </mat-checkbox>
+                                    <div class="mt-3" *ngIf="form.get('toCreateZoomMeeting').value === true">
+                                        <mat-radio-group formControlName="zoomMeetingHost">
+                                            <mat-radio-button class="d-block" value="teacher">Teacher (Teacher has to
+                                                have Zoom ID)
+                                            </mat-radio-button>
+                                            <mat-radio-button class="d-block" value="host">Admin</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <div class="mt-3" *ngIf="form.get('toCreateZoomMeeting').value === false">
+                                        <mat-form-field class="w-100">
+                                            <input matInput placeholder="Zoom URL" formControlName="zoomUrl">
+                                            <mat-error *ngIf="hasError('zoomUrl')">
+                                                Field is invalid
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-100">
+                                            <input matInput placeholder="Zoom ID" formControlName="zoomId">
+                                            <mat-error *ngIf="hasError('zoomId')">
+                                                Field is invalid
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-100">
+                                            <input matInput placeholder="Password" formControlName="zoomPassword">
+                                            <mat-error *ngIf="hasError('zoomPassword')">
+                                                Field is invalid
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <button type="submit" class="btn btn-block btn-primary"
+                                    [disabled]="form.invalid || isLoading">
+                                    <span *ngIf="isLoading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </span>
+                                    <span *ngIf="!isLoading">
+                                        Submit
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div *ngIf="!addSingleSession">
+
+                    <div *ngIf="multipleEntries && multipleEntries.length">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date/Time</th>
+                                    <th>Subject</th>
+                                    <th>Subject (Chinese)</th>
+                                    <th>Zoom URL</th>
+                                    <th>Zoom ID</th>
+                                    <th>Password</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let sess of multipleEntries; let i = index">
+                                    <td class="px-1">{{sess.startTime | date: 'medium'}}</td>
+                                    <td class="px-1">
+                                        <input type="text" class="form-control" [value]="sess.subject"
+                                            (change)="handleMultipleEntryChange(i, 'subject', $event.target.value)">
+                                    </td>
+                                    <td class="px-1">
+                                        <input type="text" class="form-control" [value]="sess.subject_ch"
+                                            (change)="handleMultipleEntryChange(i, 'subject_ch', $event.target.value)">
+                                    </td>
+                                    <td class="px-1">
+                                        <span *ngIf="sess.toCreateZoomMeeting">TBD</span>
+                                        <input *ngIf="!sess.toCreateZoomMeeting" type="text" class="form-control"
+                                            [value]="sess.zoomUrl"
+                                            (change)="handleMultipleEntryChange(i, 'zoomUrl', $event.target.value)">
+                                    </td>
+                                    <td class="px-1">
+                                        <span *ngIf="sess.toCreateZoomMeeting">TBD</span>
+                                        <input *ngIf="!sess.toCreateZoomMeeting" type="text" class="form-control"
+                                            [value]="sess.zoomId"
+                                            (change)="handleMultipleEntryChange(i, 'zoomId', $event.target.value)">
+                                    </td>
+                                    <td class="px-1">
+                                        <span *ngIf="sess.toCreateZoomMeeting">TBD</span>
+                                        <input *ngIf="!sess.toCreateZoomMeeting" type="text" class="form-control"
+                                            [value]="sess.zoomPassword"
+                                            (change)="handleMultipleEntryChange(i, 'zoomPassword', $event.target.value)">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="text-right">
+                            <button class="btn btn-primary" (click)="submitMultipleEntries()">Submit</button>
+                        </div>
+                    </div>
+
+                    <div *ngIf="multipleForm && !multipleEntries.length">
+                        <form [formGroup]="multipleForm">
+                            <h3 class="h6">Sessions left: <strong>{{lesson.total_sessions - pickedDates.length -
+                                    lesson.sessions.length}}</strong></h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <mat-form-field class="w-100">
+                                        <input placeholder="Enter date" readonly disabled (click)="openPicker()"
+                                            matInput type="text" formControlName="dateString">
+                                        <input [min]="minDate" (dateChange)="onChangePickedDates($event)" class="d-none"
+                                            readonly formControlName="date" matInput [matDatepicker]="picker"
+                                            placeholder="Enter date">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker [dateClass]="getPickedDates()" #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field class="w-100">
+                                        <input matInput type="time" placeholder="Enter start time"
+                                            formControlName="startTime">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-12">
+                                    <mat-checkbox formControlName="toCreateZoomMeeting">Create zoom meeting
+                                    </mat-checkbox>
+                                    <div class="mt-3" *ngIf="multipleForm.get('toCreateZoomMeeting').value === true">
+                                        <mat-radio-group formControlName="zoomMeetingHost">
+                                            <mat-radio-button class="d-block" value="teacher">Teacher (Teacher has to
+                                                have Zoom ID)
+                                            </mat-radio-button>
+                                            <mat-radio-button class="d-block" value="host">Admin</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 text-right">
+                                    <button (click)="$event.preventDefault(); multipleEntryNext()"
+                                        class="btn btn-sm btn-outline-primary"
+                                        [disabled]="!multipleForm.get('startTime').value">Next <i
+                                            class="fas fa-arrow-right"></i></button>
+                                    <button (click)="$event.preventDefault(); submitMultipleEntries()"
+                                        class="btn btn-sm btn-outline-primary ml-2" *ngIf="multipleEntries.length">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="mt-4" *ngIf="false">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Enrollments</h2>
+                <div></div>
+            </div>
+
+            <div class="page-table">
+                <div *ngIf="enrollments; else loading">
+                    <div *ngIf="enrollments.length; else nodata">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student</th>
+                                    <th class="text-center">Session #</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of enrollments; let i = index;">
+                                    <th scope="row">{{ item.auto_id }}</th>
+                                    <td>
+                                        <a href="#" [routerLink]="['/admin/users', item.student_family]">
+                                            <strong>{{item.student_family_name}} ({{item.student_name}})</strong>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>{{item.session_auto_id}}</strong>
+                                    </td>
+                                    <td>{{item.date | date: 'medium'}}</td>
+                                    <td>{{item.state | state}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

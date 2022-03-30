@@ -1,0 +1,244 @@
+<div class="card shadow card-noborder">
+    <div class="card-body" *ngIf="!bundle">
+        <h3 class="py-5 text-center" *ngIf="bundle === null; else loadingBundle">
+            Package is not found
+        </h3>
+        <ng-template #loadingBundle>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+    </div> 
+    <div class="card-body" *ngIf="bundle">
+        <div class="card-titlebox">
+            <div>
+                <h1 class="card-title">Package:
+                    <a href="#" [routerLink]="['/admin/courses', bundle.course_id]"
+                        class="text-primary">{{bundle.course?.topic}}</a>
+                </h1>
+            </div>
+           
+            <div>
+                <button *ngIf="!bundle.is_feature" class="btn btn-success mr-2"
+                    (click)="$event.preventDefault(); setFeaturePackage()">Set as Feature
+                </button>
+                <button *ngIf="bundle.is_feature" class="btn btn-danger mr-2"
+                    (click)="$event.preventDefault(); removeFeaturePackage()">Delete from Feature
+                </button>
+                <button *ngIf="isEditing" class="btn btn-info mr-2 btn-sm"
+                    (click)="$event.preventDefault(); isEditing = false">Cancel
+                </button>
+                <button *ngIf="isEditing" class="btn btn-primary mr-2 btn-sm"
+                    (click)="$event.preventDefault(); saveBundle();"
+                    [disabled]="editForm.invalid || bundleEditSubmit">Save
+                </button>
+                <button *ngIf="!isEditing" class="btn btn-primary mr-2 btn-sm"
+                    (click)="$event.preventDefault(); editBundle()">Edit
+                </button>
+                <button class="btn btn-danger btn-sm mr-2" (click)="$event.preventDefault(); deleteBundle()">Delete
+                </button>
+
+            </div>
+        </div>
+        <div class="card-summary" *ngIf="!isEditing">
+            <p>
+                <span>Teacher</span>
+                <span>
+                    <a href="#" [routerLink]="['/admin/users/', bundle.teacher_id]">{{bundle.teacher?.name}}</a>
+                </span>
+            </p>
+            <p>
+                <span>Package Title</span>
+                <span>{{bundle.bundle_title}}</span>
+            </p>
+            <p>
+                <span>Package Title (Chinese)</span>
+                <span>{{bundle.bundle_title_ch}}</span>
+            </p>
+            <p>
+                <span>Number of sessions</span>
+                <span>{{bundle.number_of_sessions}}</span>
+            </p>
+            <p>
+                <span>Session Length</span>
+                <span>{{bundle.session_length}}</span>
+            </p>
+            <p>
+                <span>Min students per session</span>
+                <span>{{bundle.min_students_per_session}}</span>
+            </p>
+            <p>
+                <span>Max students per session</span>
+                <span>{{bundle.max_students_per_session}}</span>
+            </p>
+            <p>
+                <span>Tuition</span>
+                <span>{{bundle.tuition}}</span>
+            </p>
+            <p>
+                <span>Gold Membership</span>
+                <span><mat-slide-toggle [checked]="checked" [disabled]="disabled"></mat-slide-toggle></span>
+            </p>
+            <p>
+                <span>Date</span>
+                <span>{{bundleStartDateString}}</span>
+            </p>
+            <p>
+                <span>Time</span>
+                <span *ngIf="is_valid_bundleStartTime">{{bundleStartTimeString | amLocal | amDateFormat: 'h:mm
+                    A'}}</span>
+                <span *ngIf="!is_valid_bundleStartTime">{{bundleStartTimeString}}</span>
+
+            </p>
+            <p>
+                <span>Number of Packages</span>
+                <span>{{bundle.number_of_bundles}}</span>
+            </p>
+            <p>
+                <span>Cancel policy</span>
+                <span>{{bundle.cancel_policy}}</span>
+            </p>
+            <p>
+                <span>Hidden/Show</span>
+                <mat-slide-toggle [checked]="showHidden" [disabled]="disabled">
+                </mat-slide-toggle>               
+            </p>
+        </div>
+
+        <div class="page-form" *ngIf="isEditing">
+            <h3 class="text-center font-weight-bold">Edit Package</h3>
+            <form [formGroup]="editForm" (ngSubmit)="saveBundle()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                            <input matInput maxlength="50" placeholder="Package Title" formControlName="bundle_title">
+                            <mat-error *ngIf="hasBundleFormError('bundle_title')">
+                                Field is invalid
+                            </mat-error>
+                            <mat-hint align="end">{{editForm.get('bundle_title').value.length}} / 50</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                            <input matInput maxlength="50" placeholder="Package Title (Chinese)"
+                                formControlName="bundle_title_ch">
+                            <mat-error *ngIf="hasBundleFormError('bundle_title_ch')">
+                                Field is invalid
+                            </mat-error>
+                            <mat-hint align="end">{{editForm.get('bundle_title_ch').value.length}} / 50</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <mat-select formControlName="teacher_id" placeholder="Teacher">
+                                <mat-option>
+                                    <ngx-mat-select-search [noEntriesFoundLabel]="'No matching found'"
+                                        [placeholderLabel]="'Find teacher...'" [formControl]="teacherForm">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option value='{{bundle.teacher._id}}' selected>{{bundle.teacher.name}}</mat-option>
+                                <mat-option *ngFor="let teacher of teachers | async" [value]="teacher._id">
+                                    {{teacher.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Number of sessions" formControlName="number_of_sessions">
+                            <mat-error *ngIf="hasBundleFormError('number_of_sessions')">
+                                Field is invalid
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Session Length" formControlName="session_length">
+                            <mat-error *ngIf="hasBundleFormError('session_length')">
+                                Field is invalid
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Min students per session"
+                                formControlName="min_students_per_session">
+                            <mat-error *ngIf="hasBundleFormError('min_students_per_session')">
+                                Field is invalid
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Max students per session"
+                                formControlName="max_students_per_session">
+                            <mat-error *ngIf="hasBundleFormError('max_students_per_session')">
+                                Field is invalid
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Tuition" formControlName="tuition">
+                            <mat-error *ngIf="hasBundleFormError('tuition')">
+                                Field is invalid
+                            </mat-error>
+                        </mat-form-field>
+                    </div>               
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input placeholder="Start Date" matInput type="text" formControlName="dates_string">                         
+                            <input [min]="minDate" (dateChange)="onChangePickedDates($event)" class="d-none"
+                                formControlName="dates" matInput [matDatepicker]="datepicker">
+                            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                            <mat-datepicker [dateClass]="getPickedDates()" #datepicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input placeholder="Start Time" matInput type="text" formControlName="start_time_string">                            
+                            <input [ngxTimepicker]="timepicker" class="d-none" formControlName="start_time">
+                            <ngx-material-timepicker-toggle matSuffix [for]="timepicker">
+                            </ngx-material-timepicker-toggle>
+                            <ngx-material-timepicker #timepicker></ngx-material-timepicker>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Number of Packages" formControlName="number_of_bundles">
+                            <mat-error *ngIf="hasBundleFormError('number_of_bundles')">
+                                Field is invalid
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                            <input matInput placeholder="Cancel policy" formControlName="cancel_policy">
+                            <mat-error *ngIf="hasBundleFormError('cancel_policy')">
+                                Field is invalid
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2 membership"> 
+                           Membership: &nbsp; &nbsp;
+                           <mat-slide-toggle formControlName="membership"></mat-slide-toggle>                     
+                    </div>
+                    <div class="col-md-2 membership"> 
+                        Hidden/Show: &nbsp; &nbsp;
+                        <mat-slide-toggle formControlName="show_on_front"></mat-slide-toggle>                     
+                 </div>
+                    <!--<div class="offset-md-4 col-md-4">-->
+                    <!--<button type="button" class="btn btn-block btn-primary"-->
+                    <!--[disabled]="editForm.invalid || bundleEditSubmit" (click)="saveBundle()">-->
+                    <!--<span *ngIf="bundleEditSubmit">-->
+                    <!--<i class="fas fa-spinner fa-spin"></i>-->
+                    <!--</span>-->
+                    <!--<span *ngIf="!bundleEditSubmit">-->
+                    <!--Submit-->
+                    <!--</span>-->
+                    <!--</button>-->
+                    <!--</div>-->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

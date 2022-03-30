@@ -1,0 +1,151 @@
+<div class="nicdark_section nicdark_background_size_cover nicdark_background_position_center_bottom">
+    <div class="nicdark_section">
+        <div class="nicdark_container nicdark_clearfix">
+            <div class="nicdark_section" style="height: 75px"></div>
+        </div>
+    </div>
+</div>
+<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+<div class="nicdark_section main pb-5" *ngIf="user && pricePerCredit && creditsValues; else loading">
+    <div class="card shadow no-border mt-3">
+        <div class="card-body" *ngIf="!initiated; else payments">
+            <div *ngIf="!is_payment_selected">
+                <h1 class="text-primary" style="margin-top: 50px" i18n>Select Payment</h1>
+                <div *ngFor="let i of paymentServices" (click)="selectPayment(i.id, i.image)"
+                     style="cursor: pointer; margin-top: 10px;">
+                    <img src="{{i.image}}" width="15%">
+                    {{i.text}}
+                </div>
+            </div>
+
+            <div *ngIf="is_payment_selected">
+                <h1 class="text-primary" style="margin-top: 50px" i18n>Credits purchase</h1>
+                <h2 class="mt-2 mb-3">1 credit = {{pricePerCredit}} USD</h2>
+                <form [formGroup]="creditsForm">
+
+                    <!--<mat-form-field class="w-100">-->
+                    <!--<mat-label i18n>Payment service</mat-label>-->
+                    <!--<mat-select formControlName="type">-->
+                    <!--<mat-option *ngFor="let i of paymentServices" [value]="i.id" style="height: 4em">-->
+                    <!--{{i.text}}-->
+                    <!--<img src="{{i.image}}" width="50%" height="20%">-->
+                    <!--</mat-option>-->
+                    <!--</mat-select>-->
+                    <!--</mat-form-field>-->
+                    <img src="{{selected_payment_image}}" width="20%">
+                    <mat-form-field class="w-100">
+                        <input formControlName="type" matInput hidden="hidden">
+                        <input matInput value="{{selected_value}}" disabled>                       
+                    </mat-form-field>
+                    <mat-form-field class="w-100">
+                        <mat-label i18n>Currency</mat-label>
+                        <mat-select formControlName="currency">
+                            <mat-option *ngFor="let i of ['USD']" [value]="i">{{i}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="w-100">
+                        <mat-label i18n>Credits</mat-label>
+                        <mat-select formControlName="credits">
+                            <mat-option *ngFor="let i of creditsValues" [value]="i">
+                                {{i}} credits - {{i * pricePerCredit}} USD
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field> -->
+                    <span [ngClass]="{'active':selected_level == i}" class="item" *ngFor="let item of creditsValues; let i = index" (click)="select_credit_value(item,i)">${{item}}</span>
+                    <button
+                            type="button"
+                            [disabled]="creditsForm.invalid"
+                            (click)="continue()"
+                            class="btn btn-outline-primary btn-block btn-lg mt-3" i18n>Continue
+                    </button>
+                </form>
+            </div>
+
+        </div>
+        <ng-template #payments>
+            <div class="card-body" *ngIf="paypalConfig">
+                <div class="d-flex justify-content-end">
+                    <a href="#" [routerLink]="['/profile']" class="btn btn-outline-info btn-sm" i18n>Cancel</a>
+                </div>
+
+                <p class="h4 my-4"><span i18n>You want to purchase</span> <strong class="text-primary">
+                    {{creditsForm.get('credits').value}} </strong> <span i18n>credits for</span> <strong
+                        class="text-primary"> {{pricePerCredit * creditsForm.get('credits').value}} USD</strong></p>
+                <ngx-paypal [config]="paypalConfig"></ngx-paypal>
+                <div class="text-center p-5" *ngIf="isLoading">
+                    Waiting for payment. Please do not refresh page
+                    <br>
+                    <i class="fas fa-spinner fa-spin fa-3x text-primary"></i>
+                </div>
+            </div>
+            <div class="card-body" *ngIf="config && config.type === 'wechat'">
+                <div class="d-flex justify-content-end">
+                    <a href="#" [routerLink]="['/profile']" class="btn btn-outline-info btn-sm" i18n>Cancel</a>
+                </div>
+                <p class="h4 mt-4"><span i18n>You want to purchase</span> <strong class="text-primary">
+                    {{creditsForm.get('credits').value}} </strong> <span i18n>credits for</span> <strong
+                        class="text-primary"> {{pricePerCredit * creditsForm.get('credits').value}} USD</strong></p>
+
+                <div *ngIf="config.url; else loadingWeChat">
+                    <img [src]="config.url" alt="" width="300" height="300">
+
+                    <p class="text-muted" i18n>Please scan this QRCode with your WeChat app.</p>
+
+                    <div class="mt-3">
+                        <button
+                                class="btn btn-block btn-primary"
+                                [disabled]="isLoading"
+                                (click)="$event.preventDefault(); confirmStripeRequest()">
+                            <i *ngIf="isLoading; else content" class="fas fa-spinner fa-spin"></i>
+                            <ng-template #content>
+                                <span i18n> I've authorized request and ready to pay.</span>
+                            </ng-template>
+                        </button>
+                    </div>
+                </div>
+                <ng-template #loadingWeChat>
+                    <div class="text-center p-5">
+                        Waiting for payment. Please do not refresh page
+                        <br>
+                        <i class="fas fa-spinner fa-spin fa-3x text-primary"></i>
+                    </div>
+                </ng-template>
+            </div>
+            <div class="card-body" *ngIf="config && config.type === 'alipay'">
+                <div class="d-flex justify-content-end">
+                    <a href="#" [routerLink]="['/profile']" class="btn btn-outline-info btn-sm" i18n>Cancel</a>
+                </div>
+                <p class="h4 mt-4"><span i18n>You want to purchase</span> <strong class="text-primary">
+                    {{creditsForm.get('credits').value}} </strong> <span i18n>credits for</span> <strong
+                        class="text-primary"> {{pricePerCredit * creditsForm.get('credits').value}} USD</strong></p>
+
+                <div *ngIf="config.id; else loadingAliPay">
+                    <div class="mt-3">
+                        <button
+                                class="btn btn-block btn-primary"
+                                [disabled]="isLoading"
+                                (click)="$event.preventDefault(); confirmStripeRequest()">
+                            <i *ngIf="isLoading; else content" class="fas fa-spinner fa-spin"></i>
+                            <ng-template #content>
+                                <span i18n>I've authorized request and ready to pay.</span>
+                            </ng-template>
+                        </button>
+                    </div>
+                </div>
+                <ng-template #loadingAliPay>
+                    <div class="text-center p-5">
+                        Waiting for payment. Please do not refresh page
+                        <br>
+                        <i class="fas fa-spinner fa-spin fa-3x text-primary"></i>
+                    </div>
+                </ng-template>
+            </div>
+        </ng-template>
+    </div>
+</div>
+<ng-template #loading>
+    <div class="nicdark_section">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

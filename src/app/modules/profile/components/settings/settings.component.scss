@@ -1,0 +1,12 @@
+.nicdark_background_size_cover{
+  background-color: #E1DB9C;
+}
+
+form{
+  margin: 1rem auto 0;
+  max-width: 600px;
+
+  @media(max-width: 767px){
+    max-width: 100%;
+  }
+}

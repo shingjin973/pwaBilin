@@ -1,0 +1,79 @@
+<div class="card-titlebox">
+    <h1 class="card-title">SA: Partners</h1>
+    <div>
+        <!--<button (click)="addPartner()" class="btn btn-primary">Add New</button>-->
+        <a href="#" [routerLink]="['/admin/super-admin/partners/new-partner']" class="btn btn-primary">Add Partner</a>
+    </div>
+</div>
+<div class="card-content">
+    <div *ngIf="partners; else loading">
+        <div *ngIf="partners.length; else nodata">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Partner Name</th>
+                    <th>Partner Icon</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of partners">
+                    <td>{{item.name}}</td>
+
+                    <td>
+                        <a href="#" (click)="$event.preventDefault(); viewPartnerImage(item.icon)">
+                            <img [src]="item.icon | s3Storage" width="50" height="50" alt="">
+                        </a>
+
+                    </td>
+                    <td>{{item.description}}</td>
+                    <td class="text-right">
+                        <!--<button class="btn btn-info btn-sm mr-3" (click)="editPartner(item)">Edit</button>-->
+                        <button class="btn btn-danger btn-sm" (click)="deletePartner(item._id)">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul *ngIf="pager.totalPages && pager.totalPages > 0" class="pagination">
+                    <li [ngClass]="{disabled:currentPage === 1}" class="page-item first-item">
+                        <a (click)="getData(1)" class="page-link" style="cursor: pointer">First</a>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === 1}" class="page-item previous-item">
+                        <a (click)="getData(currentPage - 1)" style="cursor: pointer"
+                           class="page-link">‹‹</a>
+                    </li>
+                    <li class="page-item number-item">
+                        <a *ngIf="has_previous_five_page" class="page-link">...</a>
+                    </li>
+                    <li *ngFor="let page of pagination_pages" [ngClass]="{active:currentPage === page}"
+                        class="page-item number-item">
+                        <a (click)="getData(page)" class="page-link" style="cursor: pointer">{{page}}</a>
+                    </li>
+                    <li class="page-item number-item">
+                        <a *ngIf="has_next_five_page" class="page-link">...</a>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                        class="page-item next-item">
+                        <a (click)="getData(currentPage + 1)" style="cursor: pointer"
+                           class="page-link">››</a>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                        class="page-item last-item">
+                        <a (click)="getData(pager.totalPages)" style="cursor: pointer" class="page-link">Last</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ng-template #nodata>
+            <div class="p-5 text-center">
+                <span class="h3">No data</span>
+            </div>
+        </ng-template>
+    </div>
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</div>

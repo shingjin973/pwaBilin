@@ -1,0 +1,58 @@
+<ng-template [ngIf]="secondScreen">
+    <app-partial-update (onSubmit)="submit()" [type]="secondScreenType" [uid]="secondScreenUID"></app-partial-update>
+</ng-template>
+
+<ng-template [ngIf]="!secondScreen">
+    <div class="card shadow w-100">
+        <div class="card-body">
+            <h2 class="text-center card-title"><strong i18n>Login</strong></h2>
+            <div class="alert alert-danger" *ngIf="message">
+                {{message}}
+            </div>
+
+            <form [formGroup]="form" *ngIf="form" (ngSubmit)="submit()">
+                <mat-form-field class="w-100">
+                    <input type="email" matInput i18n-placeholder placeholder="Email" formControlName="email">
+                    <!--<mat-error i18n *ngIf="form.get('email').invalid && form.get('email').touched">-->
+                    <!--Email is required-->
+                    <!--</mat-error>-->
+                    <mat-error i18n *ngIf="form.get('email').errors?.required">
+                        Email is required
+                    </mat-error>
+                    <mat-error i18n *ngIf="form.get('email').errors?.pattern">
+                        Invalid email address
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <input type="password" matInput i18n-placeholder placeholder="Password" formControlName="password">
+                    <mat-error i18n *ngIf="form.get('password').invalid && form.get('password').touched">
+                        Password is required
+                    </mat-error>
+                </mat-form-field>
+
+                <!--<re-captcha formControlName="recaptchaReactive"></re-captcha>-->
+                <!--<div class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI">-->
+                <!--<div class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6Ld0KLQZAAAAANjowzy_PRYFwryJfgyAItdCD-r2">-->
+
+                <!--</div>-->
+
+                <div class="text-center text-muted">
+                    <p i18n>Forgot your password?</p>
+                    <a href="forgot-password" [routerLink]="['/authentication/forgot-password']" i18n>Reset password</a>
+                </div>
+
+                <div class="text-center text-muted">
+                    <p i18n>Don't have an account?</p>
+                    <a href="signup" [routerLink]="['/authentication/signup']" i18n>Create an account</a>
+                </div>
+
+                <button type="submit" [disabled]="form.invalid || isLoading"
+                        class="btn btn-block btn-primary btn-lg mt-4">
+                    <span *ngIf="!isLoading" i18n>Login</span>
+                    <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+            </form>
+        </div>
+    </div>
+</ng-template>

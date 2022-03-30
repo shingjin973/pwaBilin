@@ -1,0 +1,154 @@
+<ng-template [ngIf]="teacher" [ngIfElse]="loading">
+    <div class="teacher-single-page">
+        <div class="teacher-banner d-flex align-items-center">
+            <div class="section-dvm">
+                <h1>{{teacher.name}}</h1>
+            </div>
+        </div>
+        <div class="section-dvm" style="padding-top: 64px">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3 col-12">
+                        <div class="teacher-intro" style="width:95%; margin: 0 auto">
+                            <img [src]="teacher.profile_picture | s3Storage" alt="" style="width: 100%">
+                            <div class="" style="width: 100%; background: #F1F1F1; padding: 32px 16px;">
+                                <h2 style="font-size: 24px;color: #56509F; letter-spacing: 0.2px; font-weight: 600; margin-bottom: 16px;">
+                                    About {{teacher.name}}</h2>
+                                <div style="font-size: 16px; color: #333333; letter-spacing: 0.13px; line-height: 31px;" [appTranslate]="teacher.introduction_ch">
+                                    {{teacher.introduction}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <h2 style="font-size: 24px;color: #56509F; letter-spacing: 0.2px; font-weight: 600; margin-bottom: 16px;" i18n>
+                            Courses</h2>
+                        <div *ngIf="currentTab === Tabs.Lessons"
+                             class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="overflow-x: scroll;">
+                            <div *ngIf="lessons; else loading;">
+                                <div *ngIf="lessons.length; else nodata;">
+                                    <table>
+                                        <thead>
+                                        <tr class="nicdark_border_bottom_1_solid_grey">
+                                            <td class="nicdark_padding_20 nicdark_width_20_percentage">
+                                                <h6 class="nicdark_text_transform_uppercase" i18n>COURSE</h6>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_width_30_percentage nicdark_display_none_all_iphone">
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_width_20_percentage nicdark_display_none_all_iphone">
+                                                <h6 class="nicdark_text_transform_uppercase" i18n>UPCOMING</h6>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_width_20_percentage">
+                                                <h6 class="nicdark_text_transform_uppercase" i18n>CREDITS</h6>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_width_10_percentage">
+                                            </td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngFor="let lesson of lessons" class="nicdark_border_bottom_1_solid_grey">
+                                            <td class="nicdark_padding_20">
+                                                <img alt="" class="nicdark_section"
+                                                     [src]="lesson.course.thumbnail | s3Storage">
+                                            </td>
+                                            <td class="nicdark_padding_20">
+                                                <h4 class="text-left"><strong>{{lesson.course.topic}}</strong></h4>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_display_none_all_iphone">
+                                                <p>{{lesson.startTime | amLocal | date: 'EEE, MMM d, y'}}</p>
+                                                <p>{{lesson.startTime | amLocal | amDateFormat: 'h:mm A'}}</p>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_display_none_all_iphone">
+                                                <p class="nicdark_color_greydark">{{lesson.credits_per_session |
+                                                    creditsPrice}}</p>
+                                            </td>
+                                            <td class="nicdark_padding_20">
+                                                <a [routerLink]="['/courses', lesson.course_id, 'lesson', lesson._id]"
+                                                   class="nicdark_display_inline_block nicdark_color_white nicdark_bg_green nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                                   href="#" i18n>VIEW</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-template #nodata>
+                                    <div class="text-center py-5">
+                                        <h3 i18n>No data</h3>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loading>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                        <br>
+                        <h2 *ngIf="bundles && bundles.length" style="font-size: 24px;color: #56509F; letter-spacing: 0.2px; font-weight: 600; margin-bottom: 16px;" i18n>
+                            Packages</h2>
+                        <div *ngIf="currentTab === Tabs.Lessons && bundles && bundles.length"
+                             class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="overflow-x: scroll;">
+                            <div *ngIf="bundles; else loading;">
+                                <div *ngIf="bundles.length; else nodata;">
+                                    <table>
+                                        <thead>
+                                        <tr class="nicdark_border_bottom_1_solid_grey">
+                                            <td class="nicdark_padding_20 nicdark_width_20_percentage">
+                                                <h6 class="nicdark_text_transform_uppercase" i18n>COURSE</h6>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_width_30_percentage nicdark_display_none_all_iphone">
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_width_20_percentage nicdark_display_none_all_iphone">
+                                                <h6 class="nicdark_text_transform_uppercase" i18n>TITLE</h6>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_width_20_percentage">
+                                                <h6 class="nicdark_text_transform_uppercase" i18n>TUITION</h6>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_width_10_percentage">
+                                            </td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngFor="let bundle of bundles" class="nicdark_border_bottom_1_solid_grey">
+                                            <td class="nicdark_padding_20">
+                                                <img alt="" class="nicdark_section"
+                                                     [src]="bundle.course.thumbnail | s3Storage">
+                                            </td>
+                                            <td class="nicdark_padding_20">
+                                                <h4 class="text-left"><strong>{{bundle.course.topic}}</strong></h4>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_display_none_all_iphone" [appTranslate]="bundle.bundle_title_ch">
+                                                <p>{{bundle.bundle_title}}</p>
+                                            </td>
+                                            <td class="nicdark_padding_20 nicdark_display_none_all_iphone">
+                                                <p class="nicdark_color_greydark">{{bundle.tuition | creditsPrice}}</p>
+                                            </td>
+                                            <td class="nicdark_padding_20">
+                                                <a [routerLink]="['/courses', bundle.course_id, 'package', bundle._id]"
+                                                   class="nicdark_display_inline_block nicdark_color_white nicdark_bg_green nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                                   href="#" i18n>VIEW</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-template #nodata>
+                                    <div class="text-center py-5">
+                                        <h3 i18n>No data</h3>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loading>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #loading>
+    <div style="min-height: 400px;padding-top: 200px;">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+

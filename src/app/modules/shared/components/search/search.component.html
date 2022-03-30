@@ -1,0 +1,23 @@
+<div>
+  <form [formGroup]="form">
+    <h1 class="mb-3 h3" style="font-weight: bold;">Search</h1>
+    <div class="form-group">
+      <label class="h6">Field</label>
+      <mat-select formControlName="field" class="form-control">
+        <mat-option default selected disabled value="" i18n>Pick a field</mat-option>
+        <mat-option *ngFor="let field of fields" [value]="field.key">
+          {{field.value}}
+        </mat-option>
+      </mat-select>
+    </div>
+
+    <div class="form-group">
+      <label for="value" i18n>Value</label>
+      <input style="float: none;" formControlName="value" type="text" id="value" class="form-control" placeholder="Enter value">
+    </div>
+
+    <div class="mt-4 d-flex justify-content-end align-items-center">
+      <button (click)="submit()" [disabled]="form.invalid" class="btn btn-info px-4" i18n>Submit</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,112 @@
+<div class="card shadow card-noborder">
+    <div class="card-body">
+        <div class="mb-3">
+            <ng-template [ngIf]="!schoolFilter" [ngIfElse]="schoolfilter">
+                <div class="card-titlebox mb-0">
+                    <h1 class="card-title">Students ({{pager.totals || 0}})</h1>
+                    <div>
+                        <a href="#" [routerLink]="['/admin/users/new-student']" class="btn btn-primary mr-2">Add
+                            student</a>   
+                        <button (click)="search()" class="btn btn-primary ml-2"><i class="fas fa-search mr-1"></i>
+                            Search
+                        </button>
+                        <button [disabled]="currentFilter.field ==='' && currentFilter.value === ''"
+                                (click)="clearSearch()" class="btn btn-info ml-2"><i
+                                class="fas fa-times mr-1"></i> Clear Search
+                        </button>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #schoolfilter>
+                <h1 class="card-title">Teachers for school</h1>
+            </ng-template>
+        </div>
+        <div class="card-content">
+            <div>
+                <div *ngIf="users; else loading">
+                    <div *ngIf="users.length; else nodata">
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--<tr *ngFor="let item of users | paginate: { itemsPerPage: totalItemsPerPage, currentPage: currentPage }; let i = index;">-->
+                            <tr *ngFor="let item of users; let i = index;">
+
+                                <th scope="row">{{ item.auto_id }}</th>
+                                <!--<th scope="row">{{ i + 1 }}</th>-->
+                                <td>
+                                    <a href="#" [routerLink]="['/admin/users', item._id]"><strong>{{item.name}}</strong></a>
+                                </td>
+                                <td>{{item.email}}</td>
+                                <td>{{item.phone}}</td>
+                                <td><strong class="text-primary">{{item.type | usertype}}</strong></td>
+                                <td>{{item.date | date: 'medium'}}</td>
+                                <td *ngIf="(item.type == 2 || item.type == 4 || item.type == 5)">
+                                </td>
+                                <td *ngIf="(item.type == 1 || item.type == 3) && !item.is_retired">
+                                    <button class="btn btn-danger  mr-2" (click)="$event.preventDefault(); retireTeacher(item._id)">Retire</button>
+                                </td>
+                                <td *ngIf="(item.type == 1 || item.type == 3) && item.is_retired">
+                                    <button class="btn btn-success  mr-2" (click)="$event.preventDefault(); removeRetireTeacher(item._id)">Stop Retire</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <ul *ngIf="pager.totalPages && pager.totalPages > 0" class="pagination">
+                                <li [ngClass]="{disabled:currentPage === 1}" class="page-item first-item">
+                                    <a (click)="loadPage(1)" class="page-link" style="cursor: pointer">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === 1}" class="page-item previous-item">
+                                    <a (click)="loadPage(currentPage - 1)" style="cursor: pointer"
+                                       class="page-link">‹‹</a>
+                                </li>
+                                <li class="page-item number-item">
+                                    <a *ngIf="has_previous_five_page" class="page-link">...</a>
+                                </li>
+                                <li *ngFor="let page of pagination_pages" [ngClass]="{active:currentPage === page}"
+                                    class="page-item number-item">
+                                    <a (click)="loadPage(page)" class="page-link" style="cursor: pointer">{{page}}</a>
+                                </li>
+                                <li class="page-item number-item">
+                                    <a *ngIf="has_next_five_page" class="page-link">...</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                                    class="page-item next-item">
+                                    <a (click)="loadPage(currentPage + 1)" style="cursor: pointer"
+                                       class="page-link">››</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                                    class="page-item last-item">
+                                    <a (click)="loadPage(pager.totalPages)" style="cursor: pointer" class="page-link">Last</a>
+                                </li>
+                            </ul>
+                            <!--<pagination-controls nextLabel="" previousLabel=""-->
+                            <!--(pageChange)="currentPage = $event"></pagination-controls>-->
+                        </div>
+
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h3">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

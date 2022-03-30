@@ -1,0 +1,124 @@
+<div class="teachers-page">
+    <div class="teachers-banner d-flex align-items-center">
+        <div class="section-dvm">
+            <h1 i18n>Teachers</h1>
+            <h3 i18n>Talented, Dedicated, Inspiring</h3>
+        </div>
+    </div>
+    <div class="container">
+        <div *ngIf="teachers; else loading">
+            <div *ngIf="teachers.length; else nodata">
+                <div class="teachers-top">
+                    <h2>
+                        <strong><span i18n>Showing</span> {{(currentPage - 1) * totalItemsPerPage + 1}} - {{currentPage
+                            * totalItemsPerPage < teachers.length ? currentPage * totalItemsPerPage : teachers.length}}
+                            of {{teachers.length}} <span i18n>results</span></strong>
+                    </h2>
+                </div>
+                <div class="teachers-subtop">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input autocomplete="off" matInput i18n-placeholder placeholder="Keyword"
+                                       [formControl]="searchForm">
+                            </mat-form-field>
+                        </div>
+                        <div class="ml-auto col-md-3 text-right">
+                            <div class="nicdark_display_inline_block nicdark_bg_green nicdark_border_1_solid_green nicdark_padding_8 nicdark_margin_right_10 nicdark_border_radius_3">
+                                <a (click)="$event.preventDefault(); viewState = View.Table"
+                                   class="nicdark_tooltip_jquery" title="List View" href="#">
+                                    <img alt="" class="nicdark_float_left" width="23" src="assets/img/icons/icon-list-white.svg">
+                                </a>
+                            </div>
+                            <div class="nicdark_display_inline_block nicdark_border_1_solid_grey_2 nicdark_padding_8 nicdark_border_radius_3">
+                                <a (click)="$event.preventDefault(); viewState = View.Grid"
+                                   class="nicdark_tooltip_jquery" title="Grid View" href="#">
+                                    <img alt="" class="nicdark_float_left" width="23" src="assets/img/icons/icon-grid-grey.svg">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="viewState == View.Grid">
+                    <div class="col-md-4"
+                         *ngFor="let item of showData | paginate: { itemsPerPage: totalItemsPerPage, currentPage: currentPage }; let i = index;">
+                        <div class="card border-none shadow mb-3">
+                            <div class="card-header text-center">
+                                <a href="#" [routerLink]="['/teachers', item._id]">
+                                    <div class="card-img-top">
+                                        <img [src]="item.profile_picture | s3Storage"
+                                             class="w-100 rounded-circle mt-1 mb-3"
+                                             style="min-height: 150px; max-height: 150px; max-width: 150px;" alt="">
+                                    </div>
+                                    <h3 class="h5"><strong>{{item.name | excerpt: 18}}</strong></h3>
+                                    <span>{{item.courses_offering || 0}} <span i18n>courses</span></span>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text" [teacherIntroductionTranslate]="item.introduction_ch">
+                                    {{item.introduction | excerpt: 100}}</p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                <a href="#" [routerLink]="['/teachers', item._id]" class="btn btn-primary btn-sm" i18n>
+                                    VIEW PROFILE
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-courses" *ngIf="viewState == View.Table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th i18n>Name</th>
+                        <th class="text-center" i18n>Courses offering</th>
+                        <th class="text-center" i18n>Rating</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="vertical-align: middle"
+                        *ngFor="let item of showData | paginate: { itemsPerPage: totalItemsPerPage, currentPage: currentPage }; let i = index;">
+                        <td>{{(currentPage - 1) * totalItemsPerPage + i + 1}}</td>
+                        <td>
+                            <a href="#" [routerLink]="['/teachers', item._id]">
+                                <img width="35" height="35" [src]="item.profile_picture | s3Storage"
+                                     class="rounded-circle mr-2" alt="">
+                                {{item.name}}
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            {{item.courses_offering || 0}}
+                        </td>
+                        <td class="text-center">
+                            {{item.rating || 0}}
+                        </td>
+                        <td class="text-center">
+                            <a href="#" [routerLink]="['/teachers', item._id]" class="btn btn-sm btn-primary" i18n>
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="text-center mt-3">
+                    <pagination-controls nextLabel="" previousLabel=""
+                                         (pageChange)="currentPage = $event"></pagination-controls>
+                </div>
+            </div>
+            <ng-template #nodata>
+                <div class="text-center py-5">
+                    <h3 i18n>No data</h3>
+                </div>
+            </ng-template>
+        </div>
+        <ng-template #loading>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+    </div>
+    <!--end container-->
+
+    <div class="nicdark_section nicdark_height_50"></div>
+</div>
+

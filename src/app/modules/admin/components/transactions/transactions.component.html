@@ -1,0 +1,139 @@
+<div class="card shadow card-noborder">
+    <div class="card-body">
+        <div class="mb-3">
+            <div class="card-titlebox mb-0">
+                <h1 class="card-title">Transactions ({{pager.totals || 0}})</h1>
+                <div>
+                    <a href="#" [routerLink]="['/admin/transactions/new']" class="btn btn-primary mr-1">Add
+                        transaction</a>
+
+                    <button (click)="search()" class="btn btn-primary mr-1"><i class="fas fa-search"></i>
+                        Search
+                    </button>
+                    <button [disabled]="currentFilter.field ==='' && currentFilter.value === ''"
+                            (click)="clearSearch()" class="btn btn-info mr-1"><i
+                            class="fas fa-times"></i> Clear Search
+                    </button>
+
+                    <!-- <button
+                            (click)="searchForm.setValue(''); filterTransactions(0); showSettings = !showSettings"
+                            class="btn btn-outline-primary mr-1"
+                            [ngClass]="{'active': showSettings}"> -->
+                    <button (click)="showSettings = !showSettings"
+                    class="btn btn-outline-primary mr-1" [ngClass]="{'active': showSettings}">
+                        <i *ngIf="!showSettings" class="fas fa-sliders-h"></i>
+                        <i *ngIf="showSettings" class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row dropdown-content" *ngIf="showSettings" >
+                <!-- <div class="col-md-4">
+                    <mat-form-field class="w-100">
+                        <input autocomplete="off" matInput placeholder="Search" [formControl]="searchForm">
+                    </mat-form-field>
+                </div> -->
+                <!-- <div class="offset-md-5 col-md-3">
+                    <mat-form-field class="w-100">
+                        <mat-label>Filter</mat-label>
+                        <mat-select
+                                [value]="transactionFilter"
+                                (selectionChange)="filterTransactions($event)">
+                            <mat-option [value]="0">All</mat-option>
+                            <mat-option *ngFor="let type of [1,2,3,4,5,6]" [value]="type">
+                                {{type | transactiontype}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div> -->
+                <ul *ngFor="let type of [0,1,2,3,4,5,6]">                  
+                    <li ><a (click)="filterTransactions(type)" class="{{type}}" > {{type | transactiontype}}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-content">
+            <div>
+                <div *ngIf="showData; else loading">
+                    <div *ngIf="showData.length; else nodata">
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Debit User</th>
+                                <th>Credit User</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Notes</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--<tr *ngFor="let item of showData | paginate: { itemsPerPage: totalItemsPerPage, currentPage: currentPage }; let i = index;">-->
+                            <tr *ngFor="let item of showData">
+                                <th scope="row">{{ item.auto_id }}</th>
+                                <td>
+                                    <span *ngIf="item.debit_user === 0">System</span>
+                                    <span *ngIf="item.debit_user === -1">Unknown user</span>
+                                    <a *ngIf="item.debit_user" href="#"
+                                       [routerLink]="['/admin/users', item.debit_user._id || 0]"><strong>{{item.debit_user.name}}</strong></a>
+                                </td>
+                                <td>
+                                    <span *ngIf="item.credit_user === 0">System</span>
+                                    <span *ngIf="item.credit_user === -1">Unknown user</span>
+                                    <a *ngIf="item.credit_user" href="#"
+                                       [routerLink]="['/admin/users', item.credit_user._id || 0]"><strong>{{item.credit_user.name}}</strong></a>
+                                </td>
+                                <td>{{item.debit_amount}} {{item.debit_type | transactionvaluetype}}</td>
+                                <td><strong class="text-primary">{{item.type | transactiontype}}</strong></td>
+                                <td>{{item.date | amLocal | amDateFormat: 'MMM D, YYYY, h:mm A' }}</td>
+                                <td><a href="#" (click)="$event.preventDefault(); openNotes(item.notes)">Show notes</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="text-center">
+                            <ul *ngIf="pager.totalPages && pager.totalPages > 0" class="pagination">
+                                <li [ngClass]="{disabled:currentPage === 1}" class="page-item first-item">
+                                    <a (click)="getData(1)" class="page-link" style="cursor: pointer">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === 1}" class="page-item previous-item">
+                                    <a (click)="getData(currentPage - 1)" style="cursor: pointer"
+                                       class="page-link">‹‹</a>
+                                </li>
+                                <li class="page-item number-item">
+                                    <a *ngIf="has_previous_five_page" class="page-link">...</a>
+                                </li>
+                                <li *ngFor="let page of pagination_pages" [ngClass]="{active:currentPage === page}"
+                                    class="page-item number-item">
+                                    <a (click)="getData(page)" class="page-link" style="cursor: pointer">{{page}}</a>
+                                </li>
+                                <li class="page-item number-item">
+                                    <a *ngIf="has_next_five_page" class="page-link">...</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                                    class="page-item next-item">
+                                    <a (click)="getData(currentPage + 1)" style="cursor: pointer"
+                                       class="page-link">››</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                                    class="page-item last-item">
+                                    <a (click)="getData(pager.totalPages)" style="cursor: pointer" class="page-link">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h3">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

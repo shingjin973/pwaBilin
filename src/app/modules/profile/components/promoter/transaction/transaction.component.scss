@@ -1,0 +1,74 @@
+.nicdark_background_size_cover {
+  background-color: #e1db9c;
+}
+.nicdark_section {
+  background: #f7f6f6;
+}
+.balance {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 23px;
+  /* identical to box height */
+  color: #000000;
+  opacity: 0.6;
+  float: left;
+}
+.content{
+  min-height: 600px;
+}
+.balance_amount {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 23px;
+  color: #000000;
+}
+.share-text {
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 29px;
+  color: #000000;
+}
+.table {
+  width: 850px;
+  margin: 0 auto;
+}
+.table_header{
+  width: 850px;
+  margin: 0 auto;
+}
+tr{
+  border-bottom: 1px solid #DBDBDB;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 15px;
+  padding-top: 24px;
+  border-bottom: 1px solid #DBDBDB;
+}
+.userName {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 23px;
+  color: #000000;
+}
+.amount {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  color: #000000;
+}
+.commission{
+  float: left;
+  margin-right: 30px;
+}

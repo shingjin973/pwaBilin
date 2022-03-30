@@ -1,0 +1,53 @@
+<div class="card shadow card-noborder">
+  <div class="card-body">
+    <div class="card-titlebox">
+      <h1 class="card-title">New enrollment</h1>
+      <div></div>
+    </div>
+    <div class="card-content">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field class="w-100">
+          <mat-select formControlName="teacher" placeholder="Teacher">
+            <mat-option>
+              <ngx-mat-select-search [noEntriesFoundLabel]="'No matching found'" [placeholderLabel]="'Find teacher...'" [formControl]="teacherForm"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let teacher of teachers$ | async" [value]="teacher">
+              {{teacher.name}} (#{{teacher.auto_id}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+          <mat-select formControlName="student_family" placeholder="Student">
+            <mat-option>
+              <ngx-mat-select-search [noEntriesFoundLabel]="'No matching found'" [placeholderLabel]="'Find student family...'" [formControl]="studentForm"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let student of students$ | async" [value]="student">
+              #{{student.auto_id}} {{student.name}} ({{student.children.name}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" *ngIf="lessons">
+          <mat-select formControlName="lesson" placeholder="Lesson">
+            <mat-option *ngIf="!lessons.length">Nothing found.</mat-option>
+            <mat-option *ngFor="let lesson of lessons" [value]="lesson">
+              {{lesson.course?.topic}} - {{lesson.subtitle}} (#{{lesson.auto_id}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" *ngIf="form.get('lesson').value">
+          <mat-select multiple formControlName="session" placeholder="Session">
+            <mat-option disabled *ngIf="!sessions || !sessions.length">Nothing found.</mat-option>
+            <mat-option *ngFor="let session of sessions" [value]="session">
+              #{{session.auto_id}} ({{session.startTime | date: 'medium'}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button [disabled]="form.invalid || isLoading" class="btn btn-block btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

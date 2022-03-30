@@ -1,0 +1,27 @@
+<ng-template #loading>
+  <div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+</ng-template>
+
+<ng-template #nodata>
+  <div class="text-center py-5">No materials found</div>
+</ng-template>
+
+<div>
+  <h1 class="mb-3 h3" style="font-weight: bold;">Pick materials for session</h1>
+  <div class="d-flex justify-content-center align-items-center mb-3">
+    <input type="text" placeholder="Search materials.." class="form-control" [formControl]="search">
+  </div>
+
+  <div *ngIf="materials else loading">
+    <div *ngIf="materials.length else nodata">
+      <ul class="list-group">
+        <li [ngClass]="{'bg-primary': isPicked(i._id)}" (click)="pick(i._id)" class="list-group-item" *ngFor="let i of materials">{{i.auto_id}} - {{i.description}}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex justify-content-end align-items-center">
+    <button [mat-dialog-close] class="btn btn-outline-dark px-4 mr-2">Cancel</button>
+    <button (click)="submit()" class="btn btn-info px-4">Pick {{picked.length}} material{{picked.length === 1 ? '' : 's'}}</button>
+  </div>
+</div>

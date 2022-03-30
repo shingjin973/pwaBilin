@@ -1,0 +1,88 @@
+<div class="side-bar nicdark_width_100_percentage_ipad_port nicdark_width_100_percentage_all_iphone">
+    <div class="nicdark_section nicdark_padding_15 nicdark_box_sizing_border_box">
+        <div class="card mb-4" *ngIf="showSections">
+
+            <div class="card-body course-info">
+                <img class="mb-2" alt="" [src]="lesson.course?.thumbnail | s3Storage" style="width: 100%;">
+                <ul>
+                    <li>
+                        <div class="d-flex" i18n><i class="fas fa-users mr-2"></i>Attendees</div>
+                        <div class="card-detail-text">{{lesson.max_students}} <span i18n>Seats / ses.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex" i18n><i class="far fa-clock mr-2"></i>Duration</div>
+                        <div class="card-detail-text">{{lesson.session_duration | duration}}</div>
+                    </li>
+                    <li>
+                        <div class="d-flex" i18n><i class="fas fa-child mr-2"></i>Age</div>
+                        <div class="card-detail-text">{{lesson.course?.min_age}} - {{lesson.course?.max_age}} yr.</div>
+                    </li>
+                    <li>
+                        <div class="d-flex" i18n><i class="far fa-credit-card mr-2"></i>Credits</div>
+                        <div class="card-detail-text">
+                            <ng-template [ngIf]="lesson.credits_per_session === 0" [ngIfElse]="credits_per_session">
+                                <span i18n>FREE</span>
+                            </ng-template>
+                            <ng-template #credits_per_session>
+                                {{lesson.credits_per_session}} <span i18n>credits / ses.</span>
+                            </ng-template>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex" i18n><i class="fas fa-language mr-2"></i>Language of Instruction</div>
+                        <div class="card-detail-text">{{lesson.course?.language}}</div>
+                    </li>
+                    <li>
+                        <div class="d-flex" i18n><i class="fab fa-connectdevelop mr-2"></i>Language Level</div>
+                        <div class="card-detail-text">{{lesson.course?.language_skill | levels}}</div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="card" *ngIf="showSections">
+            <div class="card-body">
+                <div>
+                    <div class="card-title" i18n>Materials</div>
+                    <ul *ngIf="lesson.course.material">
+                        {{lesson.course.material}}
+                    </ul>
+                    <div *ngIf="!lesson.course.material" i18n>
+                        N/A
+                    </div>
+                </div>
+                <div>
+                    <div class="card-title" i18n>Platform</div>
+                    <div *ngIf="lesson.course.provider == 'zoom'">
+                        <img class="nicdark_width_30 mr-2" src="assets/img/zoom.png">
+                        <span>Zoom</span>
+                    </div>
+                    <div *ngIf="lesson.course.provider == 'classin'">
+                        <img class="nicdark_width_30 mr-2" src="assets/img/ClassIn.png" width="50px;">
+                        <span>Classin</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="card-title" *ngIf="lesson.course.provider == 'zoom'">
+                        <a href="#" (click)="$event.preventDefault(); navigate('/faq')" style="cursor: pointer" i18n>How
+                            to take the class</a>
+                    </div>
+                    <div class="card-title" *ngIf="lesson.course.provider == 'classin'">
+                        <a href="#" (click)="$event.preventDefault(); navigate('/faq')" style="cursor: pointer" i18n>How
+                            to take the class</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <ng-template [ngIf]="promoter && lesson.course?.promoter_picture">
+            <div class="promotionContainer">
+                <p i18n> Promotion Poster</p>
+                <div>:US <a i18n (click)=" showUS()">View</a> <a i18n (click)=" downUS()">Download</a> </div>
+                <div>:China<a i18n (click)=" showCN()">View</a> <a i18n (click)=" downCN()">Download</a> </div>
+            </div>
+        </ng-template>
+    </div>
+    <div class="nicdark_section nicdark_height_50"> </div>
+</div>

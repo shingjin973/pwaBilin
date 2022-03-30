@@ -1,0 +1,51 @@
+<div class="nicdark_section nicdark_background_size_cover nicdark_background_position_center_bottom">
+  <div class="nicdark_section">
+    <div class="nicdark_container nicdark_clearfix">
+      <div class="nicdark_section" style="height: 40px"></div>
+    </div>
+  </div>
+</div>
+<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+<div class="nicdark_section nicdark_height_20"></div>
+<div class="nicdark_section text-center">
+  <div class="nicdark_container container nicdark_clearfix">
+    <h1 i18n>GET IN TOUCH</h1>
+    <h2 i18n>Whether you have any questions about our classes, or want to join our team of dedicated instructors, please feel free to get in touch with us!</h2>
+    <p ><strong i18n>Bilin Academy</strong></p>
+    <p><strong i18n>222 W. Merchandise Mart Plaza, Suite 1212,</strong></p>
+    <p><strong i18n>Chicago, IL 60654 USA</strong></p>
+    <p><strong>Email: </strong><a href="mailto:learn@bilinacademy.com" i18n>learn@bilinacademy.com</a></p>
+    <p ><strong i18n>Wechat 微信号: </strong>bilinstudio</p>
+
+    <img src="assets/img/wechat.jpg" width="160" alt="">
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label for="name" i18n>Name:</label>
+        <input type="text" name="name" formControlName="name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="email" i18n>Email:</label>
+        <input type="text" name="email" formControlName="email" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="subject" i18n>Subject:</label>
+        <input type="text" name="subject" formControlName="subject" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="message" i18n>Message:</label>
+        <textarea style="resize: none;" name="message" formControlName="message" class="form-control mb-3"></textarea>
+      </div>
+
+      <div class="text-right">
+        <button type="submit" [disabled]="isLoading" class="btn btn-primary">
+          <i *ngIf="isLoading; else content" class="fas fa-spinner fa-spin"></i>
+          <ng-template #content i18n>
+            Send
+          </ng-template>
+        </button>
+      </div>
+    </form>
+    <div class="nicdark_height_50"></div>
+  </div>
+</div>

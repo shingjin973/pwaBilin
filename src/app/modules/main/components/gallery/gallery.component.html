@@ -1,0 +1,20 @@
+<div class="gallery-page">
+  <div class="gallery-banner d-flex align-items-center">
+    <div class="section-dvm">
+      <h1 i18n>Gallery</h1>
+      <h3 i18n>See what our little artists create!</h3>
+    </div>
+  </div>
+  <!--start nicdark_container-->
+  <div class="nicdark_container nicdark_clearfix">
+    <div class="row mb-4">
+      <div class="col-md-4" *ngFor="let columnId of [1,2,3]">
+        <div *ngFor="let item of splitToColumns(_albums, columnId); let i = index">
+          <div class="img-wrapper" (click)="$event.preventDefault(); open(i);">
+            <img [src]="item.src | s3Storage" [alt]="item.alt">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

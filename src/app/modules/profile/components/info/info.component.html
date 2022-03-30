@@ -1,0 +1,1209 @@
+<div class="nicdark_section nicdark_background_size_cover nicdark_background_position_center_bottom">
+    <div class="nicdark_section">
+        <div class="nicdark_container nicdark_clearfix">
+            <div class="nicdark_section" style="height: 75px"></div>
+        </div>
+    </div>
+</div>
+<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+<div class="nicdark_section" *ngIf="user; else loading">
+    <!--start nicdark_container-->
+    <div class="nicdark_container nicdark_clearfix">
+        <div class="grid grid_4">
+            <div class="card shadow no-border nicdark_section nicdark_box_sizing_border_box">
+                <!--start preview-->
+                <div class="nicdark_section ">
+                    <!--image-->
+                    <div class="nicdark_section nicdark_position_relative">
+                        <ng-template [ngIf]="user.type === UserType.Teacher">
+                            <img alt="" class="nicdark_section"
+                            [src]="(user.profile_picture || 'https://static.thenounproject.com/png/630729-200.png') | s3Storage">
+                            <div
+                            class="nicdark_bg_greydark_alpha_gradient nicdark_position_absolute nicdark_left_0 nicdark_height_100_percentage nicdark_width_100_percentage nicdark_box_sizing_border_box">
+                            <div style="bottom: 10px;" class="nicdark_position_absolute w-100 text-center">
+                                <h2 class="nicdark_color_white font-weight-bold">{{user.name}}</h2>
+                            </div>
+                        </div>
+                        </ng-template>                        
+                      
+                        <div *ngIf="user.type === UserType.Student">
+                            <div class=" w-100 text-center account-name" >
+                                <h2 class="nicdark_color_black font-weight-bold ">{{user.name}}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!--image-->
+                    <div class="nicdark_section nicdark_box_sizing_border_box">
+                        <div
+                            class="nicdark_section nicdark_border_1_solid_grey nicdark_padding_20 nicdark_box_sizing_border_box">
+                            <table class="nicdark_section">
+                                <tbody>
+                                    <tr class="">
+                                        <td class="nicdark_padding_10">
+                                            <div class="nicdark_display_table nicdark_float_left">
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <i class="far fa-id-card fa-2x text-muted pt-1 i-icon"></i>
+                                                </div>
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong>ID</strong>
+                                                    </h5>
+                                                    <p class="">{{user.auto_id}}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="user.type === UserType.Student">
+                                        <td class="nicdark_padding_10">
+                                            <div class="nicdark_display_table nicdark_float_left">
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_top pt-3">
+                                                    <i class="fas fa-child fa-2x text-muted pt-1 i-icon"></i>
+                                                </div>
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong class="mr-2" i18n>PARTICIPANT(S)</strong>
+                                                        (
+                                                        <a (click)="$event.preventDefault(); addChild();" href="#"
+                                                            i18n>Add</a>
+                                                        )
+                                                    </h5>
+                                                    <p *ngFor="let kid of user.children"><strong>{{kid.name}}</strong> -
+                                                        {{kid.age}}yr. ( <a href="#"
+                                                            (click)="$event.preventDefault(); editChild(kid._id)">edit</a>
+                                                        )</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="">
+                                        <td class="nicdark_padding_10">
+                                            <div class="nicdark_display_table nicdark_float_left">
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <i class="far fa-envelope fa-2x text-muted pt-1 i-icon"></i>
+                                                </div>
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong i18n>Email</strong>
+                                                    </h5>
+
+                                                    <p class="">
+                                                        {{user.email}}
+                                                        <br>
+
+                                                        <ng-template [ngIf]="user.email" [ngIfElse]="emailField">
+                                                            <strong *ngIf="user.emailVerified" class="text-success"
+                                                                i18n>Verified</strong>
+                                                            <!-- <strong *ngIf="!user.emailVerified" class="text-danger"
+                                                                i18n>Unverifed
+                                                                <a href="#"
+                                                                (click)="$event.preventDefault(); verifyEmail()">(Verify)</a>
+                                                            </strong> -->
+                                                        </ng-template>
+                                                        <ng-template #emailField>
+                                                            <span>-</span>
+                                                        </ng-template>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="">
+                                        <td class="nicdark_padding_10">
+                                            <div class="nicdark_display_table nicdark_float_left">
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <i class="fas fa-mobile-alt fa-2x text-muted pt-1 i-icon"></i>
+                                                </div>
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong i18n>Phone</strong>
+                                                    </h5>
+                                                    <p class="">
+                                                        {{user.phone}}
+                                                        <br>
+
+                                                        <ng-template [ngIf]="user.phone" [ngIfElse]="phoneField">
+                                                            <strong *ngIf="user.phoneVerified" class="text-success"
+                                                                i18n>Verified</strong>
+                                                            <strong *ngIf="!user.phoneVerified" class="text-danger"
+                                                                i18n>Unverifed
+                                                                <!--<a href="#"-->
+                                                                <!--(click)="$event.preventDefault(); verifyMobile()">(Verify)-->
+                                                                <!--</a>-->
+                                                            </strong>
+                                                        </ng-template>
+                                                        <ng-template #phoneField>
+                                                            <span>-</span>
+                                                        </ng-template>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="nicdark_padding_10">
+                                            <div class="nicdark_display_table nicdark_float_left">
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle i-icon">
+                                                    <!-- <i class="fab fa-facebook fa-2x mr-3 text-muted pt-1"></i> -->
+                                                    <img src="assets/images/classin.png" alt="" >
+                                                </div>
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong i18n>ClassIn ID</strong>
+                                                    </h5>
+                                                    <p class="">{{user.classin || '-'}}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td class="nicdark_padding_10">
+                                            <div class="nicdark_display_table nicdark_float_left">
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <i class="fab fa-facebook fa-2x mr-3 text-muted pt-1"></i>
+                                                </div>
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong>Facebook ID</strong>
+                                                    </h5>
+                                                    <p class="">{{user.facebook || '-'}}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="nicdark_padding_10">
+                                            <div class="nicdark_display_table nicdark_float_left">
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <i class="fab fa-weixin fa-2x mr-3 text-muted pt-1"></i>
+                                                </div>
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong i18n>WeChat ID</strong>
+                                                    </h5>
+                                                    <p class="">{{user.wechat || '-'}}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr> -->
+
+                                    <tr *ngIf="user.type === UserType.Teacher">
+                                        <td class="nicdark_padding_10">
+                                            <div class="nicdark_display_table nicdark_float_left">
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_top pt-3">
+                                                    <i class="fas fa-child fa-2x mr-3 text-muted pt-1"></i>
+                                                </div>
+                                                <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong class="mr-2" i18n>School</strong>
+                                                    </h5>
+                                                    <p>{{(user.school$ | async) || '-'}}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="user.introduction">
+                                        <td class="nicdark_padding_10">
+                                            <div class="d-flex justify-content-start align-items-top flex-row">
+                                                <div class="mt-3">
+                                                    <i class="fas fa-paragraph fa-2x mr-3 text-muted pt-1"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong i18n>About Me</strong>
+                                                    </h5>
+                                                    <div class="nicdark_section nicdark_height_5"></div>
+                                                    <p class="nicdark_line_height_25"
+                                                        [appTranslate]="user.introduction_ch">
+                                                        {{user.introduction}}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngIf="user.type === UserType.Teacher || user.type === UserType.UnApprovedTeacher">
+                                        <td class="nicdark_padding_10">
+                                            <div class="d-flex justify-content-start align-items-top flex-row">
+                                                <div class="mt-3">
+                                                    <i class="fas fa-file-word fa-2x mr-3 text-muted pt-1"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="nicdark_font_size_13 nicdark_text_transform_uppercase">
+                                                        <strong i18n class="mr-2" i18n>Resume</strong>
+                                                        (
+                                                        <a (click)="$event.preventDefault(); addResume();" href="#"
+                                                            i18n>Upload
+                                                            resume</a>
+                                                        )
+                                                    </h5>
+                                                    <div class="nicdark_section nicdark_height_5"></div>
+                                                    <p class="nicdark_line_height_25">
+                                                        <a [href]="user.resume | s3Storage"
+                                                            *ngIf="user.resume; else noresume" i18n>Your resume</a>
+                                                        <ng-template #noresume>
+                                                            -
+                                                        </ng-template>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="nicdark_section nicdark_padding_10 nicdark_box_sizing_border_box nicdark_bg_white ">
+                        <div
+                            class="nicdark_width_50_percentage nicdark_padding_10 nicdark_box_sizing_border_box nicdark_float_left nicdark_text_align_center">
+                            <a [routerLink]="['/profile/settings']"
+                                class="nicdark_display_inline_block nicdark_color_white nicdark_bg_green nicdark_box_sizing_border_box nicdark_width_100_percentage nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                href="#" i18n>EDIT PROFILE</a>
+                        </div>
+                        <div
+                            class="nicdark_width_50_percentage nicdark_padding_10 nicdark_box_sizing_border_box nicdark_float_left nicdark_text_align_center">
+                            <a (click)="$event.preventDefault(); logout()"
+                                class="nicdark_display_inline_block nicdark_color_white nicdark_bg_red nicdark_box_sizing_border_box nicdark_width_100_percentage nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                                href="#" i18n>LOGOUT</a>
+                        </div>
+                    </div>
+                </div>
+                <!--start preview-->
+            </div>
+        </div>
+        <div class="grid grid_8">
+            <div class="refer_section">
+                <div class="refer_top" (click)="$event.preventDefault(); change_show()">
+                    <div class="refer_content">
+                        <div class="refer_left_content">
+                            <p class="refer_text">Refer Friends & Earn Credit</p>
+                            <p class="refer_up_text">Refer Up to 3 friends for 10 credits each when they sign up</p>
+                        </div>
+                        <div class="refer_credit">
+                            <p>$30</p>
+                            <p>credits</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="refer_bottom" [style.display]="show_refer">
+                    <div class="refer_bottom_green"></div>
+                    <div class="refer_bottom_middle"></div>
+                    <div class="refer_bottom_your_referrals">
+                        <div class="refer_content">
+                            <div class="refer_bottom_left_content">
+                                <p class="refer_blue_big_text">Your referrals:</p>
+                                <p class="refer_blue_small_text">({{user.refer_friends.length}} of 3 successful
+                                    referrals)</p>
+                            </div>
+                            <div class="refer_bottom_right_content">
+                                <table class="refer_list_table">
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Email</th>
+                                        <th>Credits</th>
+                                    </tr>
+                                    <tr *ngFor="let friend of user.refer_friends; let i = index" class="border-bottom">
+                                        <td>{{i+1}}</td>
+                                        <td>{{friend.email}}</td>
+                                        <td *ngIf="friend.phoneVerified">10</td>
+                                        <td *ngIf="!friend.phoneVerified"></td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="refer_link_section">
+                        <div class="link_content_container">
+                            <div class="link_content">
+                                <p class="refer_blue_big_text">Copy this link and send it to a friend</p>
+                                <div class="tooltiparea">
+                                    <p class="link_content_text content_wrap"> US:
+                                        https://bilin.academy/en/authentication/signup?referer={{user._id}}</p>
+                                    <button type="button" class="btn btn-outline-info copy_button"
+                                        (click)="$event.preventDefault(); copy_us()">Copy</button>
+                                    <span *ngIf="!showusTooltip" class="tooltiptext"
+                                        style="visibility: hidden;">Copied</span>
+                                    <span *ngIf="showusTooltip" class="tooltiptext"
+                                        style="visibility: visible;">Copied</span>
+                                </div>
+                                <div class="tooltiparea">
+                                    <p class="link_content_text content_wrap"> China:
+                                        https://www.bilinacademy.cn/ch/authentication/signup?referer={{user._id}}</p>
+                                    <button type="button" class="btn btn-outline-info copy_button"
+                                        (click)="$event.preventDefault(); copy_ch()">Copy</button>
+                                    <span *ngIf="!showchTooltip" class="tooltiptext"
+                                        style="visibility: hidden;">Copied</span>
+                                    <span *ngIf="showchTooltip" class="tooltiptext"
+                                        style="visibility: visible;">Copied</span>
+                                </div>
+                            </div>
+                            <div class="link_content qr_content">
+                                <p class="refer_blue_big_text">You can also send them this QR code:</p>
+                                <div class="qr_section_container">
+                                    <div class="qr_section" style="background-image: url('assets/images/qr_back.svg');">
+                                        <img src="" alt="" id="us_image" />
+                                        <p class="link_content_text qr_bottom_text">US users</p>
+                                    </div>
+                                </div>
+                                <div class="qr_section_container">
+                                    <div class="qr_section ch_qr_section"
+                                        style="background-image: url('assets/images/qr_back.svg');">
+                                        <img src="" alt="" id="ch_image" />
+                                        <p class="link_content_text qr_bottom_text">China users</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="nicdark_section">
+                <!-- BEGIN: promotions-->
+                <!--<div class="card shadow no-border mb-4"-->
+                <!--*ngIf="(user.type === UserType.Student) && (!user.emailVerified || !user.phoneVerified || !user.children || !user.children.length) ">-->
+                <!---->
+                <!-- <div class="card shadow no-border mb-4" *ngIf="user.type === UserType.Student">
+                    <div class="card-body">
+                        <div class="card-titlebox">
+                            <h2 class="mb-0 mr-2">
+                                <span i18n>Things To Do</span>
+                            </h2>
+                        </div>
+                        <br>
+                        <div class="row" *ngIf="!user.children || !user.children.length">
+                            <div class="col-md-1 nicdark_display_table_cell nicdark_vertical_align_top">
+                                <i class="fas fa-child fa-2x mr-3 text-muted pt-1" style="font-size: 35px;"></i>
+                            </div>
+                            <div class="col-md-11 nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="" i18n>
+                                    
+
+                                    <strong class="text-danger">
+                                        <a (click)="$event.preventDefault(); addChild();" href="#">
+                                           
+                                            Add a participant
+                                        </a>
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="!user.phoneVerified">
+                            <div class="col-md-1 nicdark_display_table_cell nicdark_vertical_align_top">
+                                <i class="fas fa-mobile-alt fa-2x mr-3 text-muted pt-1" style="font-size: 40px;"></i>
+                            </div>
+                            <div class="col-md-11 nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="" *ngIf="!user.phoneVerified" i18n>
+                                    {{user.phone}}
+                                    <br>
+                                    <ng-template [ngIf]="user.phone" [ngIfElse]="phoneField">
+                                   
+                                        <strong *ngIf="!user.phoneVerified" class="text-danger">
+                                            <a href="#" (click)="$event.preventDefault(); verifyMobile()"> Verify
+                                            </a>
+                                        </strong>
+                                    </ng-template>
+                                    <ng-template #phoneField>
+                                        <span>-</span>
+                                    </ng-template>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="!user.emailVerified">
+                            <div class="col-md-1 nicdark_display_table_cell nicdark_vertical_align_top">
+                                <i class="far fa-envelope fa-2x mr-3 text-muted pt-1"></i>
+                            </div>
+                            <div class="col-md-11 nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="" *ngIf="!user.emailVerified" i18n>
+                                    {{user.email}}
+                                    <br>
+
+                                    <ng-template [ngIf]="user.email" [ngIfElse]="emailField">
+                                        Verify your email to get 10 credits (10 US dollars value)
+                                        <strong *ngIf="!user.emailVerified" class="text-danger">
+                                            <a href="#" (click)="$event.preventDefault(); verifyEmail()">
+                                                Verify</a></strong>
+                                    </ng-template>
+                                    <ng-template #emailField>
+                                        <span>-</span>
+                                    </ng-template>
+                                </p>
+                            </div>
+                        </div>
+
+                        
+                        <div class="row">
+                            <div class="col-md-1 nicdark_display_table_cell nicdark_vertical_align_top">
+                                <i class="fas fa-users fa-2x mr-3 text-muted pt-1" style="font-size: 25px;"></i>
+                            </div>
+                            <div class="col-md-11 nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p *ngFor="let friend of user.refer_friends">
+                                    <strong>{{friend.email}}</strong> (Phone:
+                                    <strong *ngIf="friend.phoneVerified" class="text-success" i18n> Verified</strong>
+                                    <strong *ngIf="!friend.phoneVerified" class="text-danger" i18n> Unverifed</strong>
+                                    )
+                                </p>
+
+                                <p class="" i18n>
+                                    Refer up to 3 friends for 10 credits each when they sign up.
+                                    <br>
+                                    ({{user.refer_friends.length}} of 3 successful referrals)
+                                    <strong class="text-danger"
+                                        *ngIf="!user.refer_friends || user.refer_friends.length < 3">
+                                        <a (click)="$event.preventDefault(); referFriend();" href="#">
+                                            Refer a friend
+                                        </a>
+                                    </strong>
+                                </p>
+                                <p class="link_lavel">US refer signup link:</p>                            
+                                <p class="link_lavel">China refer signup link:</p>
+                                <div class="refer_link tooltiparea">
+                                    https://www.bilinacademy.cn/ch/authentication/signup?referer={{user._id}}
+                                    <img alt="copy" height="25" (click)="$event.preventDefault(); copy_ch()"
+                                        src="assets/img/copy.png">
+                                    <span *ngIf="!showchTooltip" class="tooltiptext"
+                                        style="visibility: hidden;">Copied</span>
+                                    <span *ngIf="showchTooltip" class="tooltiptext"
+                                        style="visibility: visible;">Copied</span>
+                                </div>
+                                <div>
+                                    <div class="qrcode_image">
+                                        <img src="" alt="" id="us_image" />
+                                        <p>US QR code</p>
+                                    </div>
+                                    <div class="qrcode_image">
+                                        <img src="" alt="" id="ch_image" />
+                                        <p>China QR code</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                </div> -->
+                <!-- END -->
+
+                <!-- BEGIN: balance -->
+                <div class="card shadow no-border mb-4" *ngIf="user.type === UserType.Student">
+                    <div class="card-body">
+                        <div class="card-titlebox">
+                            <h2 class="mb-0 mr-2"><span i18n>Balance</span>:<strong> {{user.balance || '0'}} </strong>
+                                <span i18n>credits</span>
+                            </h2>
+                            <a href="#" [routerLink]="['balance']" class="btn btn-primary mr-auto" i18n>Buy credits</a>
+                            <a href="#" [routerLink]="['/courses']" class="btn btn-primary" i18n>Browse Courses</a>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- END -->
+
+                <div class="card shadow no-border mb-4" *ngIf="user.type === UserType.Teacher">
+                    <div class="card-body">
+                        <div class="card-titlebox">
+                            <h2 class="mb-0"><span i18n>Balance</span>:<strong> ${{user.balance || '0'}}</strong></h2>
+                            <!-- <a
+                              href="#"
+                              [routerLink]="['balance']"
+                              class="btn btn-primary btn-lg"
+                              i18n
+                              >Withdraw money</a> -->
+                        </div>
+                    </div>
+                </div>
+                <!--START tab-->
+                <div class="nicdark_tabs card shadow no-border"
+                    *ngIf="(currentTab | async) !== Tabs.Hidden; else hiddenTab">
+                    <ul
+                        class="nicdark_list_style_none nicdark_margin_0 nicdark_padding_0 nicdark_section nicdark_border_bottom_2_solid_grey">
+                        <ng-template [ngIf]="user.type === UserType.Student">
+                            <li class="nicdark_display_inline_block" style="padding-left: 20px; padding-top: 20px;">
+                                <h4>
+                                    <a (click)="$event.preventDefault(); currentTab.next(Tabs.Enrollments)"
+                                        [ngClass]="{'active': (currentTab | async) == Tabs.Enrollments}"
+                                        class="nicdark_outline_0 nicdark_padding_right_20 nicdark_display_inline_block nicdark_first_font nicdark_color_greydark"
+                                        href="#" i18n>Enrollments</a>
+                                </h4>
+                            </li>
+                            <li class="nicdark_display_inline_block">
+                                <h4>
+                                    <a (click)="$event.preventDefault(); currentTab.next(Tabs.Orders)"
+                                        [ngClass]="{'active': (currentTab | async) == Tabs.Orders}"
+                                        class="nicdark_outline_0 nicdark_padding_right_20 nicdark_display_inline_block nicdark_first_font nicdark_color_greydark"
+                                        href="#" i18n>Payments</a>
+                                </h4>
+                            </li>
+                        </ng-template>
+                        <ng-template [ngIf]="user.type === UserType.Teacher">
+                            <li class="nicdark_display_inline_block" style="padding-left: 20px; padding-top: 20px;">
+                                <h4>
+                                    <a (click)="$event.preventDefault(); currentTab.next(Tabs.UpcomingSessions)"
+                                        [ngClass]="{'active': (currentTab | async) == Tabs.UpcomingSessions}"
+                                        class="nicdark_outline_0 nicdark_padding_right_20 nicdark_display_inline_block nicdark_first_font nicdark_color_greydark"
+                                        href="#" i18n>Upcoming Sessions</a>
+                                </h4>
+                            </li>
+                            <li class="nicdark_display_inline_block" >
+                                <h4>
+                                    <a (click)="$event.preventDefault(); currentTab.next(Tabs.Lessons)"
+                                        [ngClass]="{'active': (currentTab | async) == Tabs.Lessons}"
+                                        class="nicdark_outline_0 nicdark_padding_right_20 nicdark_display_inline_block nicdark_first_font nicdark_color_greydark"
+                                        href="#" i18n>Offerings</a>
+                                </h4>
+                            </li>                          
+                        </ng-template>
+                        <li class="nicdark_display_inline_block">
+                            <h4>
+                                <a (click)="$event.preventDefault(); currentTab.next(Tabs.Transactions)"
+                                    [ngClass]="{'active': (currentTab | async) == Tabs.Transactions}"
+                                    class="nicdark_outline_0 nicdark_padding_right_20 nicdark_display_inline_block nicdark_first_font nicdark_color_greydark"
+                                    href="#" i18n>Transactions</a>
+                            </h4>
+                        </li>
+
+                        <li class="nicdark_display_inline_block">
+                            <h4>
+                                <a (click)="$event.preventDefault(); currentTab.next(Tabs.Homeworks)"
+                                    [ngClass]="{'active': (currentTab | async) == Tabs.Homeworks}"
+                                    class="nicdark_outline_0 nicdark_padding_right_20 nicdark_display_inline_block nicdark_first_font nicdark_color_greydark"
+                                    href="#" i18n>Homeworks</a>
+                            </h4>
+                        </li>
+
+                        <li class="nicdark_display_inline_block">
+                            <h4>
+                                <a (click)="$event.preventDefault(); currentTab.next(Tabs.Bundles)"
+                                    [ngClass]="{'active': (currentTab | async) == Tabs.Bundles}"
+                                    class="nicdark_outline_0 nicdark_padding_right_20 nicdark_display_inline_block nicdark_first_font nicdark_color_greydark"
+                                    href="#" i18n>Packages</a>
+                            </h4>
+                        </li>
+
+                        <li class="nicdark_display_inline_block" style="margin-left: 200px;"
+                            *ngIf="user.type === UserType.Student">
+                            <h4>
+                                <a class="btn btn-primary"
+                                    (click)="$event.preventDefault(); navigate('/faq', 'howtocancel')" i18n>FAQ</a>
+
+                                <!--<a class="nicdark_outline_0 nicdark_padding_20 nicdark_padding_right_20 nicdark_display_inline_block nicdark_first_font nicdark_color_greydark"-->
+                                <!--style="cursor: pointer" [routerLink]='"/faq"' fragment="howtocancel" i18n>How to cancel a session?</a>-->
+                            </h4>
+
+                        </li>
+                    </ul>
+                    <div class="nicdark_section nicdark_height_20"></div>
+                    <div class="nicdark_section" *ngIf="(currentTab | async) == Tabs.Bundles">
+                        <div
+                            class="nicdark_section nicdark_box_sizing_border_box nicdark_overflow_hidden nicdark_overflow_x_auto nicdark_cursor_move_responsive">
+                            <div *ngIf="bundles; else loading">
+                                <div *ngIf="bundles.length; else nodata">
+                                    <table class="nicdark_section">
+                                        <thead>
+                                            <tr>
+                                                <th class="nicdark_padding_20 py-0" i18n>Package</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Student</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Tuition</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of bundles" class="nicdark_border_bottom_2_solid_grey">
+                                                <td class="nicdark_padding_20">
+                                                    <h3 class="mb-0 h6">
+                                                        <a [routerLink]="['/courses', item.bundle.course_id, 'package', item.bundle._id]"
+                                                            href="#">{{item.bundle.bundle_title}}</a>
+                                                    </h3>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p class="mb-0">{{item.student_name}}</p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p class="mb-0">{{item.bundle.tuition | currency}}</p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p class="mb-0">{{item.state | state}}</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-template #nodata>
+                                    <div class="p-5 text-center">
+                                        <span class="h4" i18n>No Package</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loading>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="nicdark_section" *ngIf="(currentTab | async) == Tabs.UpcomingSessions">
+                        <div
+                            class="nicdark_section nicdark_box_sizing_border_box nicdark_overflow_hidden nicdark_overflow_x_auto nicdark_cursor_move_responsive">
+                            <div *ngIf="upcomingSessions; else loading">
+                                <div *ngIf="upcomingSessions.length; else nodata">
+                                    <table class="nicdark_section">
+                                        <thead>
+                                            <tr>
+                                                <th class="nicdark_padding_20 py-0" i18n>Subject</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Course</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Start Time</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of upcomingSessions"
+                                                class="nicdark_border_bottom_1_solid_grey">
+                                                <td class="nicdark_padding_10">
+                                                    <a [routerLink]="['/courses', item.course?._id, 'lesson', item.lesson, 'session', item._id]"
+                                                        href="#">{{item.subject}}</a>
+                                                </td>
+                                                <td class="nicdark_padding_10">
+                                                    {{item.course?.topic}}
+                                                </td>
+                                                <td class="nicdark_padding_10">
+                                                    {{item.startTime | amLocal | amDateFormat: 'llll'}}
+                                                </td>
+                                                <td
+                                                    class="nicdark_padding_10 d-flex justify-content-center align-items-center">
+                                                    <button (click)="viewEnrollments(item)"
+                                                        class="btn btn-sm btn-outline-primary mr-1" i18n>View
+                                                        enrollments
+                                                    </button>
+                                                    <button (click)="launchClassroom(item.course)"
+                                                        class="btn btn-primary btn-sm" i18n>Enter the classroom
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-template #nodata>
+                                    <div class="p-5 text-center">
+                                        <span class="h4" i18n>No data</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loading>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="nicdark_section" *ngIf="(currentTab | async) == Tabs.Homeworks">
+                        <div
+                            class="nicdark_section nicdark_box_sizing_border_box nicdark_overflow_hidden nicdark_overflow_x_auto nicdark_cursor_move_responsive">
+                            <div class="d-flex justify-content-end px-5 mb-3"
+                                *ngIf="_enrollments && _enrollments.length">
+                                <button (click)="uploadHomework()" class="btn btn-primary px-4" i18n> Upload homework
+                                </button>
+                            </div>
+
+                            <div *ngIf="homeworks; else loading">
+                                <div *ngIf="homeworks.length; else nodata">
+                                    <table class="nicdark_section">
+                                        <thead>
+                                            <tr>
+                                                <th class="nicdark_padding_20 py-0" i18n>Course Name (id)</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Link</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of homeworks"
+                                                class="nicdark_border_bottom_1_solid_grey pb-3">
+                                                <td class="nicdark_padding_20">
+                                                    <p class="mb-0">{{item.course?.topic}} ({{item.course?.auto_id}})
+                                                    </p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <a target="_blank" [href]="item.url">{{item.prettyUrl}}</a>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p class="mb-0">{{item.date | amLocal | amTimeAgo}}</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-template #nodata>
+                                    <div class="p-5 text-center">
+                                        <span class="h4" i18n>No data</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loading>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="nicdark_section" *ngIf="(currentTab | async) == Tabs.Transactions">
+                        <div
+                            class="nicdark_section nicdark_box_sizing_border_box nicdark_overflow_hidden nicdark_overflow_x_auto nicdark_cursor_move_responsive">
+                            <div *ngIf="transactions; else loading">
+                                <div *ngIf="transactions.length; else nodata">
+                                    <table class="nicdark_section">
+                                        <thead>
+                                            <tr>
+                                                <th class="nicdark_padding_20 py-0" i18n>Credit</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Charge</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Notes</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of transactions"
+                                                class="nicdark_border_bottom_1_solid_grey">
+                                                <td class="nicdark_padding_20">
+                                                    <p>{{item.debit_user === user._id ? '-' + item.debit_amount : '+' +
+                                                        item.credit_amount}}</p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p *ngIf="user.type === UserType.Student">{{item.debit_type |
+                                                        transactionvaluetype}}</p>
+                                                    <p *ngIf="user.type === UserType.Teacher">$</p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p>{{item.notes}}</p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p>{{item.date | amLocal | amTimeAgo}}</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-template #nodata>
+                                    <div class="p-5 text-center">
+                                        <span class="h4" i18n>No data</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loading>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="nicdark_section" *ngIf="(currentTab | async) == Tabs.Enrollments">
+                        <div
+                            class="nicdark_section nicdark_box_sizing_border_box nicdark_overflow_hidden nicdark_overflow_x_auto nicdark_cursor_move_responsive">
+                            <div class="text-center mb-4">
+                                <div class="button-group">
+                                    <button
+                                        (click)="$event.preventDefault(); enrollmentTab = 'upcoming'; filterStudentEnrollments();"
+                                        [ngClass]="{'active': enrollmentTab === 'upcoming'}"
+                                        style="border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0"
+                                        class="btn btn-outline-primary px-5" i18n>
+                                        Upcoming
+                                    </button>
+                                    <button
+                                        (click)="$event.preventDefault(); enrollmentTab = 'completed'; filterStudentEnrollments();"
+                                        [ngClass]="{'active': enrollmentTab === 'completed'}"
+                                        style="border-top-left-radius: 0; border-bottom-left-radius: 0"
+                                        class="btn btn-outline-primary px-5" i18n>Completed
+                                    </button>
+                                    <button
+                                        (click)="$event.preventDefault(); enrollmentTab = 'past'; filterStudentEnrollments();"
+                                        [ngClass]="{'active': enrollmentTab === 'past'}"
+                                        style="border-top-left-radius: 0; border-bottom-left-radius: 0"
+                                        class="btn btn-outline-primary px-5" i18n> My courses
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div *ngIf="enrollments; else loading">
+                                <div *ngIf="enrollments.length; else nodata">
+                                    <ng-template [ngIf]="enrollmentTab === 'upcoming'">
+                                        <table class="nicdark_section">
+                                            <thead>
+                                                <tr>
+                                                    <th class="nicdark_padding_20 py-0" i18n>Subject</th>
+                                                    <th class="nicdark_padding_20 py-0" i18n>Course</th>
+                                                    <th class="nicdark_padding_20 py-0" i18n>Start Time</th>
+                                                    <th class="nicdark_padding_20 py-0" i18n></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let enr of enrollments"
+                                                    class="nicdark_border_bottom_2_solid_grey">
+                                                    <td class="nicdark_padding_20">
+                                                        <h3 class="mb-0 h6"><a
+                                                                [routerLink]="['/courses', enr.course?._id, 'lesson', enr.lesson?._id, 'session', enr.session?._id]"
+                                                                href="#">{{enr.session?.subject}}</a></h3>
+                                                    </td>
+                                                    <td class="nicdark_padding_20">
+                                                        <p class="mb-0"><a
+                                                                [routerLink]="['/courses', enr.course?._id, 'lesson', enr.lesson?._id]"
+                                                                href="#">{{enr.course?.topic}}</a></p>
+                                                    </td>
+                                                    <td class="nicdark_padding_20">
+                                                        <a [routerLink]="['/courses', enr.course?._id, 'lesson', enr.lesson?._id, 'session', enr.session?._id]"
+                                                            href="#"> {{enr.session?.startTime | amDateFormat: 'MMM DD,
+                                                            YYYY h:mm A'}}</a>
+                                                    </td>
+                                                    <td class="nicdark_padding_20">
+                                                        <button
+                                                            (click)="launchClassroom(enr.course?.provider, enr.session?.zoomUrl)"
+                                                            class="btn btn-primary btn-sm">Enter the classroom
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </ng-template>
+                                    <ng-template [ngIf]="enrollmentTab === 'completed'">
+                                        <table class="nicdark_section">
+                                            <thead>
+                                                <tr>
+                                                    <th class="nicdark_padding_20 py-0" i18n>Subject</th>
+                                                    <th class="nicdark_padding_20 py-0" i18n>Course</th>
+                                                    <th class="nicdark_padding_20 py-0" i18n>Start Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let enr of enrollments"
+                                                    class="nicdark_border_bottom_2_solid_grey">
+                                                    <td class="nicdark_padding_20">
+                                                        <h3 class="mb-0 h6"><a
+                                                                [routerLink]="['/courses', enr.course?._id, 'lesson', enr.lesson?._id, 'session', enr.session?._id]"
+                                                                href="#">{{enr.session?.subject}}</a></h3>
+                                                    </td>
+                                                    <td class="nicdark_padding_20">
+                                                        <p class="mb-0"><a
+                                                                [routerLink]="['/courses', enr.course?._id, 'lesson', enr.lesson?._id]"
+                                                                href="#">{{enr.course?.topic}}</a></p>
+                                                    </td>
+                                                    <td class="nicdark_padding_20">
+                                                        <a [routerLink]="['/courses', enr.course?._id, 'lesson', enr.lesson?._id, 'session', enr.session?._id]"
+                                                            href="#">{{enr.session?.startTime | amDateFormat: 'MMM DD,
+                                                            YYYY h:mm A'}}</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </ng-template>
+                                    <ng-template [ngIf]="enrollmentTab === 'past'">
+                                        <div class="accordion">
+                                            <div class="card" *ngFor="let item of enrollments">
+                                                <div class="card-header">
+                                                    <h2 class="card-title h4 mb-0 d-flex align-items-center">
+                                                        <a href="#"
+                                                            [routerLink]="['/courses', item.course._id, 'lesson', item._id]"
+                                                            class="mr-2"><i class="fas fa-external-link-alt"
+                                                                style="font-size: 14px; line-height: 2rem;"></i></a>
+                                                        <a href="#"
+                                                            class="d-flex align-items-center justify-content-between w-100"
+                                                            (click)="$event.preventDefault(); currentSession = null; currentLesson = (currentLesson === item._id ? null : item._id)">
+                                                            <span>{{item.course.topic}} ({{item.subtitle}})</span>
+                                                            <i *ngIf="currentLesson !== item._id"
+                                                                class="fas fa-angle-down"></i>
+                                                            <i *ngIf="currentLesson === item._id"
+                                                                class="fas fa-angle-up"></i>
+                                                        </a>
+                                                    </h2>
+                                                </div>
+                                                <div class="card-body" *ngIf="currentLesson === item._id">
+                                                    <table class="nicdark_section">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="nicdark_padding_20 py-0" i18n>Subject</th>
+                                                                <th class="nicdark_padding_20 py-0" i18n>Start Time</th>
+                                                                <th class="nicdark_padding_20 py-0" i18n>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let enr of item.sessions"
+                                                                class="nicdark_border_bottom_2_solid_grey">
+                                                                <td class="nicdark_padding_20">
+                                                                    <h3 class="mb-0 h6">{{enr.session?.subject}}</h3>
+                                                                </td>
+                                                                <td class="nicdark_padding_20">
+                                                                    <a [routerLink]="['/courses', enr.course?._id, 'lesson', enr.lesson?._id, 'session', enr.session?._id]"
+                                                                        href="#">{{enr.session?.startTime |
+                                                                        amDateFormat: 'MMM DD, YYYY h:mm A'}}</a>
+                                                                </td>
+                                                                <td class="nicdark_padding_20">
+                                                                    <strong class="text-primary">{{enr.state |
+                                                                        state}}</strong>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- <div class="accordion">
+                                                      <div class="card" *ngFor="let session of item.sessions">
+                                                        <div class="card-header">
+                                                          <h3 class="card-title h6 mb-0 d-flex align-items-center">
+                                                            <a href="#" [routerLink]="['/courses', item.course._id, 'lesson', item._id, 'session', session.session._id]" class="d-flex align-items-center justify-content-between w-100">
+                                                              <span>{{session.session.subject}}, {{session.session.startTime | amLocal | amDateFormat: 'llll'}}<br />Zoom Meeting ID: {{session.session.zoomId}}</span>
+                                                            </a>
+                                                          </h3>
+                                                        </div>
+                                                        <div class="card-body" *ngIf="currentSession === session._id">
+                                                          <div *ngIf="enrollments; else loading">
+                                                            <div *ngIf="enrollments.length; else nodata">
+                                                              <div class="d-flex justify-content-between align-items-center">
+                                                                <h5 class="mt-2"><span i18n>Enrollments</span> ({{enrollments.length}})</h5>
+
+                                                                <span *ngIf="loadingCompletionSession">
+                                                                  <i class="fas fa-spinner fa-spin"></i>
+                                                                </span>
+                                                                <a *ngIf="!loadingCompletionSession && session.state === State.Active" href="#" (click)="$event.preventDefault(); checkSessionCompletion(session, item)" i18n>Complete session</a>
+                                                              </div>
+                                                              <table class="nicdark_section">
+                                                                <tbody>
+                                                                  <tr *ngFor="let env of enrollments" class="nicdark_border_bottom_2_solid_grey">
+                                                                    <td class="nicdark_padding_10">
+                                                                      <h3 class="mb-0 h6">{{env.student_family_name}}</h3>
+                                                                    </td>
+                                                                    <td class="nicdark_padding_10">
+                                                                      <p class="mb-0">{{env.date | date: 'mediumDate'}}</p>
+                                                                    </td>
+                                                                    <td class="nicdark_padding_10">
+                                                                      <p class="mb-0 text-primary font-weight-bold">{{env.state | state}}</p>
+                                                                    </td>
+                                                                  </tr>
+                                                                </tbody>
+                                                              </table>
+                                                            </div>
+                                                            <ng-template #nodata>
+                                                              <div class="p-5 text-center">
+                                                                <span class="h4" i18n>No data</span>
+                                                              </div>
+                                                            </ng-template>
+                                                          </div>
+                                                          <ng-template #loading>
+                                                            <mat-spinner></mat-spinner>
+                                                          </ng-template>
+                                                        </div>
+                                                      </div>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                    <!-- <table class="nicdark_section">
+                                      <thead>
+                                        <tr>
+                                          <th class="nicdark_padding_20 py-0" *ngIf="enrollmentTab === 'past'" i18n>Status</th>
+                                          <th class="nicdark_padding_20 py-0" i18n>Start time</th>
+                                          <th class="nicdark_padding_20 py-0" i18n>Course</th>
+                                          <th class="nicdark_padding_20 py-0" i18n>Topic</th>
+                                          <th class="nicdark_padding_20 py-0" i18n>Zoom Link</th>
+                                          <th class="nicdark_padding_20 py-0" i18n>Metting ID</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let item of enrollments" class="nicdark_border_bottom_2_solid_grey">
+                                          <td class="nicdark_padding_20" *ngIf="enrollmentTab === 'past'">
+                                            <p class="mb-0 text-center">
+                                              <i *ngIf="item.state === State.Completed" class="fas fa-check-circle fa-2x text-success"></i>
+                                              <i *ngIf="item.state === State.Canceled" class="far fa-times-circle fa-2x text-danger"></i>
+                                            </p>
+                                          </td>
+                                          <td class="nicdark_padding_20">
+                                            <p class="mb-0">{{item.session.startTime | amLocal | amDateFormat: 'MMM D, YYYY, h:mm A'}}</p>
+                                          </td>
+                                          <td class="nicdark_padding_20">
+                                            <h3 class="mb-0 h6"><a href="#" [routerLink]="['/courses', item.course._id, 'lesson', item.lesson._id]">{{item.course.topic}}</a></h3>
+                                          </td>
+                                          <td class="nicdark_padding_20">
+                                            <p class="mb-0"><a href="#" [routerLink]="['/courses', item.course._id, 'lesson', item.lesson._id, 'session', item.session._id]">{{item.session.subject}}</a></p>
+                                          </td>
+                                          <td class="nicdark_padding_20">
+                                            <p class="mb-0">{{item.session.zoomUrl}}</p>
+                                          </td>
+                                          <td class="nicdark_padding_20">
+                                            <p class="mb-0">{{item.session.zoomId}}</p>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table> -->
+                                </div>
+                                <ng-template #nodata>
+                                    <div class="p-5 text-center">
+                                        <span class="h4" i18n>No data</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loading>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="nicdark_section" *ngIf="(currentTab | async) == Tabs.Lessons">
+                        <div
+                            class="nicdark_section nicdark_box_sizing_border_box nicdark_overflow_hidden nicdark_overflow_x_auto nicdark_cursor_move_responsive">
+                            <div *ngIf="lessons; else loading">
+                                <div *ngIf="lessons.length; else nodata">
+                                    <div class="accordion">
+                                        <div class="card" *ngFor="let item of lessons">
+                                            <div class="card-header">
+                                                <h2 class="card-title h4 mb-0 d-flex align-items-center">
+                                                    <a href="#"
+                                                        [routerLink]="['/courses', item.course_id, 'lesson', item._id]"
+                                                        class="mr-2"><i class="fas fa-external-link-alt"
+                                                            style="font-size: 14px; line-height: 2rem;"></i></a>
+                                                    <a href="#"
+                                                        class="d-flex align-items-center justify-content-between w-100"
+                                                        (click)="$event.preventDefault(); currentSession = null; currentLesson = (currentLesson === item._id ? null : item._id)">
+                                                        <span>{{item.course.topic}} ({{item.subtitle}})</span>
+                                                        <i *ngIf="currentLesson !== item._id"
+                                                            class="fas fa-angle-down"></i>
+                                                        <i *ngIf="currentLesson === item._id"
+                                                            class="fas fa-angle-up"></i>
+                                                    </a>
+                                                </h2>
+                                            </div>
+                                            <div class="card-body" *ngIf="currentLesson === item._id">
+                                                <div class="accordion">
+                                                    <div class="card" *ngFor="let session of item.sessions">
+                                                        <div class="card-header">
+                                                            <h3 class="card-title h6 mb-0 d-flex align-items-center">
+                                                                <a href="#"
+                                                                    [routerLink]="['/courses', item.course_id, 'lesson', item._id, 'session', session._id]"
+                                                                    class="mr-2"><i class="fas fa-external-link-alt"
+                                                                        style="font-size: 14px; line-height: 2rem;"></i></a>
+                                                                <a href="#"
+                                                                    class="d-flex align-items-center justify-content-between w-100"
+                                                                    (click)="$event.preventDefault(); activateLesson(item._id, session._id)">
+                                                                    <span>{{session.subject}}, {{session.startTime |
+                                                                        amLocal | amDateFormat: 'llll'}}<br />Zoom
+                                                                        Meeting ID: {{session.zoomId}}</span>
+                                                                    <i *ngIf="currentSession !== session._id"
+                                                                        class="fas fa-angle-down"></i>
+                                                                    <i *ngIf="currentSession === session._id"
+                                                                        class="fas fa-angle-up"></i>
+                                                                </a>
+                                                            </h3>
+                                                        </div>
+                                                        <div class="card-body" *ngIf="currentSession === session._id">
+                                                            <div *ngIf="enrollments; else loading">
+                                                                <div *ngIf="enrollments.length; else nodata">
+                                                                    <div
+                                                                        class="d-flex justify-content-between align-items-center">
+                                                                        <h5 class="mt-2"><span i18n>Enrollments</span>
+                                                                            ({{enrollments.length}})</h5>
+
+                                                                        <span *ngIf="loadingCompletionSession">
+                                                                            <i class="fas fa-spinner fa-spin"></i>
+                                                                        </span>
+                                                                        <a *ngIf="!loadingCompletionSession && session.state === State.Active"
+                                                                            href="#"
+                                                                            (click)="$event.preventDefault(); checkSessionCompletion(session, item)"
+                                                                            i18n>Complete session</a>
+                                                                    </div>
+                                                                    <table class="nicdark_section">
+                                                                        <tbody>
+                                                                            <tr *ngFor="let env of enrollments"
+                                                                                class="nicdark_border_bottom_2_solid_grey">
+                                                                                <td class="nicdark_padding_10">
+                                                                                    <h3 class="mb-0 h6">
+                                                                                        {{env.student_name}}</h3>
+                                                                                </td>
+                                                                                <td class="nicdark_padding_10">
+                                                                                    <p class="mb-0">{{env.date | date:
+                                                                                        'mediumDate'}}</p>
+                                                                                </td>
+                                                                                <td class="nicdark_padding_10">
+                                                                                    <p
+                                                                                        class="mb-0 text-primary font-weight-bold">
+                                                                                        {{env.state | state}}</p>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <ng-template #nodata>
+                                                                    <div class="p-5 text-center">
+                                                                        <span class="h4" i18n>No data</span>
+                                                                    </div>
+                                                                </ng-template>
+                                                            </div>
+                                                            <ng-template #loading>
+                                                                <mat-spinner></mat-spinner>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-template #nodata>
+                                    <div class="p-5 text-center">
+                                        <span class="h4" i18n>No data</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loading>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="nicdark_section" *ngIf="(currentTab | async) == Tabs.Orders">
+                        <div
+                            class="nicdark_section nicdark_overflow_hidden nicdark_overflow_x_auto nicdark_cursor_move_responsive">
+                            <div *ngIf="payments; else loadingPayments">
+                                <div *ngIf="payments.length; else nodataPayments">
+                                    <table class="nicdark_section">
+                                        <thead>
+                                            <tr>
+                                                <th class="nicdark_padding_20 py-0" i18n>ID</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Date</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Type</th>
+                                                <th class="nicdark_padding_20 py-0" i18n>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of payments"
+                                                class="nicdark_border_bottom_1_solid_grey">
+                                                <td class="nicdark_padding_20">
+                                                    <p>{{item.auto_id}}</p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p>{{item.create_time | amLocal | amDateFormat: 'MMM D, YYYY, h:mm
+                                                        A'}}</p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p>{{item.payment_type}}</p>
+                                                </td>
+                                                <td class="nicdark_padding_20">
+                                                    <p class="nicdark_color_greydark">{{item.amount | currency}}</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-template #nodataPayments>
+                                    <div class="p-5 text-center">
+                                        <span class="h4" i18n>No data</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #loadingPayments>
+                                <mat-spinner></mat-spinner>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #hiddenTab>
+                    <div class="p-5 text-center">
+                        <p i18n>You can't see this data.</p>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <!--end container-->
+</div>
+<ng-template #loading>
+    <div class="nicdark_section">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+<div class="nicdark_section nicdark_height_40"></div>

@@ -1,0 +1,51 @@
+<div class="nicdark_section">
+  <div class="nicdark_section nicdark_height_20"></div>
+  <div *ngIf="comments; else loading">
+    <!--START comment preview-->
+    <div *ngIf="comments.length; else nodata">
+      <div *ngFor="let comment of comments" class="nicdark_section nicdark_border_top_1_solid_grey p-3 nicdark_box_sizing_border_box">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="mb-3">
+            <p style="line-height: 1;" class="mb-0 nicdark_display_table_cell nicdark_vertical_align_middle "><span class="nicdark_color_greydark nicdark_first_font nicdark_margin_right_20"><strong>{{comment.name}}</strong></span></p>
+            <small class="text-muted">{{comment.date | timeAgo}}</small>
+          </div>
+          <app-actions
+            [showReport]="true"
+            [showDelete]="isSchoolAdmin$ | async"
+            (onReport)="onReport(comment._id)"
+            (onDelete)="onDelete(comment._id)"
+          >
+          </app-actions>
+        </div>
+        <div class="nicdark_section">
+          <p>{{comment.message}}</p>
+        </div>
+      </div>
+    </div>
+    <!--END comment preview-->
+    <ng-template #nodata>
+      <div class="text-center p-5">
+        <p i18n>No comments</p>
+      </div>
+    </ng-template>
+  </div>
+  <ng-template #loading>
+    <mat-spinner></mat-spinner>
+  </ng-template>
+  <div *ngIf="canLeaveComment" class="p-3 nicdark_section nicdark_border_top_1_solid_grey nicdark_box_sizing_border_box">
+    <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+      <h5 class="mb-0" i18n>Leave your comment:</h5>
+      <mat-form-field class="w-100">
+        <textarea style="height: 100px;" type="text" matInput placeholder="Your comment" formControlName="message"></textarea>
+        <mat-error i18n>
+          Comment is required
+        </mat-error>
+      </mat-form-field>
+      <button
+        [disabled]="commentForm.invalid || isLoading"
+        class="btn btn-primary btn-lg mt-2" i18n>
+        Submit
+      </button>
+    </form>
+  </div>
+</div>

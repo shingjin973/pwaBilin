@@ -1,0 +1,173 @@
+<div class="nicdark_section nicdark_background_size_cover nicdark_background_position_center_bottom">
+    <div class="nicdark_section">
+        <div class="nicdark_container nicdark_clearfix">
+            <div class="nicdark_section" style="height: 75px"></div>
+        </div>
+    </div>
+</div>
+<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+<div class="nicdark_section" *ngIf="user; else loading">
+    <!--start nicdark_container-->
+    <div class="nicdark_container nicdark_clearfix">
+        <div class="grid grid_3">
+            <div class="card shadow no-border nicdark_section nicdark_box_sizing_border_box">
+                <div class="nicdark_section ">
+                    <div class="nicdark_section nicdark_box_sizing_border_box">
+                        <div class="nicdark_section nicdark_border_1_solid_grey nicdark_padding_20 nicdark_box_sizing_border_box">
+                            <div class="nicdark_padding_10">
+                                <div class="nicdark_display_table nicdark_float_left">
+                                    <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                        <h4 class="mb-0 mr-2">
+                                            <i class="fa fa-balance-scale"></i>
+                                            <span i18n> Balance</span>:<strong> {{user.balance || '0'}} </strong>
+                                            credits
+                                        </h4>
+                                        <h4 class="mb-0 mr-2">
+                                            <i class="fa fa-balance-scale"></i>
+                                            <span i18n> Free Balance</span>:<strong> {{free_balance}} </strong>
+                                            credits
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nicdark_section nicdark_border_1_solid_grey nicdark_padding_20 nicdark_box_sizing_border_box">
+                            <div class="nicdark_padding_10">
+                                <div class="nicdark_display_table nicdark_float_left">
+                                    <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                        <i>1 credit = {{pricePerCredit}} USD</i>
+                                        <br>
+                                        <!-- <a href="#" (click)="$event.preventDefault(); navigate('/profile/balance')"
+                                           class="btn btn-primary mr-auto" i18n>
+                                            Buy credits
+                                        </a> -->
+                                        <i i18n>Your remaining credit balance will be automatically apply for purchase</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid_9">
+            <div class="nicdark_section">
+                <div class="card shadow no-border mb-4">
+                    <div class="card-body" *ngIf="user.type === UserType.Student; else nodata">
+                        <div class="card-titlebox" style="border-bottom: 2px solid #f1f1f1;">
+                            <h2 class="mb-0 mr-2">
+                                <span i18n>List of Package(s) to purchase</span>
+                            </h2>
+                        </div>
+                        <br>
+                        <div class="nicdark_section" *ngIf="!is_submit_purchase; else loading">
+                            <div class="nicdark_section nicdark_box_sizing_border_box nicdark_overflow_hidden nicdark_overflow_x_auto nicdark_cursor_move_responsive">
+                                <div *ngIf="bundles && bundles.length; else nodata">
+                                    <table class="nicdark_section">
+                                        <thead>
+                                        <tr>
+                                            <th class="nicdark_padding_20 py-0" i18n>Course</th>
+                                            <th class="nicdark_padding_20 py-0" i18n>Title</th>
+                                            <th class="nicdark_padding_20 py-0" i18n>Sessions</th>
+                                            <th class="nicdark_padding_20 py-0" i18n>Tuition</th>
+                                            <th class="nicdark_padding_20 py-0" i18n>Child</th>
+                                            <th class="nicdark_padding_20 py-0" i18n>Teacher</th>
+
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngFor="let item of bundles"
+                                            class="nicdark_border_bottom_2_solid_grey">
+                                            <td class="nicdark_padding_20">
+                                                <h3 class="mb-0 h6">
+                                                    <p class="mb-0" [appTranslate]="item.course_topic_ch">
+                                                        {{item.course_topic}}
+
+                                                    </p>
+                                                </h3>
+                                            </td>
+                                            <td class="nicdark_padding_20">
+                                                <h3 class="mb-0 h6">
+                                                    <a [routerLink]="['/courses', item.course, 'package', item.bundle]"
+                                                       href="#" [appTranslate]="item.bundle_title_ch">{{item.bundle_title}}
+                                                    </a>
+                                                </h3>
+                                            </td>
+                                            <td class="nicdark_padding_20">
+                                                <p class="mb-0">{{item.number_of_sessions}}</p>
+                                            </td>
+                                            <td class="nicdark_padding_20">
+                                                <p class="mb-0">{{item.tuition | creditsPrice: 'credits'}}</p>
+                                            </td>
+                                            <td class="nicdark_padding_20">
+                                                <p class="mb-0">{{item.student_name}}</p>
+                                            </td>
+
+                                            <td class="nicdark_padding_20">
+                                                <h3 class="mb-0 h6">
+                                                    <a (click)="$event.preventDefault(); navigate(['/teachers', item.teacher])"
+                                                       href="#">
+                                                        {{item.teacher_name}}
+                                                    </a>
+                                                </h3>
+                                            </td>
+                                            <td class="text-right" style="white-space: nowrap">
+                                                <button class="btn btn-danger btn-sm"
+                                                        (click)="delete_from_cart(item.bundle)" i18n>Cancel
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <ng-template #nodata>
+                                    <div class="p-5 text-center">
+                                        <span class="h4" i18n>No checkout list</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template #loading>
+                                    <mat-spinner></mat-spinner>
+                                </ng-template>
+                            </div>
+                            <div class="row" *ngIf="bundles && bundles.length" style="padding-top: 20px;">
+                                <!-- <ng-template [ngIf]="!!bundle.course?.thumbnail"
+                                                    [ngIfElse]="placeholderThumbnail">
+                                                    <img alt="" class="nicdark_section card-img-top"
+                                                        [src]="bundle.course.thumbnail | s3Storage">
+                                </ng-template> -->
+                                <div class="col-md-4 oder_summary" i18n>
+                                    <div class="oder_total">Order Summary:</div>
+                                    <span>Subtotal:</span><span class="summary_credit">{{total_sum_amount}} credits</span> <br>
+                                    <span>Balance:</span>  <span class="applied_balance summary_credit">-{{applied_balance}} credits</span> <br>
+                                    <div class="oder_total"><span>Total:</span><span class="summary_credit">{{need_credit_amount}} credits</span> </div>
+                                </div>                               
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary mr-auto btn_checkout" [disabled]="is_submit_purchase"
+                                            (click)="purchase_bundles()" i18n>CHECKOUT
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <p i18n>You have no checkout</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end container-->
+</div>
+<ng-template #loading>
+    <div class="nicdark_section">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+<div class="nicdark_section nicdark_height_40"></div>

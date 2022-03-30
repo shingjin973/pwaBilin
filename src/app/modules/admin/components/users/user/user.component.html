@@ -1,0 +1,541 @@
+<div class="card shadow card-noborder">
+    <div class="card-body" *ngIf="!user">
+        <h3 class="py-5 text-center" *ngIf="user === null; else loadingUser">
+            User is not found
+        </h3>
+        <ng-template #loadingUser>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+    </div>
+    <div class="card-body" *ngIf="user">
+        <div class="card-titlebox">
+            <h1 class="card-title">
+                <strong class="text-primary">{{user.name}}</strong> ({{user.auto_id}})
+            </h1>
+            <div>
+                <button *ngIf="user.type === UserType.UnApprovedTeacher" class="btn btn-primary mr-2"
+                    (click)="approveTeacher()">Approve teacher
+                </button>
+                <button
+                    *ngIf="(is_feature == false) && (user.type === UserType.UnApprovedTeacher || user.type === UserType.Teacher)"
+                    class="btn btn-success mr-2" (click)="$event.preventDefault(); setFeatureTeacher()">Set as Feature
+                    Teacher
+                </button>
+                <button
+                    *ngIf="(is_feature == true) && (user.type === UserType.UnApprovedTeacher || user.type === UserType.Teacher)"
+                    class="btn btn-danger mr-2" (click)="$event.preventDefault(); removeFeatureTeacher()">Delete from
+                    Features
+                </button>
+
+                <button class="btn btn-danger  mr-2" (click)="$event.preventDefault(); delete()">Delete</button>
+                <button class="btn btn-success mr-2" (click)="$event.preventDefault(); changePassword()">Change
+                    Password</button>
+
+                <button *ngIf="(user.type == 1 || user.type == 3) && !user.is_retired" class="btn btn-danger"
+                    (click)="$event.preventDefault(); retireTeacher(user._id)">Retire</button>
+                <button *ngIf="(user.type == 1 || user.type == 3) && user.is_retired" class="btn btn-success"
+                    (click)="$event.preventDefault(); removeRetireTeacher(user._id)">Stop Retire</button>
+
+            </div>
+        </div>
+        <div class="card-summary">
+            <p *ngIf="user.type === UserType.Teacher || user.type === UserType.Student">
+                <span>Balance</span>
+                <strong>{{user.balance || '0'}}{{user.type === UserType.Teacher ? '$' : ' credits'}}</strong>
+            </p>
+            <p>
+                <span>Type</span>
+                <strong class="text-primary">{{user.type | usertype}}</strong>
+            </p>
+            <p>
+                <span>Email</span>
+                <span><a href="mailto:{{user.email}}">{{user.email}}</a></span>
+                <strong *ngIf="user.emailVerified == ''" class="text-success" i18n>Verified</strong>
+                <strong *ngIf="user.emailVerified != ''" class="text-danger" i18n>Unverifed
+                    <a href="#" (click)="$event.preventDefault(); verifyEmailSuperAdmin()">(Verify)</a>
+                </strong>
+            </p>
+            <p>
+                <span>Phone number</span>
+                <span><a href="tel:{{user.phone}}">{{user.phone}}</a></span>
+                <strong *ngIf="user.phoneVerified" class="text-success" i18n>Verified</strong>
+                <strong *ngIf="!user.phoneVerified" class="text-danger" i18n>Unverifed
+                    <a href="#" (click)="$event.preventDefault(); verifyPhoneSuperAdmin()">(Verify)</a>
+                </strong>
+            </p>
+            <p>
+                <span>Reg date</span>
+                <span>{{user.date | date: 'medium'}}</span>
+            </p>
+            <p *ngIf="user.type === UserType.Teacher">
+                <span>Status</span>
+                <span>{{user.status || 0 | teacherstatus}} (<a href="#"
+                        (click)="$event.preventDefault(); changeTeacherStatus()">Change</a>)</span>
+            </p>
+            <p *ngIf="user.type === UserType.Teacher">
+                <span>Introduction</span>
+                <span>{{user.introduction}} <a href="#"
+                        (click)="$event.preventDefault(); changeTeacherIntroduction('en', user.introduction)"
+                        style="color: #007bff">Update</a></span>
+                <!--<span>(<a href="#" (click)="$event.preventDefault(); changeTeacherIntroduction()">Change</a>)</span>-->
+            </p>
+            <p *ngIf="user.type === UserType.Teacher">
+                <span>Introduction (Chinese)</span>
+                <span>{{user.introduction_ch}} <a href="#"
+                        (click)="$event.preventDefault(); changeTeacherIntroduction('ch', user.introduction_ch)"
+                        style="color: #007bff">Update</a></span>
+            </p>
+            <p *ngIf="user.type === UserType.Teacher">
+                <span>School</span>
+                <span>{{(user.school$ | async) || '-'}} (<a href="#"
+                        (click)="$event.preventDefault(); changeTeacherSchool()">Change</a>)</span>
+            </p>
+            <p *ngIf="user.type === UserType.Teacher || user.type === UserType.UnApprovedTeacher">
+                <span>Resume</span>
+                <span>
+                    <a *ngIf="user.resume; else noresume" [href]="user.resume">Resume</a>
+                    <ng-template #noresume>
+                        -
+                    </ng-template>
+                </span>
+            </p>
+            <p *ngIf="user.type === UserType.Teacher">
+                <span>Zoom ID</span>
+                <strong>
+                    <span>{{user.zoomId || '-'}}</span>
+                    <span class="ml-2" *ngIf="!user.zoomId">(
+                        <i class="fas fa-spinner fa-spin" *ngIf="isRequestLoading"></i>
+                        <a *ngIf="!isRequestLoading" href="#" style="color: #007bff"
+                            (click)="$event.preventDefault(); requestZoomId();">Request</a>
+                        )</span>
+                    <span class="ml-2" *ngIf="user.zoomId">(
+                        <i class="fas fa-spinner fa-spin" *ngIf="isRequestLoading"></i>
+                        <a *ngIf="!isRequestLoading" href="#" style="color: #007bff"
+                            (click)="$event.preventDefault(); deleteZoomId();">Delete</a>
+                        )</span>
+                </strong>
+            </p>
+            <p *ngIf="user.type === UserType.Student">
+                <span>Children</span>
+                <span>{{user.children?.length}}</span>
+            </p>
+            <!-- <p *ngIf="user.type === UserType.Student">
+                <span>Facebook ID</span>
+                <span>{{user.facebook || '-'}}</span>
+            </p>
+            <p *ngIf="user.type === UserType.Student">
+                <span>WeChat ID</span>
+                <span>{{user.wechat || '-'}}</span>
+            </p> -->
+            <p *ngIf="user.type === UserType.Student">
+                <span>ClassIn ID</span>
+                <span>{{user.classin || '-'}}</span>
+            </p>
+        </div>
+        <div class="mt-4" *ngIf="user?.type === UserType.Student">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Promoter</h2>
+                <div>
+                    <button *ngIf="isEditing" class="btn btn-primary mr-2"
+                        (click)="$event.preventDefault(); savePromotor();">
+                        Save
+                    </button>
+                    <button *ngIf="!isEditing" class="btn btn-primary mr-2"
+                        (click)="$event.preventDefault(); editPromotor();">Edit
+                    </button>
+                    <button *ngIf="isEditing" class="btn btn-primary mr-2"
+                        (click)="$event.preventDefault(); cancelPromotor();">Cancel
+                    </button>
+                </div>
+            </div>
+            <form [formGroup]="promotorform">
+                <p class="promotor">
+                    <span>Promoter</span>
+                    <span *ngIf="!isEditing">
+                        <mat-slide-toggle [disabled]="true" formControlName="promotor"></mat-slide-toggle>
+                    </span>
+                    <span *ngIf="isEditing">
+                        <mat-slide-toggle formControlName="promotor"></mat-slide-toggle>
+                    </span>
+                </p>
+                <p class="promotor">
+                    <span>Promoter Rate</span>
+                    <span *ngIf="!isEditing && user.promotorRate == undifined">{{promote_rate[0]}}%</span>
+                    <span *ngIf="!isEditing && user.promotorRate != undifined">{{user.promotorRate}}%</span>
+                    <span *ngIf="isEditing">
+                        <select class="form-control" formControlName="promotor_rate">
+                            <option *ngFor="let i of promote_rate" [value]="i">{{i}}%</option>
+                        </select>
+                    </span>
+                </p>
+            </form>
+
+        </div>
+        <!-- begin: Commission -->
+        <div class="mt-4">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Paid Commissions</h2>
+                <div>
+                    <button class="btn btn-sm btn-primary" (click)="isAddingCommission = !isAddingCommission">
+                        {{isAddingCommission ? 'Cancel' : 'Pay Promoter'}}
+                    </button>
+                </div>
+            </div>
+
+            <div class="page-table" *ngIf="!isAddingCommission">
+                <div *ngIf="commissionList; else loading">
+                    <div *ngIf="commissionList.length; else nodata">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let commission of commissionList; let i = index;">
+                                    <th scope="row">{{i+1}}</th>
+                                    <td>
+                                        {{ commission.amount }}
+                                    </td>
+                                    <td> {{ commission.date }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-danger btn-sm"
+                                            (click)="deleteCommision(commission._id)">Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+
+            <div class="page-form" *ngIf="isAddingCommission">
+                <h3 class="text-center font-weight-bold">Pay Promoter</h3>
+                <form [formGroup]="commissions" (ngSubmit)="submit()">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100">
+                                <input matInput maxlength="30" placeholder="Amount" formControlName="amount">                               
+                                <mat-error i18n *ngIf="commissions.get('amount').errors?.checkAmount">
+                                    Paid commissions should not exceed total commissions.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="offset-md-2 col-md-4">
+                            <button type="button" class="btn btn-block btn-primary"
+                                [disabled]="commissions.invalid || loading.commissionSubmit" (click)="submit()">
+                                <span>
+                                    Add
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <!-- end -->
+        <!-- begin: Commission Transaction-->
+        <div class="mt-4">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Commission Transaction</h2>
+            </div>
+            <div *ngIf="myPromoterUsers.length; else nodata">
+                <div class="nicdark_section py-4 content ng-star-inserted">
+                    <div class="share nicdark_container">
+                        <div class="commission">
+                            <span class="balance">Total Commission:</span>
+                            <span class="balance_amount">&nbsp; ${{totalCommissions*promoterRate/100 || '0'}}</span>
+                        </div>
+                        <div class="commission">
+                            <span class="balance">Paid Commission:</span>
+                            <span class="balance_amount">&nbsp; ${{paidCommision}}</span>
+                        </div>
+                        <div class="commission">
+                            <span class="balance">Non Paid Commission:</span>
+                            <span class="balance_amount">&nbsp; ${{totalCommissions*promoterRate/100
+                                -paidCommision}}</span>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Date</th>
+                                <th>Credits Purchased</th>
+                                <th>Commissions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of myPromoterUsers">
+                                <td class="userName"> {{user.username}}</td>
+                                <td>{{user.date | amLocal | date: 'EEE, MMM d, y'}}</td>
+                                <td class="amount">${{user.totalamount}}</td>
+                                <td class="amount">
+                                    ${{user.totalamount*promoterRate/100}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <ng-template #nodata>
+                <div class="p-5 text-center">
+                    <span class="h4">No data</span>
+                </div>
+            </ng-template>
+        </div>
+        <!-- end -->
+        <div class="mt-4" *ngIf="user?.type === UserType.Student">
+            <div class="card-titlebox" style="clear: both;">
+                <h2 class="card-title text-primary">Children ({{user.children?.length || 0}})</h2>
+                <div></div>
+            </div>
+
+            <div class="page-table">
+                <div *ngIf="user.children; else loading">
+                    <div *ngIf="user.children.length; else nodata">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let kid of user.children; let i = index;">
+                                    <th scope="row">{{ i + 1 }}</th>
+                                    <td>{{kid._id}}</td>
+                                    <td>{{kid.name}}</td>
+                                    <td>{{kid.age}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+
+        <div class="mt-4" *ngIf="user?.type === UserType.Student">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Lessons Enrolled ({{enrollments?.length || 0}})</h2>
+                <div>
+                    <div class="form-group">
+                        <select class="form-control" [formControl]="enrollmentGroupForm">
+                            <option default selected value="course">Course</option>
+                            <option value="session">Session</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-table">
+                <div *ngIf="enrollments; else loading">
+                    <div *ngIf="enrollments.length; else nodata">
+                        <div class="accordion">
+                            <div class="card" *ngFor="let item of enrollments;">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <button
+                                            (click)="$event.preventDefault(); activeEnrollmentGroup = (activeEnrollmentGroup === item.group) ? null : item.group"
+                                            class="btn btn-link">
+                                            {{item.group}}
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div class="collapse" [ngClass]="{'show': activeEnrollmentGroup === item.group}">
+                                    <div class="card-body">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Course (Session #)</th>
+                                                    <th>Teacher</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let enrollments of item.value;">
+                                                    <th scope="row">{{ enrollments.auto_id }}</th>
+                                                    <td>
+                                                        <a href="#"
+                                                            [routerLink]="['/admin/courses', enrollments.course, 'lesson', enrollments.lesson]"><strong>{{enrollments.course_name}}
+                                                                ({{enrollments.session_auto_id}})</strong></a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="#"
+                                                            [routerLink]="['/admin/users', enrollments.teacher]"><strong>{{enrollments.teacher_name}}</strong></a>
+                                                    </td>
+                                                    <td>{{enrollments.state | state}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+
+
+        <div class="mt-4" *ngIf="user?.type === UserType.Teacher">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Course Assigned ({{enrollments?.length || 0}})</h2>
+                <div>
+                    <div class="form-group">
+                        <select class="form-control" [formControl]="enrollmentGroupForm">
+                            <option default selected value="course">Course</option>
+                            <option value="session">Session</option>
+                            <option value="student_family">Student Family</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-table">
+                <div *ngIf="enrollments; else loading">
+                    <div *ngIf="enrollments.length; else nodata">
+
+                        <div class="accordion">
+                            <div class="card" *ngFor="let item of enrollments;">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <button
+                                            (click)="$event.preventDefault(); activeEnrollmentGroup = (activeEnrollmentGroup === item.group) ? null : item.group"
+                                            class="btn btn-link">
+                                            {{item.group}}
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div class="collapse" [ngClass]="{'show': activeEnrollmentGroup === item.group}">
+                                    <div class="card-body">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Course (Session)</th>
+                                                    <th>Student</th>
+                                                    <th>Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let enrollments of item.value;">
+                                                    <th scope="row">{{ enrollments.auto_id }}</th>
+                                                    <td>{{enrollments.course_name}} ({{enrollments.session_auto_id}})
+                                                    </td>
+                                                    <td>
+                                                        <a href="#"
+                                                            [routerLink]="['/admin/users', enrollments.student]"><strong>{{enrollments.student_name}}</strong></a>
+                                                    </td>
+                                                    <td>{{enrollments.date | date: 'medium'}}</td>
+                                                    <td>{{enrollments.state | state}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+
+        <div class="mt-4" *ngIf="user?.type === UserType.Teacher">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Classes Offering ({{lessons?.length || 0}})</h2>
+                <div></div>
+            </div>
+
+            <div class="page-table">
+                <div *ngIf="lessons; else loading">
+                    <div *ngIf="lessons.length; else nodata">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Subtitle</th>
+                                    <th>Students enrolled</th>
+                                    <th>Sessions</th>
+                                    <th>Status</th>
+                                    <th>Credit</th>
+                                    <th>Rate</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let lesson of lessons; let i = index;">
+                                    <th scope="row">{{ i + 1 }}</th>
+                                    <td>{{lesson.subtitle}}</td>
+                                    <td>{{lesson.students_enrolled}}</td>
+                                    <td>{{lesson.sessions?.length}}</td>
+                                    <td><strong class="text-primary">{{lesson.state === State.Active ? 'Active' :
+                                            'Canceled'}}</strong></td>
+                                    <td>{{lesson.credits_per_session | creditsPrice}}</td>
+                                    <td>{{lesson.teacher_rate_per_session | currency}}</td>
+                                    <td class="text-right">
+                                        <a href="#"
+                                            [routerLink]="['/admin/courses', lesson.course_id, 'lesson', lesson._id]"
+                                            class="btn btn-sm btn-primary mr-2">Manage</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+
+        </div>
+    </div>
+</div>

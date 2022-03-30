@@ -1,0 +1,147 @@
+.nicdark_container img {
+  vertical-align: initial;
+  width: 110px;
+  height: auto;
+}
+
+.nav-auth {
+  &-links {
+    & > ul {
+      display: flex;
+      list-style: none;
+      justify-content: flex-end;
+      padding: 0;
+      margin: 0;
+
+      & > li {
+        font-size: 13px;
+        text-align: center;
+
+        & > a {
+          line-height: 2;
+          vertical-align: bottom;
+          color: white;
+        }
+
+        i {
+          color: lightgray;
+
+          &:not(.fa-2x) {
+            font-size: 1.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.nicdark_navigation_2_sidebar {
+  ul {
+    display: flex;
+    flex-direction: column;
+
+    & > li > a {
+      text-transform: capitalize;
+    }
+  }
+}
+
+.nicdark_navigation_2 {
+  li {
+    &:after {
+      color: black;
+    }
+
+    a {
+      color: black;
+    }
+  }
+}
+.desktop, .mobile {
+  position: static;
+}
+
+.desktop.sticky {
+  position: fixed;
+  top: 0;
+  z-index: 9;
+}
+.mobile.sticky {
+  position: fixed;
+  top: 0;
+  z-index: 9;
+}
+
+::ng-deep .nicdark_site--header-white .nicdark_navigation_2 {
+  li {
+    &:after {
+      color: white !important;
+    }
+
+    a {
+      color: white !important;
+    }
+  }
+}
+
+::ng-deep .nicdark_site--header-white app-header h1 {
+  color: white !important;
+}
+
+@media(min-width: 960px) {
+  .nicdark_navigation_top_header_2 .nicdark_clearfix:after {
+    display: none;
+  }
+  .nicdark_section.mobile {
+    display: none;
+  }
+}
+
+@media(max-width: 959px) {
+  .nicdark_section.desktop {
+    display: none;
+  }
+  .nicdark_section.mobile {
+    display: block;
+  }
+}
+@media only screen and (min-width: 320px) and (max-width: 374px){
+  .nicdark_section.mobile .nicdark_container img { width: 130px; height: auto}
+}
+
+.nicdark_section.mobile {
+  .nicdark_container {
+    @media only screen and (min-width: 320px) and (max-width: 479px) {
+      & {
+        width:98%;
+      }
+    }
+  }
+}
+.nicdark_navigation_2_sidebar li {
+  color: white;
+}
+.speaker{
+  text-align: center;
+  height: 50px;
+  background-color: #ebebeb;
+  font-size: 16px;
+  font-weight: 800;
+  
+}
+.speaker a{
+  color: black;
+}
+.get_credit{
+  padding-top: 10px;
+}
+.get_credit_text{
+  margin-left: 5px;
+}
+.get_credit_text a:hover{
+  color: #03989E;
+}

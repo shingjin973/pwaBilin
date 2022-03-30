@@ -1,0 +1,122 @@
+<div class="card shadow w-100">
+    <div class="card-body">
+        <h2 class="text-center card-title"><strong i18n>One more step</strong></h2>
+        <div class="alert alert-danger" *ngIf="message">
+            {{message}}
+        </div>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <ng-template [ngIf]="type === UserType.UnApprovedTeacher">
+                <label i18n>Please upload your picture</label>
+                <div style="width:150px;" class="m-auto text-center">
+                    <ng-template [ngIf]="form.get('profile_picture').value">
+                        <img width="150" height="150" class="rounded-circle"
+                             [src]="form.get('profile_picture').value | s3Storage" alt="">
+                        <button class="btn btn-sm btn-outline-primary mt-3"
+                                (click)="$event.preventDefault(); form.get('profile_picture').setValue('')" i18n>Try
+                            another
+                        </button>
+                    </ng-template>
+                    <ng-template [ngIf]="!form.get('profile_picture').value">
+                        <app-file-upload [file]="form.get('profile_picture').value"
+                                         (onFinish)="form.get('profile_picture').setValue($event)"></app-file-upload>
+                    </ng-template>
+                </div>
+
+                <mat-form-field class="w-100">
+                    <textarea matInput style="min-height: 100px;" i18n-placeholder placeholder="Your introduction.."
+                              formControlName="introduction"></textarea>
+                    <mat-hint i18n>At least 100 characters.</mat-hint>
+                    <mat-error i18n *ngIf="form.get('introduction').invalid && form.get('introduction').touched">
+                        Introduction is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <textarea matInput style="min-height: 100px;" i18n-placeholder
+                              placeholder="Your introduction (Chinese).." formControlName="introduction_ch"></textarea>
+                    <mat-hint i18n>At least 100 characters.</mat-hint>
+                    <mat-error i18n *ngIf="form.get('introduction_ch').invalid && form.get('introduction_ch').touched">
+                        Chinese Introduction is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <label i18n>Please pick an association school</label>
+                    <mat-select formControlName="school">
+                        <mat-option value="" i18n>No association school</mat-option>
+                        <mat-option *ngFor="let school of schools" [value]="school._id">{{school.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button class="btn btn-block btn-primary btn-lg mt-4" [disabled]="form.invalid || isLoading"
+                        type="submit">
+                    <span *ngIf="!isLoading" i18n>Submit</span>
+                    <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+            </ng-template>
+
+            <ng-template [ngIf]="type === UserType.Student">
+                <div *ngIf="children && children.length">
+                    <h2 class="h4 text-dark" i18n>Children:</h2>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th i18n>Name</th>
+                            <th i18n>Age</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let kid of children; let i = index;">
+                            <td>{{kid.name}}</td>
+                            <td>{{kid.age}}</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" type="button"
+                                        (click)="$event.preventDefault(); deleteKid(i)"><i class="fas fa-times"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <h3 class="h5 text-dark" i18n>Add children:</h3>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="row update-form-kids">
+                        <div class="col-7">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput i18n-placeholder placeholder="Name" formControlName="name">
+                                <mat-error i18n *ngIf="form.get('name').invalid && form.get('name').touched">
+                                    Name is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput i18n-placeholder placeholder="Age" formControlName="age">
+                                <mat-error i18n *ngIf="form.get('age').invalid && form.get('age').touched">
+                                    Age is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div style="min-width: 70px;" class="ml-3">
+                        <button type="button" (click)="$event.preventDefault(); addKid()"
+                                class="btn btn-block btn-primary btn-sm" i18n>Add
+                        </button>
+                    </div>
+                </div>
+                <hr>
+
+                <button class="btn btn-block btn-primary btn-lg mt-4"
+                        [disabled]="!children || !children.length || isLoading" type="submit">
+                    <span *ngIf="!isLoading" i18n>Submit</span>
+                    <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+            </ng-template>
+        </form>
+    </div>
+</div>

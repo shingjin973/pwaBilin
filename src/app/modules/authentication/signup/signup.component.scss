@@ -1,0 +1,8 @@
+@import './../../../../vars.scss';
+
+.btn-outline-primary{
+  &.active{
+    background-color: $c_primary;
+    color: white!important;
+  }
+}

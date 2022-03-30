@@ -1,0 +1,46 @@
+@import '../../../../../../../vars.scss';
+
+h1.card-title{
+  padding-bottom: .25rem;
+  margin-bottom: .75rem;
+}
+
+h2{
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+h1, h2{
+  a{
+    text-decoration: underline;
+  }
+}
+
+.card-titlebox{
+  align-items: flex-start;
+}
+
+p{
+  padding-bottom: .5rem;
+  margin-bottom: 0;
+  margin-top: .5rem;
+}
+
+.form-control{
+  border-radius: 0;
+  border: 1px dashed $c-primary;
+  height: calc(1.5em + 0.2em + 2px);
+  padding-top: .1em;
+  padding-bottom: .1em;
+  max-width: 200px!important;
+  border-radius: 5px;
+}
+
+
+textarea.form-control{
+  max-width: 80%!important;
+  height: auto;
+}
+.membership{
+  padding-top: 15px;
+}

@@ -1,0 +1,7 @@
+<div ngbDropdown class="d-inline-block" *ngIf="showReport || showDelete">
+  <button class="btn btn-primary btn-sm" ngbDropdownToggle i18n>Action</button>
+  <div ngbDropdownMenu>
+    <button ngbDropdownItem *ngIf="showReport" (click)="fireReport()" i18n>Report</button>
+    <button ngbDropdownItem *ngIf="showDelete" (click)="fireDelete()" i18n>Delete</button>
+  </div>
+</div>

@@ -1,0 +1,142 @@
+.tab-content{
+  padding-top: 20px;
+}
+
+p.nicdark_font_size_13{
+  margin-bottom: 0;
+}
+
+.nicdark_background_size_cover{
+  background-color: #E1DB9C;
+}
+
+h4{
+  font-size: 1.25rem;
+}
+
+/*New*/
+h4.h4 {
+  color: #939292;
+  font-size: 24px;
+  letter-spacing: 0.2px;
+}
+
+h1 {
+  font-size: 32px;
+  color: #56509F;
+  letter-spacing: 0.27px;
+  margin-top: 70px;
+}
+h2 {
+  font-size: 24px;
+  color: #56509F;
+  letter-spacing: 0.2px;
+}
+.course-detail {
+  max-width: 1500px;
+  margin: 0 auto;
+  background-color: white;
+  clear: both;
+  position: relative;
+  .nicdark_box_sizing_border_box {
+    background: #EFF5F7;
+  }
+}
+.course-top-intro {
+  max-width: 800px;
+  margin-left:5%;
+  @media only screen and (max-width: 1366px) {
+    width: 60%;
+    margin-left: 0;
+  }
+  @media only screen and (max-width: 960px) {
+    width: 95%;
+    margin: 0 auto;
+  }
+}
+.section-dvm {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 90%;
+  @media only screen and (max-width: 960px) {
+    max-width: auto;
+    width: 95%;
+  }
+  .course-detail-section {
+    max-width: 800px;
+    margin-left:5%;
+    @media only screen and (max-width: 1366px) {
+      width: 60%;
+      margin-left: 0;
+    }
+    @media only screen and (max-width: 960px) {
+      width: 95%;
+      margin: 0 auto;
+    }
+
+    & > div {
+      padding-top: 20px;
+      margin-bottom:10px;
+    }
+    .nicdark_tabs .nav-bar:first-of-type {
+      position: relative;
+      button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        @media only screen and (max-width: 479px){
+          top: -38px;
+        }
+      }
+    }
+    .outer-position {
+      position: relative;
+      //.lesson-session:after {
+      //  position: absolute;
+      //  bottom: 0;
+      //  left: 0;
+      //  height: 100%;
+      //  width: 100%;
+      //  content: "";
+      //  background: linear-gradient(to top, white 1%, rgba(255, 255, 255, 0) 20%);
+      //}
+    }
+     
+    .expansion-more {
+      color: #C7BD49;
+      letter-spacing: 0.13px;
+      margin-left: 15px;
+      .arrow {
+        border: solid #C7BD49;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 3px;
+      }
+      
+      .up {
+        transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+      }
+      
+      .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+      }
+    } 
+  }
+}
+.teacher-name {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.course-detail-text {
+  line-height: 28px;
+}
+@media only screen and (min-width: 960px) and (max-width: 1199px) {
+  .nicdark_container{width:90%;}
+}
+/* 11.2 ipad port*/
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+  .nicdark_container {width:95%;}
+}

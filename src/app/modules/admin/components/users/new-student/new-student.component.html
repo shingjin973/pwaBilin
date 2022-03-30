@@ -1,0 +1,68 @@
+<div class="card shadow card-noborder">
+    <div class="card-body">
+        <div class="card-titlebox">
+            <h1 class="card-title">New Student</h1>
+            <div>
+                <a href="#" [routerLink]="['/admin/users']" class="btn btn-primary">Cancel</a>
+            </div>
+        </div>
+        <div class="card-content">
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <mat-form-field class="w-100">
+                    <input matInput placeholder="Name" formControlName="name">
+                    <mat-error *ngIf="form.get('name').invalid && form.get('name').touched">
+                        Name is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <input type="email" matInput placeholder="Email" formControlName="email">
+                    <mat-error *ngIf="form.get('email').invalid && form.get('email').touched">
+                        Email is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <input type="password" matInput placeholder="Password" formControlName="password">
+                    <mat-error *ngIf="form.get('password').invalid && form.get('password').touched">
+                        Password is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <input autocomplete="off" matInput placeholder="Phone" formControlName="phone">
+                    <mat-error *ngIf="form.get('phone').invalid && form.get('phone').touched">
+                        Phone number is required
+                    </mat-error>
+                </mat-form-field>
+
+
+                <div class="w-100 mt-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label style="font-size: 1.05rem;" class="text-muted">Children</label>
+
+                        <a href="#" (click)="$event.preventDefault(); addChild()">+ Add Child</a>
+                    </div>
+
+                    <ul *ngIf="children && children.length else nodata">
+                        <li *ngFor="let kid of children" class="d-flex justify-content-between align-items-center mb-3">
+                            <span>{{kid.name}} - {{kid.age}} y.o</span>
+
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </li>
+                    </ul>
+
+                    <ng-template #nodata>
+                        <div class="py-4 text-center text-muted">No data</div>
+                    </ng-template>
+                </div>
+
+                <button class="btn btn-block btn-primary btn-lg mt-4" [disabled]="form.invalid || isLoading"
+                        type="submit">
+                    <span *ngIf="!isLoading">Submit</span>
+                    <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

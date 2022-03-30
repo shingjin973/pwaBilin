@@ -1,0 +1,132 @@
+<div class="card shadow card-noborder">
+    <div class="card-body">
+        <div class="card-titlebox">
+            <h1 class="card-title">Sessions ({{pager.totals || 0}})</h1>
+            <div style="display: inline-flex;">
+                <!-- <a href="#" class="btn btn-primary" [routerLink]="['/admin/users/new']">Add new</a> -->
+                <div style="padding: 5px;">
+                    Filter Sessions By Date:
+                </div>
+                &nbsp;&nbsp;&nbsp;
+                <div>
+                    <form [formGroup]="form">
+                        <input type="date" class="form-control" (change)="filterByDate($event)" formControlName="date_to_filter">
+                    </form>
+                </div>
+                <div>
+                    <button [disabled]="date_to_filter == ''" (click)="clearDateToFilter()" class="btn btn-info ml-2">
+                        <i class="fas fa-times mr-1"></i> Clear Date
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="btn-group mb-3">
+                <button
+                        (click)="filterBy(State.Active)"
+                        [ngClass]="[currentState === State.Active ? 'btn-primary' : 'btn-outline-primary']"
+                        class="btn btn-sm px-4">Upcoming
+                </button>
+                <button
+                        (click)="filterBy(State.Completed)"
+                        [ngClass]="[currentState === State.Completed ? 'btn-primary' : 'btn-outline-primary']"
+                        class="btn btn-sm px-4">Completed
+                </button>
+                <button
+                        (click)="filterBy(State.Canceled)"
+                        [ngClass]="[currentState === State.Canceled ? 'btn-primary' : 'btn-outline-primary']"
+                        class="btn btn-sm px-4">Cancelled
+                </button>
+            </div>
+            <div>
+                <div *ngIf="sessions; else loading">
+                    <div *ngIf="sessions.length; else nodata">
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Day</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Course</th>
+                                <th>Subject</th>                                
+                                <th>Zoom ID</th>
+                                <th style="width: 70px;">State</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--<tr *ngFor="let item of sessions | paginate: { itemsPerPage: totalItemsPerPage, currentPage: currentPage }; let i = index;">-->
+                            <tr *ngFor="let item of sessions">
+                                <th scope="row">{{ item.sessions.auto_id }}</th>
+                                <td>{{item.sessions.startTime | amLocal | date: 'EEE'}}</td>
+                                <td>{{item.sessions.startTime | amLocal | amDateFormat: 'll'}}</td>
+                                <td>{{item.sessions.startTime | amLocal | amDateFormat: 'HH:mm'}} -
+                                    {{item.sessions.endTime | amLocal | amDateFormat: 'HH:mm'}}
+                                </td>
+                                <td>{{item.course.topic}}</td>
+                                <td>{{item.sessions.subject || '-'}}</td>
+                                <td>{{item.sessions.zoomId}}</td>                              
+                                <td *ngIf="item.sessions.state == 1" >{{item.enrollments.length}} / {{item.max_students}}</td>
+                                <!-- <td *ngIf="item.sessions.state == 1" > {{item.max_students}}</td> -->
+                                <td *ngIf="item.sessions.state != 1" >{{item.sessions.state | state}}</td>
+                                <td class="text-right">
+                                    <a href="{{item.sessions.zoomUrl}}"  class="btn btn-primary btn-sm join">Join</a>
+                                </td>
+                                <td class="text-right">
+                                    <a href="#"
+                                       [routerLink]="['/admin/courses', item.course?._id, 'lesson', item._id, 'session', item.sessions._id]"
+                                       class="btn btn-primary btn-sm">Manage</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <ul *ngIf="show_pages && pager.totalPages && pager.totalPages > 0" class="pagination">
+                                <li [ngClass]="{disabled:currentPage === 1}" class="page-item first-item">
+                                    <a (click)="getData(1)" class="page-link" style="cursor: pointer">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === 1}" class="page-item previous-item">
+                                    <a (click)="getData(currentPage - 1)" style="cursor: pointer"
+                                       class="page-link">‹‹</a>
+                                </li>
+                                <li class="page-item number-item">
+                                    <a *ngIf="has_previous_five_page" class="page-link">...</a>
+                                </li>
+                                <li *ngFor="let page of pagination_pages" [ngClass]="{active:currentPage === page}"
+                                    class="page-item number-item">
+                                    <a (click)="getData(page)" class="page-link" style="cursor: pointer">{{page}}</a>
+                                </li>
+                                <li class="page-item number-item">
+                                    <a *ngIf="has_next_five_page" class="page-link">...</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                                    class="page-item next-item">
+                                    <a (click)="getData(currentPage + 1)" style="cursor: pointer"
+                                       class="page-link">››</a>
+                                </li>
+                                <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                                    class="page-item last-item">
+                                    <a (click)="getData(pager.totalPages)" style="cursor: pointer" class="page-link">Last</a>
+                                </li>
+                            </ul>
+                            <!--<pagination-controls nextLabel="" previousLabel=""-->
+                            <!--(pageChange)="currentPage = $event"></pagination-controls>-->
+                        </div>
+
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h3">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

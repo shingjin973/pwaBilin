@@ -1,0 +1,126 @@
+<ng-template [ngIf]="secondScreen">
+    <app-partial-update (onSubmit)="afterUpdate()" [type]="secondScreenType" [uid]="secondScreenUID">
+
+    </app-partial-update>
+</ng-template>
+
+<ng-template [ngIf]="!secondScreen">
+    <div class="card shadow w-100">
+        <div class="card-body">
+            <h2 class="text-center card-title"><strong i18n>Create an account</strong></h2>
+            <div class="alert alert-danger" *ngIf="message">
+                {{message}}
+            </div>
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <mat-form-field class="w-100">
+                    <input matInput placeholder="Account Name" i18n-placeholder formControlName="name">
+                    <mat-error i18n *ngIf="form.get('name').invalid && form.get('name').touched">
+                        Name is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <input type="email" matInput placeholder="Email" i18n-placeholder formControlName="email">
+                    <!--<mat-error i18n *ngIf="form.get('email').invalid && form.get('email').touched">-->
+                    <!--Email is required-->
+                    <!--</mat-error>-->
+                    <mat-error i18n *ngIf="form.get('email').errors?.required && form.get('email').touched">
+                        Email is required
+                    </mat-error>
+                    <mat-error i18n *ngIf="form.get('email').errors?.pattern">
+                        Invalid email address
+                    </mat-error>
+                    <mat-error i18n *ngIf="form.get('email').errors?.isEmailRegisterd">
+                        This email has been registered already
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <input type="password" matInput placeholder="Password" i18n-placeholder formControlName="password">
+                    <mat-error i18n *ngIf="form.get('password').errors?.required && form.get('password').touched">
+                        Password is required
+                    </mat-error>
+                    <mat-error i18n *ngIf="form.get('password').errors?.minlength">
+                        Password must be at least 6 characters
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <input type="password" matInput placeholder="Confirm Password" i18n-placeholder
+                        formControlName="confirmPassword">
+                    <mat-error i18n
+                        *ngIf="form.get('confirmPassword').errors?.required && form.get('confirmPassword').touched">
+                        Confirm Password is required
+                    </mat-error>
+                    <mat-error i18n *ngIf="form.get('confirmPassword').errors?.mustMatch">
+                        Confirm Password must match
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <mat-select formControlName="country" (valueChange)="changeCountry($event)">
+                        <mat-option *ngFor="let c of countries" [value]="c.name">{{c.pre}} ({{c.name}})</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-100" *ngIf="is_country_other">
+                    <input autocomplete="off" matInput placeholder="Country Code" i18n-placeholder
+                        formControlName="countrycode">
+                    <mat-error i18n *ngIf="form.get('countrycode').errors?.required && form.get('countrycode').touched">
+                        Country code is required
+                    </mat-error>
+                    <mat-error i18n *ngIf="form.get('countrycode').errors?.pattern">
+                        Valid format: +Country code
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <input autocomplete="off" matInput placeholder="Phone" i18n-placeholder formControlName="phone">
+                    <mat-error i18n *ngIf="form.get('phone').errors?.required && form.get('phone').touched">
+                        Phone number is required
+                    </mat-error>
+                    <mat-error i18n *ngIf="form.get('phone').errors?.pattern">
+                        Invalid Phone number
+                    </mat-error>
+                    <mat-error i18n *ngIf="form.get('phone').errors?.isPhoneRegisterd">
+                        Phone number has been used already
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-100">
+                    <!-- <ng-template [ngIf]="editPromoter">
+                        <input matInput placeholder="Promoter ID" disabled="disabled" i18n-placeholder formControlName="promoter">
+                    </ng-template>
+                    <ng-template [ngIf]="!editPromoter">
+                        <input matInput placeholder="Promoter ID" i18n-placeholder formControlName="promoter">
+                    </ng-template> -->
+                    <input matInput placeholder="Promoter ID"  i18n-placeholder formControlName="promoter">
+                </mat-form-field>
+                <!--<div class="g-recaptcha" data-callback="signuprecaptchaCallback"-->
+                <!--data-sitekey="6Ld0KLQZAAAAANjowzy_PRYFwryJfgyAItdCD-r2">-->
+                <!--</div>-->
+                <br>
+                <mat-checkbox formControlName="term_privacy">
+                    <span style="font-size: 14px;" i18n>
+                        I agree to the <a
+                            href="https://www.termsfeed.com/terms-conditions/fa6adeb914da126be511424d31ed56de"
+                            target="_blank">Terms of Service</a> and <a
+                            href="https://www.termsfeed.com/privacy-policy/0d1b9258fe37985292a4a6d8bcbbc2fb"
+                            target="_blank">Privacy Policy</a></span>
+
+                </mat-checkbox>
+                <div class="text-center text-muted mt-4">
+                    <p i18n>Already have an account?</p>
+                    <a href="signin" [routerLink]="['/authentication/signin']" i18n>Login</a>
+                </div>
+
+
+                <button class="btn btn-block btn-primary btn-lg mt-4" [disabled]="form.invalid || isLoading"
+                    type="submit">
+                    <span *ngIf="!isLoading" i18n>Create an account</span>
+                    <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</ng-template>

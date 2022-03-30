@@ -1,0 +1,140 @@
+<div class="nicdark_section">
+  <div class="nicdark_section nicdark_height_20"></div>
+  <div *ngIf="reviews; else loading">
+    <div *ngIf="reviews.length; else nodata">
+      <div class="nicdark_section">
+        <div class="nicdark_width_30_percentage nicdark_width_100_percentage_all_iphone nicdark_border_radius_3 nicdark_float_left nicdark_text_align_center nicdark_bg_greydark nicdark_padding_30 nicdark_box_sizing_border_box">
+          <h1 class="nicdark_font_size_70 nicdark_color_white"><strong>{{averageRating}}</strong></h1>
+          <div class="nicdark_section nicdark_height_20"></div>
+          <div class="nicdark_section ">
+            <star-rating [starType]="'svg'" [rating]="averageRating"></star-rating>
+          </div>
+          <p>{{reviews.length}} <span i18n>Ratings</span></p>
+        </div>
+        <div class="nicdark_width_70_percentage nicdark_width_100_percentage_all_iphone nicdark_padding_left_40 nicdark_padding_left_0_all_iphone nicdark_float_left nicdark_box_sizing_border_box">
+          <div class=" nicdark_border_radius_3 nicdark_section nicdark_border_1_solid_grey nicdark_padding_20 nicdark_box_sizing_border_box">
+            <table class="nicdark_section">
+              <tr>
+                <td class="nicdark_width_20_percentage ">
+                  <h5><strong i18n>5 Stars</strong></h5>
+                </td>
+                <td class="nicdark_width_70_percentage ">
+                  <ngb-progressbar type="warning" [value]="managedRatings['5'] / reviews.length * 100"></ngb-progressbar>
+                </td>
+                <td class="nicdark_width_10_percentage nicdark_text_align_right">
+                  <p class="mb-0 nicdark_font_size_14 nicdark_line_height_30">{{managedRatings['5']}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td class="nicdark_width_20_percentage ">
+                  <h5><strong i18n>4 Stars</strong></h5>
+                </td>
+                <td class="nicdark_width_70_percentage ">
+                  <ngb-progressbar type="warning" [value]="managedRatings['4'] / reviews.length * 100"></ngb-progressbar>
+                </td>
+                <td class="nicdark_width_10_percentage nicdark_text_align_right">
+                  <p class="mb-0 nicdark_font_size_14 nicdark_line_height_30">{{managedRatings['4']}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td class="nicdark_width_20_percentage ">
+                  <h5><strong i18n>3 Stars</strong></h5>
+                </td>
+                <td class="nicdark_width_70_percentage ">
+                  <ngb-progressbar type="warning" [value]="managedRatings['3'] / reviews.length * 100"></ngb-progressbar>
+                </td>
+                <td class="nicdark_width_10_percentage nicdark_text_align_right">
+                  <p class="mb-0 nicdark_font_size_14 nicdark_line_height_30">{{managedRatings['3']}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td class="nicdark_width_20_percentage ">
+                  <h5><strong i18n>2 Stars</strong></h5>
+                </td>
+                <td class="nicdark_width_70_percentage ">
+                  <ngb-progressbar type="warning" [value]="managedRatings['2'] / reviews.length * 100"></ngb-progressbar>
+                </td>
+                <td class="nicdark_width_10_percentage nicdark_text_align_right">
+                  <p class="mb-0 nicdark_font_size_14 nicdark_line_height_30">{{managedRatings['2']}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td class="nicdark_width_20_percentage ">
+                  <h5><strong i18n>1 Stars</strong></h5>
+                </td>
+                <td class="nicdark_width_70_percentage ">
+                  <ngb-progressbar type="warning" [value]="managedRatings['1'] / reviews.length * 100"></ngb-progressbar>
+                </td>
+                <td class="nicdark_width_10_percentage nicdark_text_align_right">
+                  <p class="mb-0 nicdark_font_size_14 nicdark_line_height_30">{{managedRatings['1']}}</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div
+    ><div class="nicdark_section nicdark_height_30"></div>
+    <!--START comment preview-->
+    <div *ngFor="let review of reviews" class="nicdark_section nicdark_border_top_1_solid_grey nicdark_padding_40_20 nicdark_box_sizing_border_box">
+      <div class="d-flex align-items-start justify-content-between">
+        <div>
+          <p style="line-height: 1" class="  nicdark_display_table_cell nicdark_vertical_align_middle ">
+            <span class="nicdark_color_greydark nicdark_first_font nicdark_margin_right_20">
+              <strong>{{review.from_showname}}</strong>
+            </span>
+          </p>
+          <small class="text-muted">{{review.date | timeAgo}}</small>
+          <div class="nicdark_display_table_cell nicdark_vertical_align_middle ">
+            <star-rating [disabled]="true" [starType]="'svg'" [rating]="review.stars"></star-rating>
+          </div>
+        </div>
+        <app-actions
+          [showReport]="false"
+          [showDelete]="isSchoolAdmin$ | async"
+          (onReport)="onReport(review._id)"
+          (onDelete)="onDelete(review._id)"
+        ></app-actions>
+      </div>
+      <div class="nicdark_section nicdark_heigt_20"></div>
+      <div class="nicdark_section">
+        <p>{{review.message}}</p>
+      </div>
+    </div>
+    <div class="nicdark_section nicdark_height_30"></div>
+    <!--END comment preview-->
+    <ng-template #nodata>
+      <div class="text-center p-5" i18n>
+        No reviews
+      </div>
+    </ng-template>
+  </div>
+  <ng-template #loading>
+    <mat-spinner></mat-spinner>
+  </ng-template>
+  <div *ngIf="reviewForm && (canLeaveReview || (isSchoolAdmin$ | async))" class="nicdark_section nicdark_border_top_1_solid_grey nicdark_padding_40_20 nicdark_box_sizing_border_box">
+    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+      <h3 i18n>Leave your review:</h3>
+      <div class="d-flex justify-content-start my-3">
+        <star-rating-control
+          class="justify-content-start"
+          size="large"
+          [readOnly]="false"
+          [hoverEnabled]="true"
+          [starType]="'svg'"
+          formControlName="stars"></star-rating-control>
+      </div>
+      <mat-form-field class="w-100 mb-3">
+        <textarea style="height: 100px;" type="text" matInput placeholder="Your review" formControlName="message"></textarea>
+        <mat-error i18n>
+          Review is required
+        </mat-error>
+      </mat-form-field>
+      <button
+        [disabled]="reviewForm.invalid || isLoading"
+        class="btn btn-primary btn-lg" i18n>
+        Submit
+      </button>
+    </form>
+  </div>
+</div>

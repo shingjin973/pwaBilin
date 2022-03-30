@@ -1,0 +1,119 @@
+.nicdark_background_size_cover{
+  background-color: #E1DB9C;
+}
+
+h2{
+  font-weight: bold;
+  font-size: 1.8rem;
+  margin-bottom: 3.5rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+h3{
+  font-size: 1.75rem;
+}
+
+ul{
+  padding-left: 2rem;
+
+  li{
+    font-family: 'Varela Round', sans-serif;
+    color: #a3a3a3;
+  }
+}
+//new css
+.about-us-page {
+  max-width: 1500px;
+  margin: 0 auto;
+  background-color: white;
+  clear: both!important;
+  padding-bottom: 100px;
+  .about-banner {
+    height: 154px;
+    background-color: #e1db9c; 
+    justify-content: center;
+    text-align: center;
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #28B7A8;
+      letter-spacing: 0.27px;
+    }
+    h3 {
+      font-size: 24px;
+      line-height: 40px;
+      color: #ffffff;
+      font-family: "Marker Felt", "Berlin Sans FB";
+    }
+  }
+  .section-dvm{
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 90%;
+    padding-top: 70px;
+    & p {
+      color: #6c6c6c;
+    }
+    // .section-dvm-title {
+    //   text-align: center;
+    // }
+    .button {
+      display: flex;
+      margin: 0 0 24px;
+      justify-content: center;
+      .check-class {
+        max-width: 320px;
+        width: 100%;
+        text-align: center;
+        a {
+          background-color: #28B7A8;
+          color: white;
+          font-weight: 500;
+          letter-spacing: 1.2px;
+          display: inline-block;
+          padding: 16px 12px;
+          width: 100%;
+          transition: background-color .5s, font-size .5s;
+          border-radius: 4px;
+          margin: 0 auto;
+          &:hover {
+            background-color:rgb(34, 170, 156);
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+  }
+}
+.content{
+  margin-left: 80px;
+  font-size: 20px;
+  @media only screen and (max-width: 600px) {
+    margin-left: 0px;
+  }
+}
+.subtittle img{
+  width: 40px;
+}
+.subtittle span{ 
+  
+  margin-left:20px;
+}
+
+.subtittle{
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  
+}
+.virtual{
+  margin-left: 30px;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+.credit_work li{
+  color: #6c6c6c;
+}
+.bold{
+  font-weight: bold;
+}

@@ -1,0 +1,100 @@
+<div class="card-titlebox">
+    <h1 class="card-title">SA: Homepage</h1>
+    <div>
+        <button class="btn btn-success mr-2" *ngIf="isEditing" (click)="$event.preventDefault(); save();">Save</button>
+        <button class="btn btn-info mr-2" *ngIf="isEditing" (click)="$event.preventDefault(); isEditing = false">
+            Cancel
+        </button>
+        <button class="btn btn-primary" *ngIf="!isEditing" (click)="$event.preventDefault(); initForm(true)">Edit
+        </button>
+    </div>
+</div>
+<div class="card-summary">
+    <form [formGroup]="form" *ngIf="form; else loadingPS">
+        <div class="mb-3">
+            <h3 class="h4">Main configs</h3>
+            <p>
+                <span>Featured class</span>
+                <a href="#" [routerLink]="['/admin/courses', featured.course_id, 'lesson', featured._id]"
+                   *ngIf="featured">{{featured.course.topic}}</a>
+            </p>
+            <p>
+                <span>Login Text</span>
+                <span *ngIf="!isEditing">{{hs.loginText || '-'}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="loginText">
+            </p>
+            <p>
+                <span>Title</span>
+                <span *ngIf="!isEditing">{{hs.title || '-'}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="title">
+            </p>
+            <p>
+                <span>Title (Chinese)</span>
+                <span *ngIf="!isEditing">{{hs.title_ch || '-'}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="title_ch">
+            </p>
+        </div>
+        <div class="mb-3">
+            <h3 class="h4">Social</h3>
+            <p>
+                <span>Facebook</span>
+                <span *ngIf="!isEditing">{{hs.social.facebook || '-'}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="facebook">
+            </p>
+            <p>
+                <span>Instagram</span>
+                <span *ngIf="!isEditing">{{hs.social.instagram || '-'}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="instagram">
+            </p>
+            <p>
+                <span>Twitter</span>
+                <span *ngIf="!isEditing">{{hs.social.twitter || '-'}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="twitter">
+            </p>
+            <p>
+                <span>Youtube</span>
+                <span *ngIf="!isEditing">{{hs.social.youtube || '-'}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="youtube">
+            </p>
+        </div>
+        <div class="mb-3">
+            <h3 class="h4">Promotions</h3>
+
+            <div *ngIf="promotions && promotions.length; else nodata">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Class</th>
+                        <th>Teacher</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of promotions; let i = index">
+                        <td>{{item.auto_id}}</td>
+                        <td><a href="#" [routerLink]="['/admin/courses', item.course._id, 'lesson', item._id]">{{item.course.topic}}</a>
+                        </td>
+                        <td><a href="#" [routerLink]="['/admin/users', item.teacher._id]">{{item.teacher.name}}</a></td>
+                        <td>
+                            <button class="btn btn-sm btn-danger"
+                                    (click)="$event.preventDefault(); deletePromotion(item._id)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ng-template #nodata>
+                <div class="p-5 text-center">
+                    No promotions
+                </div>
+            </ng-template>
+
+        </div>
+    </form>
+    <ng-template #loadingPS>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</div>

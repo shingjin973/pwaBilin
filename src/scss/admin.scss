@@ -1,0 +1,30 @@
+.admin{
+  h2{
+    font-weight: 600;
+  }
+
+  .card{
+    &-titlebox{
+      margin-bottom: 1.5rem;
+    }
+
+    &-title{
+      margin-bottom: 0;
+    }
+
+    &-summary{
+      p{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dashed lightgray;
+        color: #868ba1;
+
+        & > *:last-child{
+          max-width: 70%;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}

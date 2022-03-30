@@ -1,0 +1,85 @@
+<div class="nicdark_section nicdark_bg_greydark" id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9 col-12">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="footer-title" i18n>Company</div>
+                        <ul>
+                            <li>
+                                <a href="#" (click)="$event.preventDefault(); navigate('/about-us')" i18n>About</a>
+                            </li>
+                            <li>
+                                <a href="#" (click)="$event.preventDefault(); navigate('/contact-us')" i18n>Contact
+                                    Us</a>
+                            </li>
+                            <li>
+                                <!--<a href="#" (click)="$event.preventDefault(); navigate('/')" i18n>Privacy Policy</a>-->
+                                <a href="https://www.termsfeed.com/privacy-policy/0d1b9258fe37985292a4a6d8bcbbc2fb"
+                                   target="_blank"
+                                   i18n>Privacy Policy</a>
+
+                            </li>
+                            <li>
+                                <!--<a href="#" (click)="$event.preventDefault(); navigate('/')" i18n>Terms</a>-->
+                                <a href="https://www.termsfeed.com/terms-conditions/fa6adeb914da126be511424d31ed56de"
+                                   target="_blank" i18n>Terms</a>
+
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="footer-title" i18n>Community</div>
+                        <ul>
+                            <li>
+                                <a href="#" (click)="$event.preventDefault(); navigate('/contact-us')" i18n>Become a
+                                    Partner</a>
+                            </li>
+                            <li>
+                                <a href="#" (click)="$event.preventDefault(); navigate('/contact-us')" i18n>Become a
+                                    Teacher</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-4">
+                        <div class="footer-title" i18n>Follow us</div>
+                        <div class="social-icons d-flex flex-row" *ngIf="social">
+                            <div class="mr-2" *ngIf="social.facebook">
+                                <a target="_blank" [href]="social.facebook"><i class="fab fa-facebook-square"></i></a>
+                            </div>
+                            <div class="mr-2" *ngIf="social.twitter">
+                                <a target="_blank" [href]="social.twitter"><i class="fab fa-twitter-square"></i></a>
+                            </div>
+                            <div class="mr-2" *ngIf="social.youtube">
+                                <a target="_blank" [href]="social.youtube"><i class="fab fa-youtube"></i></a>
+                            </div>
+                            <div class="mr-2" *ngIf="social.instagram">
+                                <a target="_blank" [href]="social.instagram"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                        <div class="footer-title" style="cursor: pointer" (click)="$event.preventDefault(); navigate('/faq')" i18n>FAQ
+                        </div>
+                        <div class="footer-title" style="cursor: pointer" (click)="$event.preventDefault(); navigate('/gallery')" i18n>GALLERY
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-12">
+                <div class="footer-title"><i class="fab fa-weixin"></i> <span i18n>WeChat:</span></div>
+                <div class="d-flex flex-row">
+                    <div class="text-center d-flex flex-column mr-2">
+                        <img class="nicdark_width_70" src="assets/img/wechat.jpg">
+                        <div class="nicdark_font_size_12" i18n>Bilin Academy<br/>US</div>
+                    </div>
+                    <div class="text-center d-flex flex-column">
+                        <img class="nicdark_width_70" src="assets/img/wechat_china.jpeg">
+                        <div class="nicdark_font_size_12" i18n>Bilin Academy<br/>China</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-3"><p class="nicdark_font_size_12 mb-1"><span i18n style="color:white">© Copyright 2020 BilinAcademy.com - Bilin Academy</span>
+            <a *ngIf="locale === 'zh'" class="ml-2" href="http://beian.miit.gov.cn/">苏ICP备20012009号</a></p></div>
+    </div>
+</div>

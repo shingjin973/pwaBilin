@@ -1,0 +1,52 @@
+<div class="card-titlebox">
+  <h1 class="card-title">Drawings ({{images?.length || 0}})</h1>
+  <div>
+    <a href="#" class="btn btn-primary" (click)="$event.preventDefault(); upload()">Add new</a>
+  </div>
+</div>
+<div class="card-content">
+  <div>
+    <div *ngIf="images; else loading">
+      <div *ngIf="images.length; else nodata">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Preview</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of images | paginate: { itemsPerPage: totalItemsPerPage, currentPage: currentPage }; let i = index;">
+              <th scope="row">{{ i + 1}}</th>
+              <td>
+                <a href="#" (click)="$event.preventDefault(); open(item.src)">
+                  <img [src]="item.src | s3Storage" width="50" height="50" alt="">
+                </a>
+              </td>
+              <td class="text-nowrap">{{item.date | date: 'medium'}}</td>
+              <td class="text-right text-nowrap">
+                <button class="btn btn-danger btn-sm" (click)="delete(item.src)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="text-center">
+          <pagination-controls nextLabel="" previousLabel ="" (pageChange)="currentPage = $event"></pagination-controls>
+        </div>
+
+      </div>
+      <ng-template #nodata>
+        <div class="p-5 text-center">
+          <span class="h3">No data</span>
+        </div>
+      </ng-template>
+    </div>
+    <ng-template #loading>
+      <mat-spinner></mat-spinner>
+    </ng-template>
+  </div>
+</div>

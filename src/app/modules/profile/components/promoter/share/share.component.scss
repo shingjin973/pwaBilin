@@ -1,0 +1,85 @@
+.nicdark_background_size_cover {
+  background-color: #e1db9c;
+}
+.nicdark_section {
+  background: #f7f6f6;
+}
+.share-text {
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 29px;
+  color: #000000;
+}
+.image-section {
+  background: white;
+}
+.content {
+  // width: 1000px;
+  display: flex;
+  justify-content: space-around;
+}
+.item {
+}
+.logo-image {
+  margin: 12px 50px;
+}
+.user-name {
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 37px;
+  letter-spacing: 0.15px;
+  color: #30978c;
+  text-align: center;
+  padding-bottom: 16px;
+}
+.link {
+  width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: #ffffff;
+  border: 1px solid #b4b4b4;
+  box-sizing: border-box;
+  margin-top: 48px;
+  padding: 10px 16px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: #28b7a8;
+}
+.copy-button {
+  width: 70%;
+  margin-left: 15%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 18px;
+  background: #28b7a8;
+  border-radius: 20px;  
+}
+.copy-button a{
+  color: white;
+}
+.copied {
+  width: 70%;
+  margin-left: 15%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 18px;
+  background: #BEB349;
+  border-radius: 20px;  
+}
+.copied a{
+  color: white;
+}

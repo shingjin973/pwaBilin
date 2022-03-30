@@ -1,0 +1,246 @@
+<div class="card shadow card-noborder">
+    <div class="card-body" *ngIf="!session">
+        <h3 class="py-5 text-center" *ngIf="session === null; else loadingSession">
+            Session is not found
+        </h3>
+        <ng-template #loadingSession>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+    </div>
+    <div class="card-body" *ngIf="session">
+        <div class="card-titlebox">
+            <div>
+                <h1 class="card-title">Session ID: {{session.auto_id}}</h1>
+                <h2>
+                    Class
+                    <a href="#"  [routerLink]="['/admin/courses', lesson.course_id, 'lesson', lesson._id]"
+                        class="text-primary">{{lesson.course.topic}}</a>
+                    by
+                    <a href="#" [routerLink]="['/admin/users/', lesson.teacher_id]">{{lesson.teacher?.name}}</a>
+                </h2>
+            </div>
+            <div>
+                <button *ngIf="isEditing" class="btn btn-primary mr-2"
+                    (click)="$event.preventDefault(); isEditing = false; saveSession()">Save
+                </button>
+                <button *ngIf="isEditing" class="btn btn-info mr-2"
+                    (click)="$event.preventDefault(); isEditing = false">Cancel
+                </button>
+                <button *ngIf="!isEditing && session.state === State.Active" class="btn btn-primary mr-2"
+                    (click)="$event.preventDefault(); isEditing = true">Edit
+                </button>
+                <button class="btn btn-danger" (click)="deleteSession()">Delete</button>
+            </div>
+        </div>
+        <form [formGroup]="form">
+            <div class="card-summary">
+                <p>
+                    <span>State</span>
+                    <span>
+                        <strong class="text-primary">{{session.state | state}}</strong>
+                        <ng-template [ngIf]="session.state === State.Active || session.state === State.Canceled">
+                            (<a href="#" style="color: #007bff" (click)="$event.preventDefault(); changeState();">
+                                <i *ngIf="isLoadingSession" class="fas fa-spinner fa-spin"></i>
+                                <span *ngIf="!isLoadingSession">Change</span>
+                            </a>)
+                        </ng-template>
+                    </span>
+                </p>
+                <p>
+                    <span>Subject</span>
+                    <span *ngIf="!isEditing">{{session.subject}}</span>
+                    <input *ngIf="isEditing" type="text" class="form-control" formControlName="subject">
+                </p>
+                <p>
+                    <span>Subject (Chinese)</span>
+                    <span *ngIf="!isEditing">{{session.subject_ch}}</span>
+                    <input *ngIf="isEditing" type="text" class="form-control" formControlName="subject_ch">
+                </p>
+                <p>
+                    <span>Date</span>
+                    <span *ngIf="!isEditing">{{session.startTime | amLocal | amDateFormat: 'll'}}</span>
+                    <input *ngIf="isEditing" type="date" class="form-control" formControlName="date">
+                </p>
+                <p>
+                    <span>Start Time</span>
+                    <span *ngIf="!isEditing">{{session.startTime | amLocal | amDateFormat: 'HH:mm'}}</span>
+                    <input *ngIf="isEditing" type="time" class="form-control" formControlName="startTime">
+                </p>
+                <p>
+                    <span>End Time</span>
+                    <span>{{session.endTime | amLocal | amDateFormat: 'HH:mm'}}</span>
+                </p>
+                <p>
+                    <span>Zoom URL</span>
+                    <span *ngIf="!isEditing">{{session.zoomUrl}}</span>
+                    <input *ngIf="isEditing" type="text" class="form-control" formControlName="zoomUrl">
+                </p>
+                <p>
+                    <span>Zoom Id</span>
+                    <span *ngIf="!isEditing">{{session.zoomId}}</span>
+                    <input *ngIf="isEditing" type="text" class="form-control" formControlName="zoomId">
+                </p>
+                <p>
+                    <span>Zoom Password</span>
+                    <span *ngIf="!isEditing">{{session.zoomPassword}}</span>
+                    <input *ngIf="isEditing" type="text" class="form-control" formControlName="zoomPassword">
+                </p>
+                <p>
+                    <span>Notes</span>
+                    <span *ngIf="!isEditing">{{session.notes}}</span>
+                    <textarea *ngIf="isEditing" formControlName="notes" style="resize: none;" rows="3">
+                    </textarea>
+                </p>
+            </div>
+        </form>
+
+        <div class="mt-4">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Enrollments</h2>
+                <div></div>
+            </div>
+
+            <div class="page-table">
+                <div *ngIf="enrollments; else loading">
+                    <div *ngIf="enrollments.length; else nodata">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of enrollments; let i = index;">
+                                    <th scope="row">{{ item.auto_id }}</th>
+                                    <td>
+                                        <a href="#" [routerLink]="['/admin/users', item.student_family]">
+                                            <strong>{{item.student_family_name}} ({{item.student_name}})</strong>
+                                        </a>
+                                    </td>
+                                    <td>{{item.date | date: 'medium'}}</td>
+                                    <td>{{item.state | state}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+
+
+        <div class="mt-4">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Materials</h2>
+                <div>
+                    <button (click)="addMaterial()" class="btn btn-primary btn-sm px-4">Pick material from list</button>
+                </div>
+            </div>
+
+            <div class="page-table">
+                <div *ngIf="materials; else loadingmaterials">
+                    <div *ngIf="materials.length; else nodatamaterials">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of materials">
+                                    <th scope="row">{{ item.auto_id }}</th>
+                                    <td>{{item.description}}</td>
+                                    <td>{{item.type | uppercase}}</td>
+                                    <td>{{item.date | date: 'medium'}}</td>
+                                    <td class="text-right">
+                                        <a href="#" [routerLink]="['/admin/materials', item._id]"
+                                            class="btn btn-sm btn-primary mr-2">View</a>
+                                        <button class="btn btn-danger btn-sm" (click)="deleteMaterial(item._id)">Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <ng-template #nodatamaterials>
+                        <div class="p-5 text-center">
+                            <span class="h3">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loadingmaterials>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+
+
+        <div class="mt-4">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Drawings</h2>
+                <div></div>
+            </div>
+
+            <div class="page-table">
+                <div *ngIf="drawings; else loadingdrawings">
+                    <div *ngIf="drawings.length; else nodatadrawings">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Preview</th>
+                                    <th>Descripts</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of drawings">
+                                    <th scope="row">{{ item.auto_id }}</th>
+                                    <td>
+                                        <a href="#" (click)="$event.preventDefault(); openDrawing(item.url)">
+                                            <img [src]="item.url | s3Storage" width="50" height="50" alt="">
+                                        </a>
+                                    </td>
+                                    <td>{{item.description}}</td>
+                                    <td class="text-nowrap">{{item.date | date: 'medium'}}</td>
+                                    <td class="text-right text-nowrap">
+                                        <button class="btn btn-danger btn-sm" (click)="deleteDrawing(item.id)">Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <ng-template #nodatadrawings>
+                        <div class="p-5 text-center">
+                            <span class="h3">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loadingdrawings>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

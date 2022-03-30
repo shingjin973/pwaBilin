@@ -1,0 +1,59 @@
+<div class="card shadow card-noborder">
+  <div class="card-body">
+    <div class="card-titlebox">
+      <h1 class="card-title">New transaction</h1>
+      <div></div>
+    </div>
+    <div class="card-content">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field class="w-100">
+          <mat-select formControlName="debit_user" (click)="$event.preventDefault(); debitUsersSearch.next('_')" placeholder="Debit user">
+            <mat-option>
+              <ngx-mat-select-search [noEntriesFoundLabel]="'No matching found'" [placeholderLabel]="'Find users...'" [formControl]="debitUsersForm"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let user of debitUsers$ | async" [value]="user">
+              {{user.name}} (#{{user.auto_id}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+          <mat-select formControlName="debit_type" placeholder="Debit type">
+            <mat-option *ngFor="let i of [1,2,3]" [value]="i">{{i | transactionvaluetype}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+          <input matInput maxlength="5" type="number" placeholder="Debit Amount" formControlName="debit_amount">
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+          <mat-select formControlName="credit_user" (click)="$event.preventDefault(); creditUsersSearch.next('_')" placeholder="Credit user">
+            <mat-option>
+              <ngx-mat-select-search [noEntriesFoundLabel]="'No matching found'" [placeholderLabel]="'Find users...'" [formControl]="creditUsersForm"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let user of creditUsers$ | async" [value]="user">
+              {{user.name}} (#{{user.auto_id}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+          <mat-select  [value]="form.get('debit_type').value" disabled placeholder="Credit type">
+            <mat-option *ngFor="let i of [1,2,3]" [value]="i">{{i | transactionvaluetype}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+          <input matInput disabled readonly [value]="form.get('debit_amount').value" placeholder="Credit Amount">
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+          <textarea matInput placeholder="Notes" formControlName="notes"></textarea>
+        </mat-form-field>
+
+        <button [disabled]="form.invalid" class="btn btn-block btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

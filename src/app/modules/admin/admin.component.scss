@@ -1,0 +1,25 @@
+@import '../../../vars.scss';
+
+.nav-item{
+  color: white;
+}
+
+main{
+  padding-top: 80px;
+  padding-bottom: 50px;
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.dropdown{
+  &-item{
+    color: white;
+
+    &:hover, &:focus, &.active{
+      background-color: darken($c_primary, 7%);
+    }
+  }
+}
+.container{
+  max-width: 1200px;
+}

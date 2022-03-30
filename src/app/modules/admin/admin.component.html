@@ -1,0 +1,104 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" *ngIf="user">
+    <a class="navbar-brand mr-4" href="#" [routerLink]="['/']">BilinAcademy Admin Panel</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" [routerLink]="['/admin', 'sessions']" routerLinkActive="active"
+                href="#">Upcoming (Sessions)</a>
+            <div class="nav-item" ngbDropdown>
+                <a class="nav-link" (click)="$event.preventDefault();" href="#" ngbDropdownToggle>Courses</a>
+                <div ngbDropdownMenu class="bg-primary shadow no-border">
+                    <a ngbDropdownItem [routerLink]="['/admin', 'courses']" routerLinkActive="active" href="#">All
+                        Courses</a>
+                    <a ngbDropdownItem [routerLink]="['/admin', 'wechat-courses']" routerLinkActive="active"
+                        href="#">Wechat Courses</a>
+                </div>
+            </div>
+            <a class="nav-item nav-link" [routerLink]="['/admin', 'promote']" routerLinkActive="active" href="#">Promote
+                Picture</a>
+            <div class="nav-item" *ngIf="!user.adminSchool" ngbDropdown>
+                <a class="nav-link" (click)="$event.preventDefault();" href="#" ngbDropdownToggle>Users</a>
+                <div ngbDropdownMenu class="bg-primary shadow no-border">
+                    <a ngbDropdownItem href="#" *ngIf="!user.adminSchool" [routerLink]="['/admin', 'users']"
+                        routerLinkActive="active">All Users</a>
+                    <a ngbDropdownItem href="#" *ngIf="!user.adminSchool" [routerLink]="['/admin/users/students']"
+                        routerLinkActive="active">Students</a>
+                    <a ngbDropdownItem href="#" *ngIf="!user.adminSchool" [routerLink]="['/admin/users/teachers']"
+                        routerLinkActive="active">Teachers</a>
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/partners']"
+                        routerLinkActive="active">Partners</a>
+                    <a ngbDropdownItem href="#" *ngIf="!user.adminSchool" [routerLink]="['/admin/users/promoters']"
+                        routerLinkActive="active">Promoters</a>
+                </div>
+            </div>
+            <div class="nav-item" ngbDropdown>
+                <a class="nav-link" (click)="$event.preventDefault();" href="#" ngbDropdownToggle>Enrollment</a>
+                <div ngbDropdownMenu class="bg-primary shadow no-border">
+                    <a ngbDropdownItem [routerLink]="['/admin', 'enrollments']" routerLinkActive="active" href="#">Class
+                        Enrollment</a>
+                    <a ngbDropdownItem [routerLink]="['/admin', 'packages']" routerLinkActive="active" href="#">Package
+                        Enrollment</a>
+                </div>
+            </div>
+            <div class="nav-item" *ngIf="!user.adminSchool" ngbDropdown>
+                <a class="nav-link" (click)="$event.preventDefault();" href="#" ngbDropdownToggle>Session</a>
+                <div ngbDropdownMenu class="bg-primary shadow no-border">
+                    <a ngbDropdownItem [routerLink]="['/admin', 'materials']" routerLinkActive="active"
+                        href="#">Materials</a>
+                    <a ngbDropdownItem [routerLink]="['/admin', 'drawings']" routerLinkActive="active"
+                        href="#">Drawings</a>
+                    <a ngbDropdownItem [routerLink]="['/admin', 'reviews']" routerLinkActive="active"
+                        href="#">Reviews</a>
+                    <a ngbDropdownItem [routerLink]="['/admin', 'comments']" routerLinkActive="active"
+                        href="#">Comments</a>
+                </div>
+            </div>
+            <div class="nav-item" *ngIf="!user.adminSchool" ngbDropdown>
+                <a class="nav-link" (click)="$event.preventDefault();" href="#" ngbDropdownToggle>Transactions</a>
+                <div ngbDropdownMenu class="bg-primary shadow no-border">
+                    <a ngbDropdownItem [routerLink]="['/admin', 'transactions']" routerLinkActive="active" href="#">All
+                        Transactions</a>
+                    <a ngbDropdownItem [routerLink]="['/admin', 'payments']" routerLinkActive="active"
+                        href="#">Payment</a>
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/balances']"
+                        routerLinkActive="active">User Balance</a>
+                </div>
+            </div>
+            <div class="nav-item" *ngIf="!user.adminSchool" ngbDropdown>
+                <a class="nav-link" (click)="$event.preventDefault();" href="#" ngbDropdownToggle>Configuration</a>
+                <div ngbDropdownMenu class="bg-primary shadow no-border">
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/feature_packages']"
+                        routerLinkActive="active">Feature Packages</a>
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/feature_teachers']"
+                        routerLinkActive="active">Feature Teachers</a>
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/configs']"
+                        routerLinkActive="active">Categories and Fees</a>
+                </div>
+            </div>
+            <div class="nav-item" *ngIf="!user.adminSchool" ngbDropdown>
+                <a *ngIf="auth.isSuperAdmin() | async" class="nav-link" routerLinkActive="active"
+                    (click)="$event.preventDefault();" href="#" ngbDropdownToggle>Admin</a>
+                <div ngbDropdownMenu class="bg-primary shadow no-border">
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/admins']"
+                        routerLinkActive="active">Admin Users</a>
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/homepage']"
+                        routerLinkActive="active">Homepage</a>
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/testimonial']"
+                        routerLinkActive="active">Testimonial</a>
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/schools']"
+                        routerLinkActive="active">Schools</a>
+                    <a ngbDropdownItem href="#" [routerLink]="['/admin/super-admin/gallery']"
+                        routerLinkActive="active">Gallery</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<main class="admin">
+    <div class="container">
+        <router-outlet></router-outlet>
+    </div>
+</main>

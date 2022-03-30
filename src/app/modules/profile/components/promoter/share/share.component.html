@@ -1,0 +1,43 @@
+<app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+<div class="nicdark_section py-4 content ng-star-inserted">
+    <div class="share nicdark_container">
+        <p class="share-text">Share Referral Link</p>
+        <div class="content">
+            <div class="item">
+                <div class="image-section">
+                    <div class="qr-image">
+                        <img src="" alt="" id="us_image" />
+                    </div>
+                    <div class="logo-image">
+                        <img src="assets/img/logos/website log.png" alt="" id="" />
+                    </div>
+                    <div class="user-name"  *ngIf="user; else loading">
+                        {{user.name}}
+                    </div>
+                </div>
+                <div class="link">{{us_link}}</div>
+                <div class="{{buttton_style}}"><a href="#" (click)="$event.preventDefault(); copy_us()" >{{copy_text}}</a></div>
+            </div>
+            <div class="item">
+                <div class="image-section">
+                    <div class="qr-image">
+                        <img src="" alt="" id="cn_image" />
+                    </div>
+                    <div class="logo-image">
+                        <img src="assets/img/logos/website log.png" alt="" id="" />
+                    </div>
+                    <div class="user-name"  *ngIf="user; else loading">
+                        {{user.name}}
+                    </div>
+                </div>
+                <div class="link">{{china_link}}</div>
+                <div class="{{buttton_style}}"><a href="#" (click)="$event.preventDefault(); copy_cn()" >{{copy_Cntext}}</a></div> 
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #loading>
+    <div class="nicdark_section">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

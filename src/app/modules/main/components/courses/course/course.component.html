@@ -1,0 +1,344 @@
+<div *ngIf="lesson else loading">
+    <div class="course-detail nicdark_clearfix">
+        <div class="nicdark_padding_15 nicdark_box_sizing_border_box">
+            <div class="section-dvm">
+                <div class="course-top-intro">
+                    <h1 class="mb-1" [appTranslate]="lesson.course?.topic_ch">{{lesson.course?.topic}}</h1>
+                    <h4 class="h4" [appTranslate]="lesson.subtitle_ch">{{lesson.subtitle}}</h4>
+                    <div class="nicdark_height_20"></div>
+                    <div class="" style="display: flex; flex-direction: row;">
+                        <div class="mr-4">
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <img alt="" class="nicdark_margin_right_10 nicdark_border_radius_100_percentage"
+                                    width="40" [src]="lesson.teacher.profile_picture | s3Storage">
+                            </div>
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="nicdark_font_size_13" i18n>Instructed by</p>
+                                <h5 class="">
+                                    <a href="#"
+                                        [routerLink]="['/teachers', lesson.teacher_id]">{{lesson.teacher?.name}}</a>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <img alt="" class="nicdark_margin_right_10" width="30"
+                                    src="assets/img/icons/icon-category-grey.svg">
+                            </div>
+                            <div class="nicdark_display_table_cell nicdark_vertical_align_middle">
+                                <p class="nicdark_font_size_13" i18n>Category</p>
+                                <h5 class="">{{lesson.course?.category}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nicdark_height_20"></div>
+                </div>
+            </div>
+            <div class="nicdark_section nicdark_height_20"></div>
+        </div>
+        <div class="section-dvm">
+            <div class="course-detail-section">
+                <div>
+                    <div class="nicdark_height_20"></div>
+                    <h2 i18n>Course Description</h2>
+                    <div class="course-detail-text" [appTranslate]="lesson.course?.description_ch">
+                        {{lesson.course?.description}}
+                        <ng-template [ngIf]="user?.promotor && lesson.course?.promoter_picture">
+                            <div class="promoteImageSection">
+                                <div class="qr_section_container">
+                                    <img width="350" height="350" id="haibao"
+                                        [src]="lesson.course?.promoter_picture | s3Storage" alt="" class="promoteImage">
+                                    <img src="" alt="" id="us_image" />
+                                </div>
+                                <div class="qr_section_container">
+                                    <img src="" alt="" id="ch_image" />
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+                <div>
+                    <div class="nicdark_height_20"></div>
+                    <h2 i18n>Sessions</h2>
+                    <div class="">
+                        <div class="nicdark_tabs">
+                            <div class="nav-bar">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" [ngClass]="{'active': currentTab == Tabs.Upcoming}"
+                                            (click)="$event.preventDefault(); currentTab=Tabs.Upcoming"
+                                            i18n>Upcoming</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#"
+                                            [ngClass]="{'active': currentTab == Tabs.Completed}"
+                                            (click)="$event.preventDefault(); currentTab=Tabs.Completed"
+                                            i18n>Completed</a>
+                                    </li>
+                                </ul>
+                                <div *ngIf="lesson.credits_per_session > 0">
+                                    <button *ngIf="(!user || (user && user.children && user.children.length))"
+                                        [disabled]="false" (click)="$event.preventDefault(); enrollAll()"
+                                        class="btn btn-sm btn-primary nicdark_font_size_13" i18n>
+                                        <i *ngIf="isLoadingEnrollAll; else content" class="fas fa-spinner fa-spin"></i>
+                                        <ng-template #content>ENROLL TO ALL</ng-template>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button *ngIf="enrollments_ids_to_cancel && enrollments_ids_to_cancel.length > 0"
+                                        (click)="$event.preventDefault(); cancelEnrollments()"
+                                        class="btn btn-sm btn-danger nicdark_font_size_13" style="margin-right: 125px;"
+                                        [disabled]="isCancelingEnrollments" i18n>
+                                        <i *ngIf="isCancelingEnrollments; else isCancelingEnrollmentscontent"
+                                            class="fas fa-spinner fa-spin"></i>
+                                        <ng-template #isCancelingEnrollmentscontent>CANCEL ENROLLMENT</ng-template>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.Upcoming}"
+                                    role="tabpanel" aria-labelledby="sessions-tab">
+                                    <div class="nicdark_section" *ngIf="enrollments; else loadingEnrollments">
+                                        <div class="nicdark_section nicdark_height_10"></div>
+                                        <div class="nicdark_section outer-position">
+                                            <div class="text-center py-4" *ngIf="!upcoming_sessions.length">
+                                                <span class="nicdark_color_grey" i18n>No Upcoming sessions</span>
+                                            </div>
+                                            <div class="lesson-session">
+                                                <div i18n>Times on the website are displaying in your local time zone.
+                                                </div>
+                                                <div *ngFor="let session of upcoming_sessions_to_show"
+                                                    class="nicdark_section nicdark_border_bottom_1_solid_grey nicdark_padding_15">
+                                                    <div
+                                                        class="pt-1 nicdark_width_75_percentage nicdark_width_100_percentage_responsive nicdark_float_left">
+                                                        <div class="d-flex align-items-center">
+                                                            <input
+                                                                *ngIf="checkEnrollmentsHasSession(session._id) !== -1"
+                                                                style="width: 15px; margin-left: -15px" type="checkbox"
+                                                                (change)="addEnrollmentToCancel($event, getEnrollmentIDOfSession(session._id))">
+                                                            <div style="margin-left:12px">
+                                                                <img alt="" width="20"
+                                                                    src="assets/img/icons/icon-clock-grey.svg">
+                                                                <span
+                                                                    class="nicdark_color_grey nicdark_first_font nicdark_font_size_16 nicdark_margin_left_10">{{session.startTime
+                                                                    | amLocal | date: 'EEE, MMM d,
+                                                                    y'}}({{session.timezone_to_start_session}})</span>
+                                                            </div>
+                                                        </div>
+                                                        <div style="margin-left: 30px;">
+                                                            <span class="text-dark">{{session.startTime | amLocal |
+                                                                amDateFormat: 'h:mm A'}} - {{session.endTime | amLocal |
+                                                                amDateFormat: 'h:mm A'}}</span>
+                                                            <span class="text-dark" style="font-size: 1.3rem;">
+                                                                {{attendees[session._id]}}/{{lesson.max_students}}
+                                                            </span>
+                                                            <span class="text-dark" style="font-size: 1.3rem;"
+                                                                i18n>student(s) </span>
+                                                        </div>
+                                                        <div style="margin-left: 30px;">
+                                                            <strong class="text-muted"
+                                                                [appTranslate]="session.subject_ch">{{session.subject}}</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="nicdark_width_25_percentage nicdark_width_100_percentage_responsive nicdark_float_left nicdark_text_align_right nicdark_text_align_left_responsive nicdark_margin_top_5_responsive">
+                                                        <div class="d-flex justify-content-end">
+                                                            <a *ngIf="(myEnrollments && checkEnrollmentsHasSession(session._id) !== -1) || (isSchoolAdmin$ | async) || isTeacher"
+                                                                [routerLink]="['/courses', lesson.course_id, 'lesson', lesson._id, 'session', session._id]"
+                                                                class="mr-2 btn btn-primary btn-sm nicdark_font_size_13"
+                                                                href="#" i18n>
+                                                                VIEW
+                                                            </a>
+                                                            <div *ngIf="session.state === State.Active;">
+                                                                <!--<button *ngIf="(!user || (user && user.children && user.children.length))"-->
+                                                                <button
+                                                                    [disabled]="attendees[session._id] >= lesson.max_students"
+                                                                    (click)="$event.preventDefault(); enroll(session._id);"
+                                                                    class="btn btn-sm btn-primary nicdark_font_size_13"
+                                                                    i18n>
+                                                                    ENROLL
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="expansion-more" style="cursor:pointer;"
+                                            (click)="showMoreDataUpcoming()"
+                                            [ngClass]="{'invisible': upcoming_counter>=upcoming_sessions.length}" i18n>
+                                            Show more
+                                            <span class="arrow down"></span>
+                                        </div>
+
+                                        <div class="expansion-more" style="cursor:pointer;" (click)="lessDataUpcoming()"
+                                            [ngClass]="{'invisible': upcoming_counter < upcoming_sessions.length || upcoming_sessions.length <= 5}"
+                                            i18n>
+                                            Less
+                                            <span class="arrow up"></span>
+
+                                        </div>
+
+                                        <div class="nicdark_height_10"></div>
+                                    </div>
+                                    <ng-template #loadingEnrollments>
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-spinner fa-spin fa-2x"></i>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                                <div class="tab-pane" [ngClass]="{'active': currentTab == Tabs.Completed}"
+                                    role="tabpanel" aria-labelledby="teachers-tab">
+                                    <div class="nicdark_section" *ngIf="enrollments; else loadingEnrollments">
+                                        <div class="nicdark_section nicdark_height_10"></div>
+                                        <div class="nicdark_section outer-position">
+                                            <div class="text-center py-4" *ngIf="!completed_sessions.length">
+                                                <span class="nicdark_color_grey" i18n>No Completed sessions</span>
+                                            </div>
+                                            <div class="lesson-session">
+                                                <div i18n>Times on the website are displaying in your local time zone.
+                                                </div>
+                                                <div *ngFor="let session of completed_sessions_to_show"
+                                                    class="nicdark_section nicdark_border_bottom_1_solid_grey nicdark_padding_15">
+                                                    <div
+                                                        class="pt-1 nicdark_width_75_percentage nicdark_width_100_percentage_responsive nicdark_float_left">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <img alt="" width="20"
+                                                                    src="assets/img/icons/icon-clock-grey.svg">
+                                                                <span
+                                                                    class="nicdark_color_grey nicdark_first_font nicdark_font_size_16 nicdark_margin_left_10">{{session.startTime
+                                                                    | amLocal | date: 'EEE, MMM d,
+                                                                    y'}}({{session.timezone_to_start_session}})</span>
+
+                                                            </div>
+                                                        </div>
+                                                        <div style="margin-left: 30px;">
+                                                            <span class="text-dark">{{session.startTime | amLocal |
+                                                                amDateFormat: 'h:mm A'}} - {{session.endTime | amLocal |
+                                                                amDateFormat: 'h:mm A'}}</span>
+                                                            <span class="text-dark" style="font-size: 1.3rem;">
+                                                                {{attendees[session._id]}}/{{lesson.max_students}}
+                                                                student(s)</span>
+                                                            <h4 class="nicdark_second_font mb-0 pr-3"></h4>
+                                                        </div>
+                                                        <div style="margin-left: 30px;">
+                                                            <strong class="text-muted"
+                                                                [appTranslate]="session.subject_ch">{{session.subject}}</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="nicdark_width_25_percentage nicdark_width_100_percentage_responsive nicdark_float_left nicdark_text_align_right nicdark_text_align_left_responsive nicdark_margin_top_5_responsive">
+                                                        <div class="d-flex justify-content-end">
+                                                            <a *ngIf="(myEnrollments && myEnrollments.indexOf(session._id) !== -1) || (isSchoolAdmin$ | async) || isTeacher"
+                                                                [routerLink]="['/courses', lesson.course_id, 'lesson', lesson._id, 'session', session._id]"
+                                                                class="mr-2 btn btn-primary btn-sm nicdark_font_size_13"
+                                                                href="#" i18n>
+                                                                VIEW
+                                                            </a>
+                                                            <div *ngIf="session.state === State.Completed;">
+                                                                <button [disabled]="true"
+                                                                    (click)="$event.preventDefault(); enroll(session._id)"
+                                                                    class="btn btn-sm btn-primary nicdark_font_size_13"
+                                                                    i18n>
+                                                                    COMPLETED
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="expansion-more" style="cursor:pointer;"
+                                            (click)="showMoreDataCompleted()"
+                                            [ngClass]="{'invisible': completed_counter>=completed_sessions.length}"
+                                            i18n>
+                                            Show more
+                                            <span class="arrow down"></span>
+                                        </div>
+
+                                        <div class="expansion-more" style="cursor:pointer;"
+                                            (click)="lessDataCompleted()"
+                                            [ngClass]="{'invisible': completed_counter<completed_sessions.length || completed_sessions.length <= 5}"
+                                            i18n>
+                                            Less
+                                            <span class="arrow up"></span>
+
+                                        </div>
+
+                                        <div class="nicdark_height_10"></div>
+                                    </div>
+                                    <ng-template #loadingEnrollments>
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-spinner fa-spin fa-2x"></i>
+                                        </div>
+                                    </ng-template>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:left">
+                    <div class="nicdark_height_20"></div>
+                    <h2 i18n>Teacher</h2>
+                    <div class="nicdark_height_20"></div>
+                    <div class="d-flex flex-row justify-content-start">
+                        <div class="mr-2">
+                            <img alt="" class="nicdark_margin_right_20 nicdark_border_radius_100_percentage " width="83"
+                                height="83" [src]="lesson.teacher.profile_picture | s3Storage">
+                        </div>
+                        <div class="d-flex flex-column justify-content-end">
+                            <h3 class="teacher-name">{{lesson.teacher?.name}}</h3>
+                            <h5 class="nicdark_color_grey" i18n>Main Teacher</h5>
+                        </div>
+                    </div>
+                    <div class="nicdark_section nicdark_height_20"></div>
+                    <div class="course-detail-text" [appTranslate]="lesson.teacher.introduction_ch">
+                        {{lesson.teacher.introduction}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nicdark_section nicdark_height_50"></div>
+        <ng-template [ngIf]="user?.promotor">
+            <app-single-sidebar [lesson]="lesson" [promoter]="user.promotor" (showUsImage)="showUs()"
+                (showCnImage)="showCn()" (downUsImage)="downUs()" (downCsImage)="downCn()"></app-single-sidebar>
+        </ng-template>
+        <ng-template [ngIf]="!user?.promotor">
+            <app-single-sidebar [lesson]="lesson"></app-single-sidebar>
+        </ng-template>
+
+        <!--end container-->
+        <!--START related products-->
+        <div class="nicdark_section nicdark_border_top_1_solid_grey">
+            <!--start nicdark_container-->
+            <div class="nicdark_container nicdark_clearfix py-4 ">
+                <h2><strong i18n>Related lessons</strong></h2>
+                <div class="row" *ngIf="relatedLessons; else loadingLessons">
+                    <div class="col-md-4" *ngFor="let relatedLesson of relatedLessons" style="margin-bottom: 15px;">
+                        <app-course-card [data]="relatedLesson"></app-course-card>
+                    </div>
+                </div>
+                <ng-template #loadingLessons>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+            <!--end container-->
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" (click)="$event.preventDefault(); closeModal()">&times;</span>
+        <img src="" alt="" id="promoteImage" class="qrImage" />
+    </div>
+</div>
+<ng-template #loading>
+    <div style="min-height: 400px;padding-top: 200px;">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

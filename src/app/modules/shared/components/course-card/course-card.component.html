@@ -1,0 +1,83 @@
+<div class="card course-box">
+    <div class="nicdark_section nicdark_position_relative">
+        <ng-template #placeholderThumbnail>
+            <img class="nicdark_section" 
+                src="assets/img/courses/img2.png" alt="">
+        </ng-template>
+        <ng-template [ngIf]="!!lesson.course?.thumbnail"
+            [ngIfElse]="placeholderThumbnail">
+            <img alt="" class="nicdark_section"
+                [src]="lesson.course.thumbnail | s3Storage" style="height: 177px;">
+            <!-- <img alt="" class="nicdark_section card-img-top" src="https://bilinstudio-assets.s3.us-east-2.amazonaws.com/6017e890-0663-11ea-85f5-d5c31f233303.jpg"> -->
+
+        </ng-template>
+        <div
+            class="nicdark_bg_greydark_alpha_gradient_2 nicdark_position_absolute nicdark_left_0 nicdark_height_100_percentage nicdark_width_100_percentage nicdark_padding_20 nicdark_box_sizing_border_box">
+            <div class="course-card-thumbnail-bottom">
+                <div>
+                    <i *ngIf="!lesson.course.topic.includes('Calligraphy') && !lesson.course.topic.includes('Go')" class="fas fa-tasks mr-2"></i>
+                    <span *ngIf="!lesson.course.topic.includes('Calligraphy') && !lesson.course.topic.includes('Go')">{{lesson.total_sessions}} <span
+                            i18n>sessions</span></span>
+                </div>
+                <div>
+                    <i class="far fa-clock mr-2"></i>
+                    <span>{{lesson.session_duration | duration}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="nicdark_section course_card_next_on_date_font" *ngIf="lesson.next_on_session">
+            <p>{{lesson.next_on_session.startTime | amLocal | date: 'EEE, MMM d, y'}}</p>
+            <p>{{lesson.next_on_session.startTime | amLocal | amDateFormat: 'h:mm A'}} - {{lesson.next_on_session.endTime | amLocal | amDateFormat: 'h:mm A'}}</p>
+        </div>
+        <div class="nicdark_section course_card_age_font">
+            <img width="20" src="assets/img/age.png" style="display: inline;">
+            {{lesson.course?.min_age}} - {{lesson.course?.max_age}} yr.
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div
+            class="nicdark_section nicdark_padding_20 nicdark_box_sizing_border_box">
+            <h3 class="">
+                <a [appTranslate]="lesson.course.topic_ch"
+                    [href]="'/courses/' + lesson.course_id + '/lesson/' + lesson._id"
+                    (click)="$event.preventDefault(); navigate(['/courses', lesson.course_id, 'lesson', lesson._id])">{{lesson.course.topic}}</a>
+            </h3>
+            <h4 class="nicdark_font_size_18 nicdark_color_grey"
+                [appTranslate]="lesson.subtitle_ch">{{lesson.subtitle || ''}}
+            </h4>
+            <div class="d-flex">
+                <a [href]="'/teachers/' + lesson.teacher._id"
+                    class="d-flex align-items-center"
+                    (click)="$event.preventDefault(); navigate(['/teachers', lesson.teacher._id])">
+                    <img [src]="lesson.teacher.profile_picture | s3Storage"
+                        width="36" height="36" class="rounded-circle mr-2"
+                        alt="">
+                    <span
+                        class="text-primary mb-0">{{lesson.teacher.name}}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="nicdark_section">
+            <div class="nicdark_float_left">
+                <div class="nicdark_display_table nicdark_float_left">
+                    <img alt=""
+                        class="nicdark_margin_right_10 nicdark_display_table_cell nicdark_vertical_align_middle"
+                        width="23" src="assets/img/icons/icon-availability.svg">
+                    <p
+                        class="nicdark_display_table_cell nicdark_vertical_align_middle nicdark_font_size_15">
+                        <a href="#">{{lesson.max_students}} Seats</a></p>
+                </div>
+            </div>
+            <div class="" style="float: right">
+                <a class="nicdark_color_white nicdark_bg_red nicdark_first_font nicdark_padding_8 nicdark_border_radius_3 nicdark_font_size_13"
+                    style="float: right" [href]="'/course/' + lesson.course_id"
+                    (click)="$event.preventDefault(); navigate(['courses', lesson.course_id, 'lesson', lesson._id])">{{lesson.credits_per_session
+                    | creditsPrice: 'credits'}}</a>
+            </div>
+        </div>
+    </div>
+</div>

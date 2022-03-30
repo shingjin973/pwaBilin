@@ -1,0 +1,77 @@
+.nicdark_background_size_cover{
+  background-color: #E1DB9C;
+}
+
+h4{
+  font-size: 1rem;
+}
+
+p{
+  margin-bottom: 0;
+}
+
+.teacher-single{
+  &-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    img{
+      margin-right: 2rem;
+      border: 1px solid #727272;
+    }
+
+    h1{
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .btn{
+      border-width: 2px;
+    }
+
+    &-item{
+      text-align: center;
+      margin: 0 1.5rem;
+
+      p{
+        color: #727475;
+        font-weight: bold;
+        font-size: 3rem;
+        margin-bottom: .5rem;
+      }
+
+      span{
+        color: #a3a3a3;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+//new css
+.teacher-single-page {
+  max-width: 1500px;
+  margin: 0 auto;
+  background-color: white;
+  clear: both!important;
+  padding-bottom: 100px;
+  .teacher-banner {
+    height: 154px;
+    background-color: #F6FCFE;
+    padding-left: 5%;
+    h1 {
+      font-size: 32px;
+      color: #56509F;
+      letter-spacing: 0.27px;
+      font-weight: 600;
+    }
+  }
+}
+.section-dvm {
+  max-width: 1280px;
+  width:90%;
+  margin: 0 auto;
+  padding: 32px 0;
+}

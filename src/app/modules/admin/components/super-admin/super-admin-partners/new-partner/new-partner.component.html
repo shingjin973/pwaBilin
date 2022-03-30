@@ -1,0 +1,51 @@
+<div class="card shadow card-noborder">
+    <div class="card-body">
+        <div class="card-titlebox">
+            <h1 class="card-title">New Partner</h1>
+            <div>
+                <a href="#" [routerLink]="['/admin/super-admin/partners']" class="btn btn-primary">Cancel</a>
+            </div>
+        </div>
+        <div class="card-content">
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <mat-form-field class="w-100">
+                    <input matInput placeholder="Partner Name" formControlName="name">
+                    <mat-error *ngIf="form.get('name').invalid && form.get('name').touched">
+                        Partner name is required
+                    </mat-error>
+                </mat-form-field>
+
+
+                <label>Please upload partner icon</label>
+                <div style="width:150px;" class="m-auto text-center">
+                    <ng-template [ngIf]="form.get('icon').value">
+                        <img width="150" height="150" class="rounded-circle"
+                             [src]="form.get('icon').value | s3Storage" alt="">
+                        <button class="btn btn-sm btn-outline-primary mt-3"
+                                (click)="$event.preventDefault(); form.get('icon').setValue('')">Try another
+                        </button>
+                    </ng-template>
+                    <ng-template [ngIf]="!form.get('icon').value">
+                        <app-file-upload [file]="form.get('icon').value"
+                                         (onFinish)="form.get('icon').setValue($event)"></app-file-upload>
+                    </ng-template>
+                </div>
+
+                <mat-form-field class="w-100">
+                    <textarea matInput style="min-height: 100px;" placeholder="Description"
+                              formControlName="description"></textarea>
+                    <!--<mat-hint>At least 100 characters.</mat-hint>-->
+                    <mat-error *ngIf="form.get('description').invalid && form.get('description').touched">
+                        Description is required
+                    </mat-error>
+                </mat-form-field>
+
+                <button class="btn btn-block btn-primary btn-lg mt-4" [disabled]="form.invalid || isLoading"
+                        type="submit">
+                    <span *ngIf="!isLoading">Submit</span>
+                    <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

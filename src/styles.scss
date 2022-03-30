@@ -1,0 +1,243 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'vars.scss';
+@import './scss/fonts.scss';
+
+$theme-colors: (
+        'primary': $c_primary
+);
+
+body {
+  color: #494A47;
+
+}
+
+.mat-datepicker-picked div {
+  background: orange !important;
+  color: white !important;
+}
+
+.mat-datepicker-not-picked.mat-calendar-body-disabled div {
+  background: transparent !important;
+  color: rgba(0, 0, 0, .38) !important;
+}
+
+@import '~ngx-toastr/toastr.css';
+
+@import '~ngx-lightbox/lightbox.css';
+
+@import '~bootstrap/scss/bootstrap';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+@import './scss/admin.scss';
+
+@import '~ngx-bar-rating/themes/br-movie-theme.css';
+
+.br-movie.br-readonly {
+  .br-unit {
+    background-color: lighten($c_primary, 15%);
+  }
+
+  .br-active, .br-selected {
+    background-color: $c_primary;
+  }
+}
+
+.text-orange {
+  color: $c_primary;
+}
+
+.toast {
+  opacity: 1;
+
+  &-success {
+    background-color: #51A351;
+  }
+
+  &-error {
+    background-color: red;
+  }
+}
+
+.btn-outline-primary {
+  &:focus {
+    color: $c_primary !important;
+  }
+}
+
+.btn-primary, .btn-outline-primary {
+  &:hover:not(:disabled), &:active, &.active, &.dropdown-toggle[aria-expanded="true"] {
+    color: white !important;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.btn-primary {
+  &, &:disabled, &:active, &:focus {
+    color: white !important;
+  }
+}
+
+.btn-bold {
+  font-weight: 700;
+  border-width: 2px;
+}
+
+.card {
+  &-noborder {
+    border: none;
+  }
+
+  &-titlebox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      font-weight: 600;
+    }
+  }
+}
+
+.form-width {
+  max-width: 500px;
+  margin: auto;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+mat-spinner {
+  margin: 3rem auto;
+}
+
+span {
+  font-family: 'Varela Round', sans-serif;
+}
+
+.ngx-file-drop__drop-zone {
+  border-color: #ceb28d !important;
+}
+
+.no-border {
+  border: none !important;
+}
+
+.swal2-actions {
+  text-align: center;
+}
+
+// SCSS for slider of courses
+#courses_tab {
+  .slick-track {
+    float: left;
+  }
+  .slide {
+    &:focus {
+      outline: 0 !important;
+    }
+    .slick-slide {
+      width: 365px !important;
+    }
+  }
+  .mr-3, .mx-3 {
+    margin-right: 0rem !important;
+  }
+
+  ul.slick-dots {
+    padding-top: 30px;
+    width: 7.5rem;
+    overflow: hidden;
+    display: flex;
+    transition: all 0.25s;
+    position: relative;
+    margin: 0 auto;
+    list-style: none;
+    transform: translateX(0);
+    align-items: center;
+    bottom: unset;
+    height: 100%;
+    li {
+      button {
+        &:before {
+          color: #28B7A8;
+          font-size: 13px;
+        }
+      }
+    }
+
+    li.p-small-1 {
+      transform: scale(0.5);
+    }
+    li.n-small-1 {
+      transform: scale(0.5);
+    }
+    li.slick-active {
+      transform: scale(1.3);
+      transform-origin: center;
+    }
+  }
+}
+
+#testimonial {
+  /* styles for '...' */
+  .block-with-text {
+    overflow: hidden;
+    position: relative;
+    line-height: 26px;
+    max-height: 105px;
+    font-style: italic;
+    @media only screen and (max-width: 600px) {
+      max-height: 131px;
+    }
+  }
+
+  .carousel-control-prev-icon {
+    &:hover {
+      cursor: pointer;
+    }
+    &:focus {
+      outline: none !important;
+      border: none !important;
+    }
+  }
+
+  .carousel-control-next-icon {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .carousel {
+    &:focus {
+      outline: 0 !important;
+    }
+  }
+}
+
+.course_card_age_font {
+  position: absolute;
+  text-align: right;
+  padding-top: 10px;
+  padding-right: 10px;
+  font-family: "Varela Round", sans-serif;
+  color: #ffffff;
+}
+
+.course_card_next_on_date_font {
+  position: absolute;
+  padding-top: 10px;
+  padding-left: 10px;
+  font-family: "Varela Round", sans-serif;
+  color: #ffffff;
+  p {
+    margin: 0px;
+    line-height: 20px;
+    color: #ffffff;
+  }
+}
+.join {
+  padding: 0.25rem 1rem;
+}

@@ -1,0 +1,85 @@
+<div class="card-titlebox admin-balances-titlebox">
+    <h1 class="card-title">SA: Users Balances</h1>
+    <div>
+        <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <mat-select (selectionChange)="filterData()" [(value)]="filter">
+                <mat-option value="">All users</mat-option>
+                <mat-option value="s">Only students</mat-option>
+                <mat-option value="t">Only teachers</mat-option>
+                <mat-option value="sb">Only students with balance</mat-option>
+                <mat-option value="tb">Only teachers with balance</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+<div class="card-content">
+    <div *ngIf="users; else loading">
+        <div *ngIf="users.length; else nodata">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Type</th>
+                    <th>Balance</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of users">
+                    <th scope="row">{{ item.auto_id }}</th>
+                    <td>
+                        <a href="#" [routerLink]="['/admin/users', item._id]"><strong>{{item.name}}</strong></a>
+                    </td>
+                    <td>{{item.email}}</td>
+                    <td><strong class="text-primary">{{item.type | usertype}}</strong></td>
+                    <td>{{item.balance || 0}}{{item.type === UserType.Student ? ' credits' : '$'}}</td>
+                    <!-- <td class="text-right">
+                      <button *ngIf="item.type !== UserType.SuperAdmin" class="btn btn-danger btn-sm" (click)="deleteAdmin(item._id)">Delete from admins</button>
+                    </td> -->
+                </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul *ngIf="pager.totalPages && pager.totalPages > 0" class="pagination">
+                    <li [ngClass]="{disabled:currentPage === 1}" class="page-item first-item">
+                        <a (click)="getUsers(1)" class="page-link" style="cursor: pointer">First</a>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === 1}" class="page-item previous-item">
+                        <a (click)="getUsers(currentPage - 1)" style="cursor: pointer"
+                           class="page-link">‹‹</a>
+                    </li>
+                    <li class="page-item number-item">
+                        <a *ngIf="has_previous_five_page" class="page-link">...</a>
+                    </li>
+                    <li *ngFor="let page of pagination_pages" [ngClass]="{active:currentPage === page}"
+                        class="page-item number-item">
+                        <a (click)="getUsers(page)" class="page-link" style="cursor: pointer">{{page}}</a>
+                    </li>
+                    <li class="page-item number-item">
+                        <a *ngIf="has_next_five_page" class="page-link">...</a>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                        class="page-item next-item">
+                        <a (click)="getUsers(currentPage + 1)" style="cursor: pointer"
+                           class="page-link">››</a>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === pager.totalPages}"
+                        class="page-item last-item">
+                        <a (click)="getUsers(pager.totalPages)" style="cursor: pointer" class="page-link">Last</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ng-template #nodata>
+            <div class="p-5 text-center">
+                <span class="h3">No data</span>
+            </div>
+        </ng-template>
+    </div>
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</div>

@@ -1,0 +1,93 @@
+<div class="card-titlebox">
+    <h1 class="card-title">SA: Configs</h1>
+    <div>
+        <button class="btn btn-success btn-sm mr-2" *ngIf="isEditing" (click)="$event.preventDefault(); save();">Save
+        </button>
+        <button class="btn btn-info btn-sm mr-2" *ngIf="isEditing" (click)="$event.preventDefault(); isEditing = false">
+            Cancel
+        </button>
+        <button class="btn btn-primary btn-sm" *ngIf="!isEditing" (click)="$event.preventDefault(); initForm(true)">
+            Edit
+        </button>
+    </div>
+</div>
+<div class="card-summary">
+    <h3 class="h4">Main configs</h3>
+    <div class="mb-3">
+        <p>
+            <span>Categories</span>
+            <!--<button class="btn btn-primary" (click)="uploadCategoryImage()">-->
+                <!--Add Category-->
+            <!--</button>-->
+            <a href="#" [routerLink]="['/admin/super-admin/configs/new-category']" class="btn btn-primary">Add Category</a>
+
+        </p>
+        <div *ngIf="categories">
+            <table class="table">
+                <tbody>
+                <tr *ngFor="let cat of categories">
+                    <td>
+                        <a href="#" (click)="$event.preventDefault(); viewCategoryImage(cat.picture)">
+                            <img [src]="cat.picture | s3Storage" width="50" height="50" alt="">
+                        </a>
+                    </td>
+                    <td class="text-nowrap">{{cat.name}}</td>
+                    <td class="text-right text-nowrap">
+                        <button class="btn btn-danger btn-sm" (click)="deleteCategory(cat._id)">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <form [formGroup]="form" *ngIf="form; else loadingPS">
+        <div class="mb-3">
+            <!--<p>-->
+            <!--<span>Categories (separated by comma)</span>-->
+            <!--<span *ngIf="!isEditing">{{paymentsSettings.categories.join(', ')}}</span>-->
+            <!--<input *ngIf="isEditing" type="text" class="form-control" formControlName="categories">-->
+            <!--</p>-->
+            <p>
+                <span>Skills (separated by comma)</span>
+                <span *ngIf="!isEditing">{{paymentsSettings.skills.join(', ')}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="skills">
+            </p>
+        </div>
+        <div class="mb-3">
+            <h3 class="h4">Fees</h3>
+            <p>
+                <span>Bronze</span>
+                <span *ngIf="!isEditing">{{paymentsSettings.fees.bronze}}%</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="fees_bronze">
+            </p>
+            <p>
+                <span>Silver</span>
+                <span *ngIf="!isEditing">{{paymentsSettings.fees.silver}}%</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="fees_silver">
+            </p>
+            <p>
+                <span>Gold</span>
+                <span *ngIf="!isEditing">{{paymentsSettings.fees.gold}}%</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="fees_gold">
+            </p>
+            <p>
+                <span>Credits to purchase (separated by comma)</span>
+                <span *ngIf="!isEditing">{{paymentsSettings.creditsToPurchase.join(', ')}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="creditsToPurchase">
+            </p>
+            <p>
+                <span>Promoter rate (separated by comma)</span>
+                <span *ngIf="!isEditing">{{paymentsSettings.promoterRate.join(', ')}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="promoterRate">
+            </p>
+            <p>
+                <span>Price per credit</span>
+                <span *ngIf="!isEditing">{{paymentsSettings.pricePerCredit | currency}}</span>
+                <input *ngIf="isEditing" type="text" class="form-control" formControlName="pricePerCredit">
+            </p>
+        </div>
+    </form>
+    <ng-template #loadingPS>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</div>

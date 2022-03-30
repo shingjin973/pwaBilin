@@ -1,0 +1,505 @@
+<div class="card shadow card-noborder">
+    <div class="card-body" *ngIf="!course">
+        <h3 class="py-5 text-center" *ngIf="course === null; else loadingCourse">
+            Course is not found
+        </h3>
+        <ng-template #loadingCourse>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+    </div>
+    <div class="card-body" *ngIf="course">
+        <div class="card-titlebox">
+            <h1 class="card-title">
+                <div class="d-flex justify-content-start align-items-start">
+                    <img [src]="course.thumbnail | s3Storage" alt="" width="50" height="50" class="rounded-circle mr-2"
+                        *ngIf="course.thumbnail">
+
+                    <strong class="text-primary">{{course.topic}}</strong>
+                </div>
+            </h1>
+            <div>
+                <button *ngIf="!isEditing && !course.is_mini_app" class="btn btn-success mr-2"
+                    (click)="$event.preventDefault(); setCourseToMiniApp()">Set To show in MiniApp
+                </button>
+                <button *ngIf="!isEditing && course.is_mini_app" class="btn btn-danger mr-2"
+                    (click)="$event.preventDefault(); removeCourseFromMiniApp()">Remove in MiniApp
+                </button>
+                <button *ngIf="isEditing" class="btn btn-info mr-2"
+                    (click)="$event.preventDefault(); isEditing = false;">Cancel
+                </button>
+                <button *ngIf="isEditing" class="btn btn-primary mr-2" (click)="$event.preventDefault(); saveCourse();">
+                    Save
+                </button>
+                <button *ngIf="!isEditing" class="btn btn-primary mr-2"
+                    (click)="$event.preventDefault(); editCourse();">Edit
+                </button>
+                <button class="btn btn-danger" (click)="$event.preventDefault(); deleteCourse();">Delete</button>
+            </div>
+        </div>
+        <div class="card-summary">
+            <form [formGroup]="editForm" *ngIf="editForm">
+
+                <div style="width:300px;" class="mx-auto text-center" *ngIf="isEditing && editForm.get('thumbnail')">
+                    <ng-template [ngIf]="editForm.get('thumbnail').value">
+                        <img width="300" [src]="editForm.get('thumbnail').value | s3Storage" alt="">
+                        <button class="btn btn-sm btn-outline-primary mt-3"
+                            (click)="$event.preventDefault(); editForm.get('thumbnail').setValue('')">Upload another
+                            thumbnail
+                        </button>
+                    </ng-template>
+                    <ng-template [ngIf]="!editForm.get('thumbnail').value">
+                        <app-file-upload [file]="editForm.get('thumbnail').value"
+                            (onFinish)="editForm.get('thumbnail').setValue($event)"></app-file-upload>
+                    </ng-template>
+                </div>
+
+                <p *ngIf="isEditing">
+                    <span>Topic</span>
+                    <input type="text" formControlName="topic" class="form-control">
+                </p>
+                <p>
+                    <span>Topic (Chinese)</span>
+                    <span *ngIf="!isEditing">{{course.topic_ch}}</span>
+                    <input *ngIf="isEditing" type="text" formControlName="topic_ch" class="form-control">
+                </p>
+                <p>
+                    <span>Material</span>
+                    <span *ngIf="!isEditing">{{course.material}}</span>
+                    <input *ngIf="isEditing" type="text" formControlName="material" class="form-control">
+                </p>
+                <p>
+                    <span>Category</span>
+                    <span *ngIf="!isEditing">{{course.category}}</span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="category">
+                        <option *ngFor="let i of admin_course_categories" [value]="i.name"
+                            (selected)="(course.category == i.name)? true: false">
+                            <img [src]="i.picture | s3Storage" width="2%" />{{i.name}}
+                        </option>
+                    </select>
+                </p>
+                <p>
+                    <span>Description</span>
+                    <span *ngIf="!isEditing">{{course.description}}</span>
+                    <textarea *ngIf="isEditing" formControlName="description" style="resize: none;" rows="2"
+                        class="form-control"></textarea>
+                </p>
+                <p>
+                    <span>Description(Chinese)</span>
+                    <span *ngIf="!isEditing">{{course.description_ch}}</span>
+                    <textarea *ngIf="isEditing" formControlName="description_ch" style="resize: none;" rows="2"
+                        class="form-control"></textarea>
+                </p>
+                <p>
+                    <span>Min age</span>
+                    <span *ngIf="!isEditing">{{course.min_age}}</span>
+                    <input *ngIf="isEditing" type="number" formControlName="min_age" class="form-control">
+                </p>
+                <p>
+                    <span>Max age</span>
+                    <span *ngIf="!isEditing">{{course.max_age}}</span>
+                    <input *ngIf="isEditing" type="number" formControlName="max_age" class="form-control">
+                </p>
+                <p>
+                    <span>Language</span>
+                    <span *ngIf="!isEditing">{{course.language || 'Unknown'}}</span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="language">
+                        <option value="English">English</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Japanese">Japanese</option>
+                    </select>
+                </p>
+                <p>
+                    <span>Language skill</span>
+                    <span *ngIf="!isEditing">{{course.language_skill | levels}}</span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="language_skill">
+                        <option *ngFor="let i of [1,2,3]" [value]="i">{{i | levels}}</option>
+                    </select>
+                </p>
+                <p>
+                    <span>Course skill</span>
+                    <span *ngIf="!isEditing">{{course.skill}}</span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="skill">
+                        <option *ngFor="let i of skills$ | async" [value]="i">{{i}}</option>
+                    </select>
+                </p>
+                <p>
+                    <span>Course skill level</span>
+                    <span *ngIf="!isEditing">{{course.skill_level | levels}}</span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="skill_level">
+                        <option *ngFor="let i of [1,2,3]" [value]="i">{{i | levels}}</option>
+                    </select>
+                </p>
+                <p>
+                    <span>Class Platform</span>
+                    <span *ngIf="!isEditing">{{course.provider | titlecase}}</span>
+                    <select *ngIf="isEditing" class="form-control" formControlName="provider">
+                        <option *ngFor="let i of ['zoom', 'classin']" [value]="i">{{i | titlecase}}</option>
+                    </select>
+                </p>
+                <p>
+                    <span>Subjects (separated by comma)</span>
+                    <span *ngIf="!isEditing">{{course.default_sessions}}</span>
+                    <input *ngIf="isEditing" type="text" formControlName="default_sessions" class="form-control">
+                </p>
+            </form>
+        </div>
+        <!-- begin: Classes -->
+        <div class="mt-4">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Classes</h2>
+                <div>
+                    <button class="btn btn-sm btn-primary" (click)="isAddingLesson = !isAddingLesson">
+                        {{isAddingLesson ? 'Cancel' : 'Add new class'}}
+                    </button>
+                </div>
+            </div>
+
+            <div class="page-table" *ngIf="!isAddingLesson">
+                <div *ngIf="lessons; else loading">
+                    <div *ngIf="lessons.length; else nodata">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Teacher</th>
+                                    <th>Subtitle</th>
+                                    <th>Status</th>
+                                    <th>Sessions</th>
+                                    <th>Credit</th>                        
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let lesson of lessons; let i = index;">
+                                    <th scope="row">{{ lesson.auto_id }}</th>
+                                    <td>
+                                        <strong>
+                                            <a href="#"
+                                                [routerLink]="['/admin/users', lesson.teacher._id]">{{lesson.teacher?.name}}</a>
+                                        </strong>
+                                    </td>
+                                    <td>{{lesson.subtitle || '-'}}</td>
+                                    <td>{{lesson.state | state}}</td>
+                                    <td>{{lesson.sessions?.length}} / {{lesson.total_sessions}}</td>
+                                    <td>{{lesson.credits_per_session | creditsPrice}}</td>                                   
+                                    <td class="text-right">
+                                        <a href="#" [routerLink]="['/admin/courses', course._id, 'lesson', lesson._id]"
+                                            class="btn btn-sm btn-primary mr-2">Manage</a>
+                                        <button [disabled]="lesson.sessions.length !== 0" class="btn btn-danger btn-sm"
+                                            (click)="deleteLesson(lesson._id)">Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #nodata>
+                        <div class="p-5 text-center">
+                            <span class="h4">No data</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+
+            <div class="page-form" *ngIf="isAddingLesson">
+                <h3 class="text-center font-weight-bold">New class</h3>
+                <form [formGroup]="form" (ngSubmit)="submit()">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100">
+                                <input matInput maxlength="30" placeholder="Subtitle" formControlName="subtitle">
+                                <mat-error *ngIf="hasError('subtitle')">
+                                    Field is invalid
+                                </mat-error>
+                                <mat-hint align="end">{{form.get('subtitle').value.length}} / 30</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100">
+                                <input matInput maxlength="30" placeholder="Subtitle (Chinese)"
+                                    formControlName="subtitle_ch">
+                                <mat-error *ngIf="hasError('subtitle_ch')">
+                                    Field is invalid
+                                </mat-error>
+                                <mat-hint align="end">{{form.get('subtitle_ch').value.length}} / 30</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <mat-select formControlName="teacher_id" placeholder="Teacher">
+                                    <mat-option>
+                                        <ngx-mat-select-search [noEntriesFoundLabel]="'No matching found'"
+                                            [placeholderLabel]="'Find teacher...'" [formControl]="teacherForm">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let teacher of teachers$ | async" [value]="teacher._id">
+                                        {{teacher.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Credit" formControlName="credits_per_session">
+                                <mat-error *ngIf="hasError('credits_per_session')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Session duraction (in minutes)"
+                                    formControlName="session_duration">
+                                <mat-error *ngIf="hasError('session_duration')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <mat-select formControlName="total_sessions" placeholder="Total sessions">
+                                    <mat-option *ngFor="let i of _range(15)" [value]="i">
+                                        {{i}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="hasError('total_sessions')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <mat-select formControlName="max_students" placeholder="Max students">
+                                    <mat-option *ngFor="let i of _range(25)" [value]="i">{{i}}</mat-option>
+                                    <mat-option value="50">50</mat-option>
+                                    <mat-option value="100">100</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="hasError('max_students')">
+                                    Field is invalid
+
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2 membership">
+                            Show/Hidden: &nbsp; &nbsp;
+                            <mat-slide-toggle [checked]="false" formControlName="show_on_front"></mat-slide-toggle>
+                        </div>
+                        <div class="offset-md-2 col-md-4">
+                            <button type="button" class="btn btn-block btn-primary"
+                                [disabled]="form.invalid || loading.lessonSubmit" (click)="submit()">
+                                <span *ngIf="loading.lessonSubmit">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </span>
+                                <span *ngIf="!loading.lessonSubmit">
+                                    Submit
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <!-- end -->
+
+        <!-- begin: Bundle -->
+        <div class="mt-4">
+            <div class="card-titlebox">
+                <h2 class="card-title text-primary">Packages</h2>
+                <div>
+                    <button class="btn btn-sm btn-primary" (click)="isAddingBundle = !isAddingBundle">
+                        {{isAddingBundle ? 'Cancel' : 'Add new Package'}}
+                    </button>
+                </div>
+            </div>
+
+            <div class="page-table" *ngIf="!isAddingBundle">
+                <div *ngIf="bundles; else loading">
+                    <div *ngIf="bundles.length; else nobundledata">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Teacher</th>
+                                    <th>Title</th>
+                                    <th>Sessions</th>
+                                    <th>Tuition</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bundle of bundles; let i = index;">
+                                    <th scope="row">{{ bundle.auto_id }}</th>
+                                    <td>
+                                        <strong>
+                                            <a href="#"
+                                                [routerLink]="['/admin/users', bundle.teacher._id]">{{bundle.teacher?.name}}</a>
+                                        </strong>
+                                    </td>
+                                    <td>{{bundle.bundle_title || '-'}}</td>
+                                    <td>{{bundle.number_of_sessions}}</td>
+                                    <td>{{bundle.tuition | currency}}</td>
+                                    <td class="text-right">
+                                        <a href="#" [routerLink]="['/admin/courses', course._id, 'package', bundle._id]"
+                                            class="btn btn-sm btn-primary mr-2">Manage</a>
+                                        <button class="btn btn-danger btn-sm" (click)="deleteBundle(bundle._id)">Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #nobundledata>
+                        <div class="p-5 text-center">
+                            <span class="h4" i18n>No Package</span>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #loading>
+                    <mat-spinner></mat-spinner>
+                </ng-template>
+            </div>
+
+            <div class="page-form" *ngIf="isAddingBundle">
+                <h3 class="text-center font-weight-bold">New Package</h3>
+                <form [formGroup]="bundleform" (ngSubmit)="submitBundle()">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100">
+                                <input matInput maxlength="50" placeholder="Package Title"
+                                    formControlName="bundle_title">
+                                <mat-error *ngIf="hasBundleFormError('bundle_title')">
+                                    Field is invalid
+                                </mat-error>
+                                <mat-hint align="end">{{bundleform.get('bundle_title').value.length}} / 50</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100">
+                                <input matInput maxlength="50" placeholder="Package Title (Chinese)"
+                                    formControlName="bundle_title_ch">
+                                <mat-error *ngIf="hasBundleFormError('bundle_title_ch')">
+                                    Field is invalid
+                                </mat-error>
+                                <mat-hint align="end">{{bundleform.get('bundle_title_ch').value.length}} / 50</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <mat-select formControlName="teacher_id" placeholder="Teacher">
+                                    <mat-option>
+                                        <ngx-mat-select-search [noEntriesFoundLabel]="'No matching found'"
+                                            [placeholderLabel]="'Find teacher...'" [formControl]="teacherForm">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let teacher of teachers$ | async" [value]="teacher._id">
+                                        {{teacher.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Number of sessions" formControlName="number_of_sessions">
+                                <mat-error *ngIf="hasBundleFormError('number_of_sessions')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Session Length" formControlName="session_length">
+                                <mat-error *ngIf="hasBundleFormError('session_length')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Min students per session"
+                                    formControlName="min_students_per_session">
+                                <mat-error *ngIf="hasBundleFormError('min_students_per_session')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Max students per session"
+                                    formControlName="max_students_per_session">
+                                <mat-error *ngIf="hasBundleFormError('max_students_per_session')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Tuition" formControlName="tuition">
+                                <mat-error *ngIf="hasBundleFormError('tuition')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input placeholder="Start Date" matInput type="text" formControlName="dates_string">
+                                <input [min]="minDate" (dateChange)="onChangePickedDates($event)" class="d-none"
+                                    formControlName="dates" matInput [matDatepicker]="datepicker">
+                                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                                <mat-datepicker [dateClass]="getPickedDates()" #datepicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input placeholder="Start Time" matInput type="text"
+                                    formControlName="start_time_string">
+                                <input [ngxTimepicker]="timepicker" class="d-none" formControlName="start_time">
+                                <ngx-material-timepicker-toggle matSuffix [for]="timepicker">
+                                </ngx-material-timepicker-toggle>
+                                <ngx-material-timepicker #timepicker></ngx-material-timepicker>
+                            </mat-form-field>
+
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Number of Packages" formControlName="number_of_bundles">
+                                <mat-error *ngIf="hasBundleFormError('number_of_bundles')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Cancel policy" formControlName="cancel_policy">
+                                <mat-error *ngIf="hasBundleFormError('cancel_policy')">
+                                    Field is invalid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="offset-md-4 col-md-4">
+                            <button type="button" class="btn btn-block btn-primary"
+                                [disabled]="bundleform.invalid || loading.bundleSubmit" (click)="submitBundle()">
+                                <span *ngIf="loading.bundleSubmit">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </span>
+                                <span *ngIf="!loading.bundleSubmit">
+                                    Submit
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <!-- end -->
+    </div>
+</div>

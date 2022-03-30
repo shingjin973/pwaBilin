@@ -1,0 +1,11 @@
+<div class="nicdark_section nicdark_bg_grey nicdark_border_bottom_1_solid_grey">
+  <div class="nicdark_container nicdark_clearfix">
+    <div class="grid grid_12">
+      <ng-template ngFor let-bc [ngForOf]="breadcrumbs" let-i="index">
+        <span class="text-primary" *ngIf="!bc.url">{{bc.link}}</span>
+        <a *ngIf="bc.url" href="#" (click)="$event.preventDefault(); navigate(bc.url)">{{bc.link}}</a>
+        <img alt="" *ngIf="i !== breadcrumbs.length - 1" class="nicdark_margin_left_10 nicdark_margin_right_10" width="10" src="assets/img/icons/icon-next-grey.svg">
+      </ng-template>
+    </div>
+  </div>
+</div>
