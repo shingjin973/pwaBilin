@@ -8,8 +8,18 @@ if (environment.production) {
   enableProdMode();
 }
 
+function matchPath(path: string): boolean {
+  return window.location.pathname === path;
+}
+
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/ngsw-worker.js');
+  if (matchPath('/en/')) {
+    navigator.serviceWorker.register('/en/ngsw-worker.js');
+  } else if (matchPath('/ch/')) {
+    navigator.serviceWorker.register('/ch/ngsw-worker.js');
+  } else if (matchPath('/')) {
+    navigator.serviceWorker.register('/ngsw-worker.js');
+  }
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
