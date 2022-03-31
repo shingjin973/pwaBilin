@@ -9,7 +9,7 @@ if (environment.production) {
 }
 
 function matchPath(path: string): boolean {
-  return window.location.pathname === path;
+  return window.location.pathname.includes(path);
 }
 
 if ('serviceWorker' in navigator) {
