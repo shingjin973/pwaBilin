@@ -49,10 +49,10 @@
               "outputPath": "dist/bilinstudio-en",
               "sourceMap": false,
               "extractCss": true,
-              "namedChunks": true,
+              "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": true,
+              "vendorChunk": false,
               "buildOptimizer": true,
               "fileReplacements": [
                 {
@@ -67,10 +67,10 @@
               "outputPath": "dist/bilinstudio-ch",
               "sourceMap": false,
               "extractCss": true,
-              "namedChunks": true,
+              "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": true,
+              "vendorChunk": false,
               "buildOptimizer": true,
               "fileReplacements": [
                 {
