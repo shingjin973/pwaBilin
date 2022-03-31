@@ -8,6 +8,8 @@ import {StarRatingModule} from 'angular-star-rating';
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from '@angular/material';
 import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import {SharedModule} from './modules/shared/shared.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -24,6 +26,7 @@ import {SharedModule} from './modules/shared/shared.module';
         }),
         StarRatingModule.forRoot(),
         SweetAlert2Module.forRoot(),
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         
 
     ],

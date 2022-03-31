@@ -24,7 +24,8 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/assets/css/style.css",
@@ -37,7 +38,9 @@
               "./node_modules/jquery/dist/jquery.js",
               "./node_modules/slick-carousel/slick/slick.min.js"
             ],
-            "es5BrowserSupport": true
+            "es5BrowserSupport": true,
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "prod-en": {
@@ -114,7 +117,8 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ]
           }
         },
